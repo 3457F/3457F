@@ -120,7 +120,7 @@ void opcontrol() {
 		bool R2_pressed = controller.get_digital(DIGITAL_R2);
 
 		///// TOGGLE controls
-		bool L2_new_press = controller.get_digital(DIGITAL_L2);
+		bool L2_new_press = controller.get_digital_new_press(DIGITAL_L2);
 
 		/**
 		 * INTAKE:
