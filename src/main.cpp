@@ -7,13 +7,13 @@ const int DRIVE_SPEED = 127;
 pros::Controller controller(pros::E_CONTROLLER_MASTER);
 
 // motor definitions
-pros::Motor left_front(-20);
-pros::Motor left_mid(-10);
-pros::Motor left_back(-9);
+pros::Motor left_front(-11);
+pros::Motor left_mid(-12);
+pros::Motor left_back(-13);
 
-pros::Motor right_front(8);
-pros::Motor right_mid(7);
-pros::Motor right_back(6);
+pros::Motor right_front(20);
+pros::Motor right_mid(19);
+pros::Motor right_back(18);
 
 // motor groups
 pros::Motor_Group left_motors({
