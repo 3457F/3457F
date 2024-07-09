@@ -45,7 +45,7 @@ void arcade() {
 /**
  * SUBSYSTEM INITIALIZATION:
 */
-Intake intake = Intake(1, pros::E_MOTOR_BRAKE_HOLD);
+Intake intake = Intake(-1, pros::E_MOTOR_BRAKE_HOLD);
 
 MogoMech mogo = MogoMech('H');
 
