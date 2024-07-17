@@ -1,8 +1,54 @@
+/**
+ * IMPORTS:
+*/
+#include <cmath>
+#include <algorithm>
+#include <string>
+
 #include "main.h"
 #include "lemlib/api.hpp"
 
+/**
+ * CONFIG VARS:
+*/
+// whether PID is being tuned, or normal
+// driver control should run
+bool tuningPID = true;
+// whether the physical PID tuner is being 
+// used, or P, I, and D values are being set
+// manually, through the C++ structs
+// `lateralController` and
+// `angularController`
+bool usingPhysicalPIDTuner = false;
+// if `tuningPID` is set to `true`, whether
+// LINEAR PID is being tuned, or ANGULAR
+// PID is being tuned
+bool runningLinearPIDTest = false;
+
+
+/**
+ * RUNTIME VARS: (**DO NOT MODIFY**)
+*/
+// if `tuningPID` is set to `true`, whether
+// the robot is CURRENTLY running a test
+// auton with target kP and kD values!
+bool runningPIDTest = false;
+// represents the TARGET (NOT actual) kP,
+// that you want to be set
+int kp_target = 0;
+// represents the TARGET (NOT actual) kD,
+// that you want to be set
+int kd_target = 0;
+
 // constants
 const int DRIVE_SPEED = 127;
+
+lemlib::MoveToPointParams linearPIDTestMoveToPointParams = {
+	forwards: false
+	, maxSpeed: 127
+	, minSpeed: 0
+	, earlyExitRange: 0
+};
 
 // controller definition
 pros::Controller controller(pros::E_CONTROLLER_MASTER);
@@ -42,26 +88,26 @@ lemlib::Drivetrain drivetrain(
 );
 
 // lateral PID controller
-lemlib::ControllerSettings lateral_controller(10, // proportional gain (kP)
+lemlib::ControllerSettings lateral_controller(1, // proportional gain (kP)
                                               0, // integral gain (kI)
-                                              3, // derivative gain (kD)
-                                              3, // anti windup
-                                              1, // small error range, in inches
-                                              100, // small error range timeout, in milliseconds
-                                              3, // large error range, in inches
-                                              500, // large error range timeout, in milliseconds
-                                              20 // maximum acceleration (slew)
+                                              0, // derivative gain (kD)
+                                              0, // anti windup
+                                              0, // small error range, in inches
+                                              0, // small error range timeout, in milliseconds
+                                              0, // large error range, in inches
+                                              0, // large error range timeout, in milliseconds
+                                              0 // maximum acceleration (slew)
 );
 
 // angular PID controller
-lemlib::ControllerSettings angular_controller(2, // proportional gain (kP)
+lemlib::ControllerSettings angular_controller(1, // proportional gain (kP)
                                               0, // integral gain (kI)
-                                              10, // derivative gain (kD)
-                                              3, // anti windup
-                                              1, // small error range, in degrees
-                                              100, // small error range timeout, in milliseconds
-                                              3, // large error range, in degrees
-                                              500, // large error range timeout, in milliseconds
+                                              0, // derivative gain (kD)
+                                              0, // anti windup
+                                              0, // small error range, in degrees
+                                              0, // small error range timeout, in milliseconds
+                                              0, // large error range, in degrees
+                                              0, // large error range timeout, in milliseconds
                                               0 // maximum acceleration (slew)
 );
 
@@ -99,6 +145,240 @@ Intake intake = Intake(-1, pros::E_MOTOR_BRAKE_HOLD);
 
 MogoMech mogo = MogoMech('H');
 
+
+void screenTaskFunc(void* chassis) {
+	lemlib::Chassis* myChassis = (lemlib::Chassis *)(chassis);
+
+	while (true) {
+		char runningPIDTestBufferString[20];
+
+		// the space in the format string is important... don't delete it!
+		std::snprintf(
+			runningPIDTestBufferString
+			, sizeof(runningPIDTestBufferString)
+			, " PID Test? %s"
+			, runningPIDTest ? "YES" : "NO"
+		);
+
+		// first value: whether tuning PID / normal driver control is enabled
+		// second value: if tuning PID, whether test PID auton running or not
+		pros::lcd::print(
+			0
+			, "Tuning? %s%s"
+			, tuningPID ? "YES" : "NO"
+			, tuningPID ? runningPIDTestBufferString : ""
+		);
+
+		pros::lcd::print(1, "Pos X (Relative): %f", myChassis->getPose().x);
+		pros::lcd::print(2, "Pos Y (Relative): %f", myChassis->getPose().y);
+		pros::lcd::print(3, "Bot Heading (Relative): %f", myChassis->getPose().theta);
+
+		pros::lcd::print(
+			4
+			, "CURRENT %s kP: %f"
+			, runningLinearPIDTest ? "LINEAR" : "ANGULAR"
+			, runningLinearPIDTest ? myChassis->lateralPID.kP : myChassis->angularPID.kP 
+		);
+
+		pros::lcd::print(
+			5
+			, "CURRENT %s kD: %f"
+			, runningLinearPIDTest ? "LINEAR" : "ANGULAR"
+			, runningLinearPIDTest ? myChassis->lateralPID.kD : myChassis->angularPID.kD
+		);
+		
+		pros::delay(20);
+	}
+}
+
+std::vector<std::string> split(const std::string& _input,
+                               const std::string& delimiter) {
+	std::vector<std::string> tokens;
+
+	std::string source = _input;
+
+	size_t pos = 0;
+
+	while ((pos = source.find(delimiter)) != std::string::npos) {
+		tokens.push_back(source.substr(0, pos));
+
+		source.erase(0, pos + delimiter.length());
+	}
+
+	// returns last entry AFTER delimiter
+	tokens.push_back(source);
+
+	return tokens;
+}
+
+void makeLowerCase(std::string& str) {
+	std::transform(
+		str.begin()		// passes in the
+		, str.end()		// full string to be transformed
+
+		, str.begin()	// section of string to start inserting
+						// transformed string into
+		
+		// basically lambda function that returns lowercase version of
+		// each character in the string
+		, [](unsigned char c) { return std::tolower(c); }
+	);
+}
+
+/**
+ * inspired by code from: https://github.com/meisZWFLZ/OverUnder781X
+*/
+void tuningCLI() {
+	lemlib::PID* pid = &(runningLinearPIDTest ? chassis.lateralPID
+											  : chassis.angularPID);
+
+	while (tuningPID) {
+		try {
+			// informs user they can start typing command
+			std::cout << "enter command> ";
+
+			// fetches command (WAITS UNTIL NEWLINE)
+			// and formats it to lowercase
+			std::string input;
+			getline(std::cin, input);
+			makeLowerCase(input);
+
+			auto params = split(input, " ");
+
+			std::string command = params.at(0);
+
+			if (command == "s" || command == "set") {
+				if (params.size() < 3) {
+					std::cout << "not enough arguments to process request (need 3!)..." << std::endl;
+					continue;
+				}
+
+				std::string whichGain = params.at(1);
+				std::string valueToSetStr = params.at(2);
+
+				float *constToSet = nullptr;
+
+
+				if (whichGain == "p") {
+					constToSet = &(pid->kP);
+				
+				} else if (whichGain == "i") {
+					constToSet = &(pid->kI);
+				
+				} else if (whichGain == "d") {
+					constToSet = &(pid->kD);
+				
+				} else {
+					std::cout << " | INVALID gain to set!" << std::endl;
+					continue;
+				}
+
+				// stores old value of the PID constant, to inform the user later
+				float oldValue = (*constToSet);
+
+				// initializes `valueToSet`
+				float valueToSet = -1;
+
+				/**
+				 * if the user types in a certain string as the second parameter (that is, NOT a float),
+				 * fetches the PID constant they want to change, and adds or subtracts 1 or 2, accordingly
+				 * to get its new value
+				*/
+				if (valueToSetStr == "+1") {
+					valueToSet = (*constToSet) + 1;
+				} else if (valueToSetStr == "-1") {
+					valueToSet = (*constToSet) - 1;
+				
+				} else if (valueToSetStr == "+2") {
+					valueToSet = (*constToSet) + 2;
+				} else if (valueToSetStr == "-2") {
+					valueToSet = (*constToSet) - 2;
+				
+				} else {
+					try {
+						// tries to convert user's desired gain value to a float
+						valueToSet = std::stof(valueToSetStr);
+					} catch (const std::invalid_argument &e) {
+						// we were scammed! the user didn't pass in a float!
+						std::cout << " | Gain value not a valid float!" << std::endl;
+						continue;
+					}
+				}
+
+				// sets the new value of the PID constant!
+				(*constToSet) = valueToSet;
+
+				printf(" | successfully changed gain value! old value: %f, new value %f!\n", oldValue, *constToSet);
+
+			} else if (command == "g" || command == "get") {
+				if (params.size() < 2) {
+					std::cout << "not enough arguments to process request (need 2!)..." << std::endl;
+					continue;
+				}
+
+				std::string whatInfo = params.at(2);
+
+				if (whatInfo == "mode") {
+					std::cout << " | currently tuning " << (runningLinearPIDTest ? "LINEAR" : "ANGULAR") << " PID" << std::endl;
+				
+				} else if (whatInfo == "p") {
+					std::cout << " | kP: " << pid->kP << std::endl;
+				
+				} else if (whatInfo == "i") {
+					std::cout << " | kI: " << pid->kI << std::endl;
+				
+				} else if (whatInfo == "d") {
+					std::cout << " | kD: " << pid->kD << std::endl;
+				
+				} else {
+					std::cout << " | INVALID gain to fetch info for!" << std::endl;
+				}
+			
+			} else if (command == "turn-left") { // returns robot to original position IF tuning angular PID
+				if (!runningLinearPIDTest) {
+					chassis.setPose(0, 0, 0);
+
+					chassis.turnToHeading(-90, 1500, {}, false);
+				}
+
+			} else if (command == "run" || command == "r") {
+				runningPIDTest = true;
+
+				// resets position before runs, in case test auton is being run multiple times
+				chassis.setPose(0, 0, 0);
+
+				switch (runningLinearPIDTest) {
+					// running linear PID test
+					case true:
+						chassis.moveToPoint(0, -24, 3000, linearPIDTestMoveToPointParams, false);
+						
+						break;
+					default:
+						chassis.turnToHeading(90, 1500, {}, false);
+
+						pros::delay(1000);
+				}
+			
+			} else if (command == "stop") {
+				chassis.cancelAllMotions();
+			
+			} else if (command == "exit") {
+				std::cout << " | switching to driver control..." << std::endl << std::endl << "---" << std::endl << std::endl;
+
+				chassis.cancelAllMotions();
+				tuningPID = false;
+
+				break;
+			
+			} else {
+				std::cout << "| not a valid command..." << std::endl;
+			}
+		} catch (std::exception e) {
+			std::cout << " | something went wrong: " << e.what() << std::endl;
+		}
+	}
+}
+
 /**
  * Runs initialization code. This occurs as soon as the program is started.
  *
@@ -107,6 +387,13 @@ MogoMech mogo = MogoMech('H');
  */
 void initialize() {
 	pros::lcd::initialize();
+
+	chassis.calibrate();
+
+	pros::Task screenTask(
+		screenTaskFunc			// function that is the task
+		, &chassis				// pointer to parameter to task
+	);
 }
 
 /**
@@ -153,50 +440,71 @@ void autonomous() {}
  * operator control task will be stopped. Re-enabling the robot will restart the
  * task, not resume it from where it left off.
  */
+
 void opcontrol() {
+	// opcontrol runs forever! (while in driver control; it's its own task so we gucci)
 	while (true) {
-		/**
-		 * DRIVING:
-		*/
-		arcade();
-		
-		/**
+		if (!tuningPID) {
+			/* normal driver control */
+
+			bool X_pressed = controller.get_digital(DIGITAL_X);
+			bool A_pressed = controller.get_digital(DIGITAL_A);
+
+			// if both the X and A buttons are pressed
+			if (X_pressed && A_pressed) {
+				printf("X and A were both pressed, transferring to tuning PID mode...\n\n---\n\n");
+				tuningPID = true;
+
+				continue;
+			}
+
+			/**
 		 * CONTROL FETCHING:
-		*/
-		///// HOLD controls
-		// intake (HOLD)
-		bool R1_pressed = controller.get_digital(DIGITAL_R1);
-		// outtake (HOLD)
-		bool R2_pressed = controller.get_digital(DIGITAL_R2);
+			*/
+			///// HOLD controls
+			// intake (HOLD)
+			bool R1_pressed = controller.get_digital(DIGITAL_R1);
+			// outtake (HOLD)
+			bool R2_pressed = controller.get_digital(DIGITAL_R2);
+	
+			///// TOGGLE controls
+			bool L2_new_press = controller.get_digital_new_press(DIGITAL_L2);
+	
+			/**
+			 * INTAKE:
+			*/
+			if (R1_pressed == R2_pressed) {
+				// if both controls are pressed or depressed, brake (stop) the intake
+	
+				intake.brake();
+			} else if (R1_pressed) {
+				// intaking
+	
+				intake.intake();
+			} else if (R2_pressed) {
+				// outtaking
+	
+				intake.outtake();
+			}
+	
+			/**
+			 * MOGO:
+			*/
+	
+			if (L2_new_press) {
+				mogo.toggle();
+			}
 
-		///// TOGGLE controls
-		bool L2_new_press = controller.get_digital_new_press(DIGITAL_L2);
+			/**
+		 * DRIVING:
+		 */
+			// replace with tank() if u really don't like tank that much
+			arcade();
+		} else {
+			/* tuning PID! wee! */
 
-		/**
-		 * INTAKE:
-		*/
-		if (R1_pressed == R2_pressed) {
-			// if both controls are pressed or depressed, brake (stop) the intake
-
-			intake.brake();
-		} else if (R1_pressed) {
-			// intaking
-
-			intake.intake();
-		} else if (R2_pressed) {
-			// outtaking
-
-			intake.outtake();
+			tuningCLI();
 		}
-
-		/**
-		 * MOGO:
-		*/
-
-		if (L2_new_press) {
-			mogo.toggle();
-		}
-
 
 		// delay to save system resources
 		pros::delay(20);
