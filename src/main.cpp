@@ -15,7 +15,7 @@
 */
 // whether PID is being tuned, or normal
 // driver control should run
-bool tuningPID = true;
+bool tuningPID = false;
 // whether the physical PID tuner is being 
 // used, or P, I, and D values are being set
 // manually, through the C++ structs
