@@ -88,9 +88,9 @@ lemlib::Drivetrain drivetrain(
 );
 
 // lateral PID controller
-lemlib::ControllerSettings lateral_controller(1, // proportional gain (kP)
+lemlib::ControllerSettings lateral_controller(12, // proportional gain (kP)
                                               0, // integral gain (kI)
-                                              0, // derivative gain (kD)
+                                              5, // derivative gain (kD)
                                               0, // anti windup
                                               0, // small error range, in inches
                                               0, // small error range timeout, in milliseconds
@@ -100,9 +100,9 @@ lemlib::ControllerSettings lateral_controller(1, // proportional gain (kP)
 );
 
 // angular PID controller
-lemlib::ControllerSettings angular_controller(1, // proportional gain (kP)
+lemlib::ControllerSettings angular_controller(3, // proportional gain (kP)
                                               0, // integral gain (kI)
-                                              0, // derivative gain (kD)
+                                              24, // derivative gain (kD)
                                               0, // anti windup
                                               0, // small error range, in degrees
                                               0, // small error range timeout, in milliseconds
