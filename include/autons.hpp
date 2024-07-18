@@ -1,0 +1,1 @@
+void red_right_side();

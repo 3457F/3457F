@@ -4,7 +4,7 @@
 
 class MogoMech {
     public:
-        pros::ADIDigitalOut mogo_pistons;
+        pros::adi::DigitalOut mogo_pistons;
         bool mogo_mech_enabled = false;
 
         MogoMech(

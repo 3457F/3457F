@@ -24,6 +24,7 @@
  * E_CONTROLLER_MASTER is pedantically correct within the PROS styleguide, but
  * not convenient for most student programmers.
  */
+#include "lemlib/chassis/chassis.hpp"
 #define PROS_USE_SIMPLE_NAMES
 
 /**
@@ -35,10 +36,15 @@
 #define PROS_USE_LITERALS
 
 #include "api.h"
+#include "lemlib/api.hpp"
 
-
+#include "autons.hpp"
 #include "intake.hpp"
 #include "mogo.hpp"
+
+extern lemlib::Chassis chassis;
+extern MogoMech mogo;
+extern Intake intake;
 
 /**
  * If you find doing pros::Motor() to be tedious and you'd prefer just to do
