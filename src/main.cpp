@@ -429,7 +429,7 @@ void competition_initialize() {}
  */
 void autonomous() {
 	chassis.setBrakeMode(pros::motor_brake_mode_e::E_MOTOR_BRAKE_BRAKE);
-	red_right_side();
+	red_left_side();
 
 }
 
