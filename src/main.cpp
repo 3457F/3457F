@@ -149,6 +149,8 @@ Intake intake = Intake(-1, pros::E_MOTOR_BRAKE_HOLD, 'G');
 
 MogoMech mogo = MogoMech('H');
 
+Arm arm = Arm(10, pros::E_MOTOR_BRAKE_HOLD);
+
 
 // void screenTaskFunc(void* chassis) {
 // 	lemlib::Chassis* myChassis = (lemlib::Chassis *)(chassis);
@@ -515,15 +517,29 @@ void opcontrol() {
 			// outtake (HOLD)
 			bool R2_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2);
 	
+			bool UP_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_UP);
+			bool DOWN_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN);
+
 			///// TOGGLE controls
 			bool L2_new_press = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2);
-	
+
+			/**
+				* ARM
+			*/
+			if (UP_pressed == DOWN_pressed) {
+					arm.brake();
+			} else if (UP_pressed) {
+					arm.arm_up();
+			} else if (DOWN_pressed) {
+					arm.arm_down();
+			}
+
 			/**
 			 * INTAKE:
 			*/
 			if (R1_pressed == R2_pressed) {
 				// if both controls are pressed or depressed, brake (stop) the intake
-	
+
 				intake.brake();
 			} else if (R1_pressed) {
 				// intaking
