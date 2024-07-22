@@ -67,9 +67,37 @@ void red_right_side() {
 };
 
 void red_left_side(){
-    chassis.setPose(-165.69,76.093,90); 
-    //setting bozos up
-    lemlib::MoveToPoseParams();
-    chassis.moveToPose(-60.748, 60.253, 180, TO, {true, 2 ,0.6 ,80 ,50 });
-    //movees to mogo(Not working)
-};
+    // chassis.setPose(-149.849,22.632,0); 
+    // //setting bozos up
+    // lemlib::MoveToPoseParams();
+    // chassis.moveToPose(-148.849, -27.364, 0, TO, {false, 2 ,0.6 ,128 ,80});
+    // //moving bozo out of the way
+    // waitd;
+    // chassis.moveToPose(-167.175, -2.119, 270, TO, {false});
+    
+    chassis.setPose(-54.513, 43.502, 90);
+
+    chassis.swingToHeading(120, DriveSide::RIGHT, 500);
+    waitd;
+    mogo.toggle();
+
+    chassis.moveToPoint(-20.993, 19.531, TO, {true, 80, 0, 6});
+    waitd;
+    mogo.toggle();
+    intake.intake();
+
+    chassis.turnToPoint(-23.332, 58.432, TO, {false});
+    waitd;
+    chassis.moveToPoint(-23.332, 58.432, TO, {false});
+    waitd;
+    pros::delay(150);
+
+    chassis.turnToPoint(-3.453, 54.221, TO, {false});
+    waitd;
+    chassis.moveToPoint(-9.3, 54.221, TO, {false});
+    waitd;
+    
+    chassis.swingToHeading(-70, DriveSide::LEFT, 500);
+    waitd;
+    chassis.moveToPoint(-3.258, 43.307, TO, {false, 60});
+}
