@@ -4,7 +4,7 @@
 
 class Arm {
     public:
-        pros::Motor arm_motor(10);
+        pros::Motor arm_motor;
 
         pros::motor_brake_mode_e brake_mode;
 
@@ -17,4 +17,6 @@ class Arm {
         void arm_up();
 
         void arm_down();
+
+        void brake();
 }
