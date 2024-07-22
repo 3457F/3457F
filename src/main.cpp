@@ -4,6 +4,8 @@
 #include <cmath>
 #include <algorithm>
 #include <string>
+#include <map>
+#include <vector>
 
 #include "main.h"
 #include "pros/abstract_motor.hpp"
@@ -381,6 +383,40 @@ MogoMech mogo = MogoMech('H');
 // 	}
 // }
 
+std::vector<std::string> autonNames = {
+	"Red Right Side"
+	, "Red Left Side"
+}
+
+std::map<std::string, void(*)()> autonMap = {
+	{"Red Right Side": &red_right_side}
+	, {"Red Left Side": &red_left_side}
+};
+
+int autonMapSize = static_cast<int>(autonMap.size());
+
+int curr_auton = 0;
+
+void display_auton() {
+	pros::lcd::clear_line(0);
+
+	pros::lcd::set_text(0, autonNames[curr_auton]);
+}
+
+void left_btn_cb() {
+	if (curr_auton > 0) {
+		curr_auton -= 1;
+		display_auton();
+	}
+}
+
+void right_btn_cb() {
+	if (curr_auton < (autonMapSize - 1)) {
+		curr_auton += 1;
+		display_auton();
+	}
+}
+
 /**
  * Runs initialization code. This occurs as soon as the program is started.
  *
@@ -391,6 +427,9 @@ void initialize() {
 	pros::lcd::initialize();
 
 	chassis.calibrate();
+
+	pros::lcd::register_btn0_cb(left_btn_cb);
+	pros::lcd::register_btn2_cb(right_btn_cb);
 
 // 	pros::Task screenTask(
 // 		screenTaskFunc			// function that is the task
@@ -429,8 +468,10 @@ void competition_initialize() {}
  */
 void autonomous() {
 	chassis.setBrakeMode(pros::motor_brake_mode_e::E_MOTOR_BRAKE_BRAKE);
-	red_left_side();
+	// red_left_side();
 
+	// calls the auton chosen in the auton selector
+	autonMap[autonNames[curr_auton]]();
 }
 
 /**
@@ -451,19 +492,19 @@ void opcontrol() {
 	chassis.setBrakeMode(pros::motor_brake_mode_e::E_MOTOR_BRAKE_COAST);
 	// opcontrol runs forever! (while in driver control; it's its own task so we gucci)
 	while (true) {
-		if (!tuningPID) {
+//		if (!tuningPID) {
 			/* normal driver control */
 
-			bool X_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_X);
-			bool A_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_A);
+//			bool X_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_X);
+//			bool A_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_A);
 
 			// if both the X and A buttons are pressed
-			if (X_pressed && A_pressed) {
-				printf("X and A were both pressed, transferring to tuning PID mode...\n\n---\n\n");
-				tuningPID = true;
+//			if (X_pressed && A_pressed) {
+//				printf("X and A were both pressed, transferring to tuning PID mode...\n\n---\n\n");
+//				tuningPID = true;
 
-				continue;
-			}
+//				continue;
+//			}
 
 			/**
 		 * CONTROL FETCHING:
@@ -507,11 +548,11 @@ void opcontrol() {
 		 */
 			// replace with tank() if u really don't like tank that much
 			arcade();
-		} else {
+//		} else {
 			/* tuning PID! wee! */
 
 			// tuningCLI();
-		}
+//		}
 
 		// delay to save system resources
 		pros::delay(20);
