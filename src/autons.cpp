@@ -77,7 +77,7 @@ void red_left_side(){
     
     chassis.setPose(-54.513, 43.502, 90);
 
-    chassis.swingToHeading(120, DriveSide::RIGHT, 500);
+    chassis.swingToHeading(115, DriveSide::RIGHT, 500);
     waitd;
     mogo.toggle();
 
@@ -86,18 +86,18 @@ void red_left_side(){
     mogo.toggle();
     intake.intake();
 
-    chassis.turnToPoint(-23.332, 58.432, TO, {false});
+    chassis.turnToPoint(-23.332, 53.432, TO, {false});
     waitd;
-    chassis.moveToPoint(-23.332, 58.432, TO, {false});
+    chassis.moveToPoint(-23.332, 53.432, TO, {false});
     waitd;
     pros::delay(150);
 
-    chassis.turnToPoint(-3.453, 54.221, TO, {false});
+    chassis.swingToPoint(-3.453, 53,DriveSide::LEFT, TO, {false});
     waitd;
-    chassis.moveToPoint(-9.3, 54.221, TO, {false});
+    chassis.moveToPoint(-9.3, 53, TO, {false});
     waitd;
     
-    chassis.swingToHeading(-70, DriveSide::LEFT, 500);
+    chassis.swingToHeading(-10, DriveSide::RIGHT, 850);
     waitd;
-    chassis.moveToPoint(-3.258, 43.307, TO, {false, 60});
+    chassis.moveToPoint(-5.207, 44.307, TO, {false, 60});
 }
