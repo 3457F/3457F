@@ -298,7 +298,9 @@
       }
     },
     "upload_options": {
-      "icon": "pros"
+      "icon": "pros",
+      "description": "Showcase of 3457F main program",
+      "after": "none"
     },
     "use_early_access": false
   }

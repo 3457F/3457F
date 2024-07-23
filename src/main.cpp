@@ -388,11 +388,11 @@ Arm arm = Arm(10, pros::E_MOTOR_BRAKE_HOLD);
 std::vector<std::string> autonNames = {
 	"Red Right Side"
 	, "Red Left Side"
-}
+};
 
 std::map<std::string, void(*)()> autonMap = {
-	{"Red Right Side": &red_right_side}
-	, {"Red Left Side": &red_left_side}
+	// {"Red Right Side"} & {red_right_side}
+	// , {"Red Left Side"} &{&red_left_side}
 };
 
 int autonMapSize = static_cast<int>(autonMap.size());
@@ -413,7 +413,7 @@ void left_btn_cb() {
 }
 
 void right_btn_cb() {
-	if (curr_auton < (autonMapSize - 1)) {
+	if (curr_auton < (autonMapSize = 1)) {
 		curr_auton += 1;
 		display_auton();
 	}
@@ -473,8 +473,10 @@ void autonomous() {
 	// red_left_side();
 
 	// calls the auton chosen in the auton selector
-	autonMap[autonNames[curr_auton]]();
-}
+	// autonMap[autonNames[curr_auton]]();
+
+	red_left_side();
+};
 
 /**
  * Runs the operator control code. This function will be started in its own task

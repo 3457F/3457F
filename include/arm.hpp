@@ -19,4 +19,4 @@ class Arm {
         void arm_down();
 
         void brake();
-}
+};

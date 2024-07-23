@@ -2,6 +2,7 @@
 #include "lemlib/chassis/chassis.hpp"
 #include "main.h"
 #include "pros/imu.h"
+#include "pros/rtos.h"
 #include "pros/rtos.hpp"
 #include <ctime>
 
@@ -75,29 +76,42 @@ void red_left_side(){
     // waitd;
     // chassis.moveToPose(-167.175, -2.119, 270, TO, {false});
     
+    
     chassis.setPose(-54.513, 43.502, 90);
-
-    chassis.swingToHeading(115, DriveSide::RIGHT, 500);
+    //setting things up
+    chassis.swingToHeading(120 , DriveSide::LEFT, 500);
+    //turning towards the mogo
     waitd;
     mogo.toggle();
-
     chassis.moveToPoint(-20.993, 19.531, TO, {true, 80, 0, 6});
     waitd;
     mogo.toggle();
+    //getting the mogo
     intake.intake();
-
+    //scoring preload
     chassis.turnToPoint(-23.332, 53.432, TO, {false});
     waitd;
-    chassis.moveToPoint(-23.332, 53.432, TO, {false});
+    //turning to next ring
+    chassis.moveToPoint(-23.332, 45.432, TO, {false});
     waitd;
+    //moving the next ring and scoring
     pros::delay(150);
-
     chassis.swingToPoint(-3.453, 53,DriveSide::LEFT, TO, {false});
     waitd;
+    //moving to center rings
     chassis.moveToPoint(-9.3, 53, TO, {false});
     waitd;
-    
+    //grabbing center rings
     chassis.swingToHeading(-10, DriveSide::RIGHT, 850);
     waitd;
     chassis.moveToPoint(-5.207, 44.307, TO, {false, 60});
+    waitd;
+    //getting second center ring
+    pros:pros::c::delay(500);
+    //going to double stack
+    chassis.moveToPose(-50.031, -2.978, 225, TO, {false});
+    waitd;
+    intake.lift(true);
+    
+
 }
