@@ -39,6 +39,8 @@
 #include "lemlib/api.hpp"
 
 #include "autons.hpp"
+
+#include "arm.hpp"
 #include "intake.hpp"
 #include "mogo.hpp"
 
