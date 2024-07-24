@@ -85,6 +85,8 @@ void red_left_side(){
     mogo.toggle();
     chassis.moveToPoint(-20.993, 19.531, TO, {true, 80, 0, 6});
     waitd;
+    chassis.swingToHeading(105, DriveSide::LEFT, 250);
+    waitd;
     mogo.toggle();
     //getting the mogo
     intake.intake();
