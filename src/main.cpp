@@ -12,6 +12,8 @@
 #include "pros/misc.h"
 #include "pros/motors.h"
 
+#include "robodash/api.h"
+
 /**
  * CONFIG VARS:
 */
@@ -385,39 +387,50 @@ Arm arm = Arm(10, pros::E_MOTOR_BRAKE_HOLD);
 // 	}
 // }
 
-std::vector<std::string> autonNames = {
-	"Red Right Side"
-	, "Red Left Side"
-};
 
-std::map<std::string, void(*)()> autonMap = {
-	// {"Red Right Side"} & {red_right_side}
-	// , {"Red Left Side"} &{&red_left_side}
-};
+rd::Selector selector({
+    {"Red right side AWP", &red_right_side},
+    {"Red left side AWP", &red_left_side},
+   
+});
 
-int autonMapSize = static_cast<int>(autonMap.size());
+// Create robodash console
+rd::Console console;
 
-int curr_auton = 0;
 
-void display_auton() {
-	pros::lcd::clear_line(0);
+// std::vector<std::string> autonNames = {
+// 	"Red Right Side"
+// 	, "Red Left Side"
+// };
 
-	pros::lcd::set_text(0, autonNames[curr_auton]);
-}
+// std::map<std::string, void(*)()> autonMap = {
+// 	// {"Red Right Side"} & {red_right_side}
+// 	// , {"Red Left Side"} &{&red_left_side}
+// };
 
-void left_btn_cb() {
-	if (curr_auton > 0) {
-		curr_auton -= 1;
-		display_auton();
-	}
-}
+// int autonMapSize = static_cast<int>(autonMap.size());
 
-void right_btn_cb() {
-	if (curr_auton < (autonMapSize = 1)) {
-		curr_auton += 1;
-		display_auton();
-	}
-}
+// int curr_auton = 0;
+
+// void display_auton() {
+// 	pros::lcd::clear_line(0);
+
+// 	pros::lcd::set_text(0, autonNames[curr_auton]);
+// }
+
+// void left_btn_cb() {
+// 	if (curr_auton > 0) {
+// 		curr_auton -= 1;
+// 		display_auton();
+// 	}
+// }
+
+// void right_btn_cb() {
+// 	if (curr_auton < (autonMapSize = 1)) {
+// 		curr_auton += 1;
+// 		display_auton();
+// 	}
+// }
 
 /**
  * Runs initialization code. This occurs as soon as the program is started.
@@ -426,12 +439,12 @@ void right_btn_cb() {
  * to keep execution time for this mode under a few seconds.
  */
 void initialize() {
-	pros::lcd::initialize();
+	// pros::lcd::initialize();
 
 	chassis.calibrate();
 
-	pros::lcd::register_btn0_cb(left_btn_cb);
-	pros::lcd::register_btn2_cb(right_btn_cb);
+	// pros::lcd::register_btn0_cb(left_btn_cb);
+	// pros::lcd::register_btn2_cb(right_btn_cb);
 
 // 	pros::Task screenTask(
 // 		screenTaskFunc			// function that is the task
@@ -455,7 +468,10 @@ void disabled() {}
  * This task will exit when the robot is enabled and autonomous or opcontrol
  * starts.
  */
-void competition_initialize() {}
+void competition_initialize() {
+	// Focus auton selector on screen
+	selector.focus();
+};
 
 /**
  * Runs the user autonomous code. This function will be started in its own task
@@ -469,13 +485,15 @@ void competition_initialize() {}
  * from where it left off.
  */
 void autonomous() {
+	// Run the selected autonomous function
+	selector.run_auton();
 	chassis.setBrakeMode(pros::motor_brake_mode_e::E_MOTOR_BRAKE_BRAKE);
 	// red_left_side();
 
 	// calls the auton chosen in the auton selector
 	// autonMap[autonNames[curr_auton]]();
 
-	red_left_side();
+	// red_left_side();
 };
 
 /**
@@ -493,6 +511,11 @@ void autonomous() {
  */
 
 void opcontrol() {
+	// Print hello 0-99 to the robodash console
+	for (int i = 0; i < 100; i++) {
+		console.printf("Hello %d\n", i);
+		pros::delay(200);
+	}
 	chassis.setBrakeMode(pros::motor_brake_mode_e::E_MOTOR_BRAKE_COAST);
 	// opcontrol runs forever! (while in driver control; it's its own task so we gucci)
 	while (true) {

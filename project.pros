@@ -300,7 +300,8 @@
     "upload_options": {
       "icon": "pros",
       "description": "Showcase of 3457F main program",
-      "after": "run"
+      "after": "run",
+      "slot": 1
     },
     "use_early_access": false
   }

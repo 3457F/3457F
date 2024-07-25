@@ -11,6 +11,7 @@
 #define waitd chassis.waitUntilDone()
 
 void red_right_side() {
+    std::cout << "Running Red Right Side Awp" << std::endl;
     // start: 160.5, -60.5
     chassis.setPose(-149.5, -28.5, 180);
     //setting thingys up!
@@ -147,6 +148,4 @@ void red_left_side(){
     waitd;
     chassis.moveToPoint(-68.155, 32.942, TO, {true});
     
-    
-
 }
