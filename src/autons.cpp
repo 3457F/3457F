@@ -1,6 +1,7 @@
 #include "intake.hpp"
 #include "lemlib/chassis/chassis.hpp"
 #include "main.h"
+#include "mogo.hpp"
 #include "pros/imu.h"
 #include "pros/rtos.h"
 #include "pros/rtos.hpp"
@@ -79,16 +80,29 @@ void red_left_side(){
     
     chassis.setPose(-54.513, 43.502, 90);
     //setting things up
-    chassis.swingToHeading(120 , DriveSide::LEFT, 500);
-    //turning towards the mogo
+
+    mogo.toggle();
+    chassis.moveToPose(-7.351, 12.028 , 125, TO, {true});
     waitd;
     mogo.toggle();
-    chassis.moveToPoint(-20.993, 19.531, TO, {true, 80, 0, 6});
-    waitd;
+    pros:pros::c::delay(100);  
+    //last 4 lines of code go to the mogo and grab it
+
+
+    // chassis.swingToHeading(125 , DriveSide::LEFT, 500);
+    // //turning towards the mogo
+    // waitd;
+    // mogo.toggle();
+    // chassis.moveToPoint(-20.993, 19.531, TO, {true, 80, 0, 6});
+    // waitd;
+    // pros:pros::c::delay(100);
+    // mogo.toggle();
+    // //getting the mogo
+
+
     chassis.swingToHeading(105, DriveSide::LEFT, 250);
+    //turning towards next ring 
     waitd;
-    mogo.toggle();
-    //getting the mogo
     intake.intake();
     //scoring preload
     chassis.turnToPoint(-23.332, 53.432, TO, {false});
@@ -109,11 +123,30 @@ void red_left_side(){
     chassis.moveToPoint(-5.207, 44.307, TO, {false, 60});
     waitd;
     //getting second center ring
-    pros:pros::c::delay(500);
+    pros::delay(200);
     //going to double stack
-    chassis.moveToPose(-50.031, -2.978, 225, TO, {false});
+    chassis.moveToPose(-38.143, 8.715, 223, TO, {false});
     waitd;
-    intake.lift(true);
+    //moving towards the double stack
+    pros::c::delay(200);
+    intake.lift(true); 
+    //lifting intake up to ensure before we are at the double stack
+    chassis.moveToPoint(-72.833, -23.051, TO, {false, 20});
+    waitd;
+    //move to the double stack
+    pros::c::delay(400);
+    intake.lift(false);
+    pros::c::delay(200);
+    //last 3 motoions should be get the ring
+
+    // next few lines don't work (Noted for Aarav to work on it on thrusday)
+
+    chassis.moveToPose(-38.143, 8.715, 223, TO, {false});
+    waitd;
+    chassis.turnToHeading(270,TO);
+    waitd;
+    chassis.moveToPoint(-68.155, 32.942, TO, {true});
+    
     
 
 }
