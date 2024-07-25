@@ -391,7 +391,6 @@ Arm arm = Arm(10, pros::E_MOTOR_BRAKE_HOLD);
 rd::Selector selector({
     {"Red right side AWP", &red_right_side},
     {"Red left side AWP", &red_left_side},
-   
 });
 
 // Create robodash console
