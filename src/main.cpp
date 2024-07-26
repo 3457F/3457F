@@ -127,7 +127,7 @@ void initialize() {
 	pros::Task screenTask(
 		tuning_cli_screen_task
 		, &chassis
-	)
+	);
 }
 
 /**
@@ -159,17 +159,7 @@ void competition_initialize() {};
  * will be stopped. Re-enabling the robot will restart the task, not re-start it
  * from where it left off.
  */
-void autonomous() {
-	// Run the selected autonomous function
-	selector.run_auton();
-	chassis.setBrakeMode(pros::motor_brake_mode_e::E_MOTOR_BRAKE_BRAKE);
-
-	red_left_side();
-
-	// calls the auton chosen in the auton selector
-	// autonMap[autonNames[curr_auton]]();
-
-};
+void autonomous() {};
 
 /**
  * Runs the operator control code. This function will be started in its own task
@@ -190,7 +180,7 @@ void autonomous() {
 void opcontrol() {
 	// opcontrol runs forever! (while in driver control; it's its own task so we gucci)
 	while (true) {
-		if (!tuningPID) {
+		if (!TuningCLI::tuningPID) {
 			/* normal driver control */
 
 			bool X_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_X);
@@ -199,7 +189,7 @@ void opcontrol() {
 			// if both the X and A buttons are pressed
 			if (X_pressed && A_pressed) {
 				printf("X and A were both pressed, transferring to tuning PID mode...\n\n---\n\n");
-				tuningPID = true;
+				TuningCLI::tuningPID = true;
 
 				continue;
 			}

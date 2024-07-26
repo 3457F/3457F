@@ -1,9 +1,13 @@
 #pragma once
 
-#include "main.h"
+#include <vector>
+#include <string>
+#include <iostream>
 
 #include "api.h"
 #include "lemlib/api.hpp"
+
+#include "util.hpp"
 
 namespace TuningCLI {
     /**

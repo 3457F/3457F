@@ -48,7 +48,8 @@
 #include "mogo.hpp"
 #include "tuning_cli.hpp"
 
-extern lemlib::Chassis chassis;
+#include "util.hpp"
+
 extern MogoMech mogo;
 extern Intake intake;
 

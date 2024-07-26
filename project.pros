@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "3457F",
+    "project_name": "PID Tuning Code!",
     "target": "v5",
     "templates": {
       "LemLib": {
@@ -299,9 +299,9 @@
     },
     "upload_options": {
       "icon": "pros",
-      "description": "Showcase of 3457F main program",
-      "after": "run",
-      "slot": 1
+      "description": "PID TUNER",
+      "after": "none",
+      "slot": 2
     },
     "use_early_access": false
   }
