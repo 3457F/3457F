@@ -83,7 +83,7 @@ void red_left_side(){
     //setting things up
 
     mogo.toggle();
-    chassis.moveToPose(-7.351, 12.028 , 125, TO, {true});
+    chassis.moveToPose(-4.233, 3.453  , 135, TO, {true});
     waitd;
     mogo.toggle();
     pros:pros::c::delay(100);  
@@ -126,26 +126,22 @@ void red_left_side(){
     //getting second center ring
     pros::delay(200);
     //going to double stack
-    chassis.moveToPose(-38.143, 8.715, 223, TO, {false});
+    chassis.moveToPose(-61.529,-13.891, 223, TO, {false});
     waitd;
     //moving towards the double stack
     pros::c::delay(200);
     intake.lift(true); 
     //lifting intake up to ensure before we are at the double stack
-    chassis.moveToPoint(-72.833, -23.051, TO, {false, 20});
+    //next line should be going slowly towards the double stack
+    chassis.moveToPoint(-55.683, -8.24 , TO, {false, 20});
     waitd;
     //move to the double stack
     pros::c::delay(400);
     intake.lift(false);
     pros::c::delay(200);
     //last 3 motoions should be get the ring
-
-    // next few lines don't work (Noted for Aarav to work on it on thrusday)
-
-    chassis.moveToPose(-38.143, 8.715, 223, TO, {false});
+    chassis.moveToPose(-68.155, 32.942, 0, TO, {true});
     waitd;
-    chassis.turnToHeading(270,TO);
-    waitd;
-    chassis.moveToPoint(-68.155, 32.942, TO, {true});
+    chassis.swingToHeading(0,lemlib::DriveSide::LEFT, TO);
     
 }

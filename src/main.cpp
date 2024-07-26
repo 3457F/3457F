@@ -487,12 +487,12 @@ void autonomous() {
 	// Run the selected autonomous function
 	selector.run_auton();
 	chassis.setBrakeMode(pros::motor_brake_mode_e::E_MOTOR_BRAKE_BRAKE);
-	// red_left_side();
+
+	red_left_side();
 
 	// calls the auton chosen in the auton selector
 	// autonMap[autonNames[curr_auton]]();
 
-	// red_left_side();
 };
 
 /**
@@ -508,14 +508,10 @@ void autonomous() {
  * operator control task will be stopped. Re-enabling the robot will restart the
  * task, not resume it from where it left off.
  */
+ 
+
 
 void opcontrol() {
-	// Print hello 0-99 to the robodash console
-	for (int i = 0; i < 100; i++) {
-		console.printf("Hello %d\n", i);
-		pros::delay(200);
-	}
-	chassis.setBrakeMode(pros::motor_brake_mode_e::E_MOTOR_BRAKE_COAST);
 	// opcontrol runs forever! (while in driver control; it's its own task so we gucci)
 	while (true) {
 //		if (!tuningPID) {
@@ -532,62 +528,62 @@ void opcontrol() {
 //				continue;
 //			}
 
-			/**
-		 * CONTROL FETCHING:
-			*/
-			///// HOLD controls
-			// intake (HOLD)
-			bool R1_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1);
-			// outtake (HOLD)
-			bool R2_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2);
-	
-			bool UP_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_UP);
-			bool DOWN_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN);
+		/**
+		* CONTROL FETCHING:
+		*/
+		///// HOLD controls
+		// intake (HOLD)
+		bool R1_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1);
+		// outtake (HOLD)
+		bool R2_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2);
 
-			///// TOGGLE controls
-			bool L2_new_press = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2);
+		bool UP_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_UP);
+		bool DOWN_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN);
 
-			/**
-				* ARM
-			*/
-			if (UP_pressed == DOWN_pressed) {
-					arm.brake();
-			} else if (UP_pressed) {
-					arm.arm_up();
-			} else if (DOWN_pressed) {
-					arm.arm_down();
-			}
+		///// TOGGLE controls
+		bool L2_new_press = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2);
 
-			/**
-			 * INTAKE:
-			*/
-			if (R1_pressed == R2_pressed) {
-				// if both controls are pressed or depressed, brake (stop) the intake
+		/**
+			* ARM
+		*/
+		if (UP_pressed == DOWN_pressed) {
+				arm.brake();
+		} else if (UP_pressed) {
+				arm.arm_up();
+		} else if (DOWN_pressed) {
+				arm.arm_down();
+		}
 
-				intake.brake();
-			} else if (R1_pressed) {
-				// intaking
-	
-				intake.intake();
-			} else if (R2_pressed) {
-				// outtaking
-	
-				intake.outtake();
-			}
-	
-			/**
-			 * MOGO:
-			*/
-	
-			if (L2_new_press) {
-				mogo.toggle();
-			}
+		/**
+			* INTAKE:
+		*/
+		if (R1_pressed == R2_pressed) {
+			// if both controls are pressed or depressed, brake (stop) the intake
 
-			/**
+			intake.brake();
+		} else if (R1_pressed) {
+			// intaking
+
+			intake.intake();
+		} else if (R2_pressed) {
+			// outtaking
+
+			intake.outtake();
+		}
+
+		/**
+			* MOGO:
+		*/
+
+		if (L2_new_press) {
+			mogo.toggle();
+		}
+
+		/**
 		 * DRIVING:
 		 */
-			// replace with tank() if u really don't like tank that much
-			arcade();
+		// replace with tank() if u really don't like tank that much
+		arcade();
 //		} else {
 			/* tuning PID! wee! */
 
@@ -596,5 +592,6 @@ void opcontrol() {
 
 		// delay to save system resources
 		pros::delay(20);
+	
 	}
 }
