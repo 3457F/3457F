@@ -1,4 +1,5 @@
 #include <cstdint>
+
 #include "mogo.hpp"
 
 MogoMech::MogoMech(std::uint8_t mogo_pistons_port) : mogo_pistons(mogo_pistons_port) {};

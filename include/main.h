@@ -35,6 +35,9 @@
  */
 #define PROS_USE_LITERALS
 
+#include <string>
+#include <vector>
+
 #include "api.h"
 #include "lemlib/api.hpp"
 
@@ -43,6 +46,7 @@
 #include "arm.hpp"
 #include "intake.hpp"
 #include "mogo.hpp"
+#include "tuning_cli.hpp"
 
 extern lemlib::Chassis chassis;
 extern MogoMech mogo;
