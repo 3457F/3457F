@@ -1,6 +1,10 @@
 # Introduction
 Welcome to the repository for team 3457F's **OFFICIAL** robot code! This file aims to be a starting point for anybody (by which I mean *cough* team members *cough*) looking to contribute to our codebase! This document is mainly composed of guidelines on how to contribute, such as how to format issues.
 
+# Some (Hopefully) Common Sense Points...
+
+- if you make a QoL change (Quality of Life change; e.g. a housekeeping change, or a change that makes the code more efficient/readable), and the QoL change impacts code that is _present on multiple branches_, then _propagate these changes across all branches!_
+
 # Issue Formatting
 When filing an issue, please make sure to check that...
 - you have **assigned** someone to check up on and solve the issue. Usually, [CodeMyGame1](https://github.com/CodeMyGame1) will be one of the assignees, as he is the main coder for the team.
