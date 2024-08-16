@@ -4,14 +4,11 @@
 
 class MogoMech {
     public:
-        pros::adi::DigitalOut mogo_pistons;
-        bool mogo_mech_enabled = false;
+        pros::adi::Port mogo_pistons;
 
         MogoMech(
             std::uint8_t mogo_pistons_port
         );
-
-        void update();
 
         void toggle();
 };

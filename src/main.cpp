@@ -59,28 +59,47 @@ lemlib::MoveToPointParams linearPIDTestMoveToPointParams = {
 // controller definition
 pros::Controller controller(pros::E_CONTROLLER_MASTER);
 
-// motor definitions
-pros::Motor left_front(-11);
-pros::Motor left_mid(-12);
-pros::Motor left_back(-13);
+// right dt normal; left reversed
+// right front 1
+// right middle 3
+// right back 2
+// left front 5
+// left middle 12
+// left back 6
 
-pros::Motor right_front(20);
-pros::Motor right_mid(19);
-pros::Motor right_back(18);
+// mogo mech is forward!
+// motor definitions
+/**
+ * -5
+ * -12
+ * -6
+ * 
+ * 1
+ * 3
+ * 2
+ */
+
+pros::Motor left_front(-2);
+pros::Motor left_mid(-3);
+pros::Motor left_back(-1);
+
+pros::Motor right_front(6);
+pros::Motor right_mid(12);
+pros::Motor right_back(5);
 
 pros::Imu imu(2);
 
 // motor groups
 pros::MotorGroup left_motors({
-	-11
-	, -12
-	, -13
+	-2
+	, -3
+	, -1
 }, pros::MotorGearset::blue);
 
 pros::MotorGroup right_motors({
-	20
-	, 19
-	, 18
+	6
+	, 12
+	, 5
 }, pros::MotorGearset::blue);
 
 // liblem
@@ -147,11 +166,24 @@ void arcade() {
 /**
  * SUBSYSTEM INITIALIZATION:
 */
-Intake intake = Intake(-1, pros::E_MOTOR_BRAKE_HOLD, 'G');
 
-MogoMech mogo = MogoMech('H');
+// right intake 4
+// left intake 19
 
-Arm arm = Arm(10, pros::E_MOTOR_BRAKE_HOLD);
+// right intake normal; left intake reversed 
+Intake intake = Intake(
+	{
+		-19						// left intake (reversed)
+		, 4						// right intake (normal)
+	}
+	, pros::E_MOTOR_BRAKE_HOLD	// brake mode of intake
+
+	, 'B'						// intake piston port
+);
+
+MogoMech mogo = MogoMech('A');
+
+// Arm arm = Arm(10, pros::E_MOTOR_BRAKE_HOLD);
 
 
 // void screenTaskFunc(void* chassis) {
@@ -532,30 +564,34 @@ void opcontrol() {
 		* CONTROL FETCHING:
 		*/
 		///// HOLD controls
-		// intake (HOLD)
+		// outtake
 		bool R1_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1);
-		// outtake (HOLD)
+		// intake
 		bool R2_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2);
 
-		bool UP_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_UP);
-		bool DOWN_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN);
+		// bool UP_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_UP);
+		// bool DOWN_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN);
 
 		///// TOGGLE controls
+		// intake lift
+		bool X_new_press = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X);
+		// mogo mech
 		bool L2_new_press = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2);
 
 		/**
 			* ARM
 		*/
-		if (UP_pressed == DOWN_pressed) {
-				arm.brake();
-		} else if (UP_pressed) {
-				arm.arm_up();
-		} else if (DOWN_pressed) {
-				arm.arm_down();
-		}
+		// if (UP_pressed == DOWN_pressed) {
+		// 		arm.brake();
+		// } else if (UP_pressed) {
+		// 		arm.arm_up();
+		// } else if (DOWN_pressed) {
+		// 		arm.arm_down();
+		// }
+
 
 		/**
-			* INTAKE:
+		 * INTAKE:
 		*/
 		if (R1_pressed == R2_pressed) {
 			// if both controls are pressed or depressed, brake (stop) the intake
@@ -564,15 +600,23 @@ void opcontrol() {
 		} else if (R1_pressed) {
 			// intaking
 
-			intake.intake();
+			intake.outtake();
 		} else if (R2_pressed) {
 			// outtaking
 
-			intake.outtake();
+			intake.intake();
 		}
 
 		/**
-			* MOGO:
+		 * INTAKE LIFT: 
+		 */
+		
+		if (X_new_press) {
+			intake.toggle();
+		}
+
+		/**
+		 * MOGO:
 		*/
 
 		if (L2_new_press) {

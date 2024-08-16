@@ -1,18 +1,19 @@
 #pragma once
 
 #include "api.h"
+#include <vector>
 
 class Intake {
     public:
-        pros::Motor intake_motor;
+        pros::MotorGroup intake_motors;
 
-        pros::adi::DigitalOut intake_piston;
+        pros::adi::Port intake_piston;
 
-        pros::motor_brake_mode_e brake_mode;
+        pros::motor_brake_mode_e_t intake_brake_mode;
 
         Intake(
-            std::int8_t intake_motor_port
-            , pros::motor_brake_mode_e brake_mode
+            std::initializer_list<std::int8_t> intake_motor_ports
+            , pros::motor_brake_mode_e_t brake_mode
             , std::uint8_t intake_piston_port
         );
 
@@ -23,4 +24,6 @@ class Intake {
         void brake();
 
         void lift(bool set);
+
+        void toggle();
 };
