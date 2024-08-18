@@ -19,27 +19,27 @@ const int DRIVE_SPEED = 127;
 pros::Controller controller(pros::E_CONTROLLER_MASTER);
 
 // motor definitions
-pros::Motor left_front(-11);
-pros::Motor left_mid(-12);
-pros::Motor left_back(-13);
+pros::Motor left_front(-2);
+pros::Motor left_mid(-3);
+pros::Motor left_back(-1);
 
-pros::Motor right_front(20);
-pros::Motor right_mid(19);
-pros::Motor right_back(18);
+pros::Motor right_front(6);
+pros::Motor right_mid(12);
+pros::Motor right_back(5);
 
 pros::Imu imu(2);
 
 // motor groups
 pros::MotorGroup left_motors({
-	-11
-	, -12
-	, -13
+	-2
+	, -3
+	, -1
 }, pros::MotorGearset::blue);
 
 pros::MotorGroup right_motors({
-	20
-	, 19
-	, 18
+	6
+	, 12
+	, 5
 }, pros::MotorGearset::blue);
 
 // liblem
@@ -53,26 +53,26 @@ lemlib::Drivetrain drivetrain(
 );
 
 // lateral PID controller
-lemlib::ControllerSettings lateral_controller(9, // proportional gain (kP)
+lemlib::ControllerSettings lateral_controller(1, // proportional gain (kP)
                                               0, // integral gain (kI)
-                                              18, // derivative gain (kD)
-                                              3, // anti windup
-                                              1, // small error range, in inches
-                                              100, // small error range timeout, in milliseconds
-                                              3, // large error range, in inches
-                                              500, // large error range timeout, in milliseconds
-                                              20 // maximum acceleration (slew)
+                                              1, // derivative gain (kD)
+                                              0, // anti windup
+                                              0, // small error range, in inches
+                                              0, // small error range timeout, in milliseconds
+                                              0, // large error range, in inches
+                                              0, // large error range timeout, in milliseconds
+                                              0 // maximum acceleration (slew)
 );
 
 // angular PID controller
-lemlib::ControllerSettings angular_controller(3, // proportional gain (kP)
+lemlib::ControllerSettings angular_controller(1, // proportional gain (kP)
                                               0, // integral gain (kI)
-                                              24, // derivative gain (kD)
-                                              3, // anti windup
-                                              1, // small error range, in inches
-                                              100, // small error range timeout, in milliseconds
-                                              3, // large error range, in inches
-                                              500, // large error range timeout, in milliseconds
+                                              1, // derivative gain (kD)
+                                              0, // anti windup
+                                              0, // small error range, in inches
+                                              0, // small error range timeout, in milliseconds
+                                              0, // large error range, in inches
+                                              0, // large error range timeout, in milliseconds
                                               0 // maximum acceleration (slew)
 );
 
@@ -83,10 +83,10 @@ lemlib::OdomSensors sensors(nullptr, // vertical tracking wheel 1, set to null
                             &imu // inertial sensor
 );
 
-lemlib::Chassis chassis(drivetrain, // drivetrain settings
-                        lateral_controller, // lateral PID settings
-                        angular_controller, // angular PID settings
-                        sensors // odometry sensors
+lemlib::Chassis chassis(drivetrain // drivetrain settings
+                        , lateral_controller // lateral PID settings
+                        , angular_controller // angular PID settings
+                        , sensors // odometry sensors
 );
 
 // driving functions
@@ -106,11 +106,16 @@ void arcade() {
 /**
  * SUBSYSTEM INITIALIZATION:
 */
-Intake intake = Intake(-1, pros::E_MOTOR_BRAKE_HOLD, 'G');
+Intake intake = Intake({
+	-19 // left intake motor
+	, 4 // right intake motor
+}, pros::E_MOTOR_BRAKE_HOLD, 'B');
 
-MogoMech mogo = MogoMech('H');
+MogoMech mogo = MogoMech('A');
 
-Arm arm = Arm(10, pros::E_MOTOR_BRAKE_HOLD);
+Slapper slapper = Slapper('C');
+
+// Arm arm = Arm(10, pros::E_MOTOR_BRAKE_HOLD);
 
 
 /**
@@ -198,28 +203,34 @@ void opcontrol() {
 			* CONTROL FETCHING:
 			*/
 			///// HOLD controls
-			// intake (HOLD)
-			bool R1_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1);
 			// outtake (HOLD)
+			bool R1_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1);
+			// intake (HOLD)
 			bool R2_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2);
 
-			bool UP_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_UP);
-			bool DOWN_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN);
+			// arm
+			// bool UP_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_UP);
+			// bool DOWN_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN);
 
 			///// TOGGLE controls
+			// intake lift
+			bool X_new_press = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X);
+			// mogo mech
 			bool L2_new_press = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2);
+			// slapper
+			bool Y_new_press = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y);
 
 
 			/**
 			* ARM
 			*/
-			if (UP_pressed == DOWN_pressed) {
-				arm.brake();
-			} else if (UP_pressed) {
-				arm.arm_up();
-			} else if (DOWN_pressed) {
-				arm.arm_down();
-			}
+			// if (UP_pressed == DOWN_pressed) {
+			// 	arm.brake();
+			// } else if (UP_pressed) {
+			// 	arm.arm_up();
+			// } else if (DOWN_pressed) {
+			// 	arm.arm_down();
+			// }
 
 
 			/**
@@ -232,20 +243,34 @@ void opcontrol() {
 			} else if (R1_pressed) {
 				// intaking
 
-				intake.intake();
+				intake.outtake();
 			} else if (R2_pressed) {
 				// outtaking
 
-				intake.outtake();
+				intake.intake();
+			}
+
+			/**
+			 * INTAKE LIFT:
+			 */
+			if (X_new_press) {
+				intake.toggle();
 			}
 
 
 			/**
-			* MOGO:
-			*/
+			 * MOGO:
+			 */
 
 			if (L2_new_press) {
 				mogo.toggle();
+			}
+
+			/**
+			 * SLAPPER:
+			 */
+			if (Y_new_press) {
+				slapper.toggle();
 			}
 
 

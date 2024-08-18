@@ -1,10 +1,10 @@
 #include "tuning_cli.hpp"
 
 lemlib::MoveToPointParams linearPIDTestMoveToPointParams = {
-	forwards: false
-	, maxSpeed: 127
-	, minSpeed: 0
-	, earlyExitRange: 0
+	.forwards = false
+	, .maxSpeed = 127
+	, .minSpeed = 0
+	, .earlyExitRange = 0
 };
 
 namespace TuningCLI {
@@ -106,6 +106,9 @@ void tuningCLI() {
 	lemlib::PID* pid = &(TuningCLI::runningLinearPIDTest ? chassis.lateralPID
 											  : chassis.angularPID);
 
+	// informs user what MODE they're tuning
+	std::cout << "currently tuning " << (TuningCLI::runningLinearPIDTest ? "LINEAR" : "ANGULAR") << " PID!" << std::endl << std::endl;
+
 	while (TuningCLI::tuningPID) {
 		try {
 			// informs user they can start typing command
@@ -190,14 +193,14 @@ void tuningCLI() {
 					continue;
 				}
 
-				std::string whatInfo = params.at(2);
+				std::string whatInfo = params.at(1);
 
 				if (whatInfo == "mode") {
 					std::cout << " | currently tuning " << (TuningCLI::runningLinearPIDTest ? "LINEAR" : "ANGULAR") << " PID" << std::endl;
 				
 				} else if (whatInfo == "p") {
 					std::cout << " | kP: " << pid->kP << std::endl;
-				
+
 				} else if (whatInfo == "i") {
 					std::cout << " | kI: " << pid->kI << std::endl;
 				
@@ -221,16 +224,15 @@ void tuningCLI() {
 				// resets position before runs, in case test auton is being run multiple times
 				chassis.setPose(0, 0, 0);
 
-				switch (TuningCLI::runningLinearPIDTest) {
-					// running linear PID test
-					case true:
-						chassis.moveToPoint(0, -24, 3000, linearPIDTestMoveToPointParams, false);
-						
-						break;
-					default:
-						chassis.turnToHeading(90, 1500, {}, false);
+				// running linear PID test
+				if (TuningCLI::runningLinearPIDTest) {
+					chassis.moveToPoint(0, -24, 3000, linearPIDTestMoveToPointParams, false);
+				
+				// running angular PID test
+				} else {
+					chassis.turnToHeading(90, 1500, {}, false);
 
-						pros::delay(1000);
+					pros::delay(1000);
 				}
 			
 			} else if (command == "stop") {
@@ -248,7 +250,7 @@ void tuningCLI() {
 				std::cout << "| not a valid command..." << std::endl;
 			}
 		} catch (std::exception e) {
-			std::cout << " | something went wrong: " << e.what() << std::endl;
+			std::cout << " | something went wrong. please remove the try/catch statements and manually catch the error!" << std::endl;
 		}
 	}
 }

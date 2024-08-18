@@ -46,6 +46,7 @@
 #include "arm.hpp"
 #include "intake.hpp"
 #include "mogo.hpp"
+#include "slapper.hpp"
 #include "tuning_cli.hpp"
 
 #include "util.hpp"
