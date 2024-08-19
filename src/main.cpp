@@ -31,7 +31,6 @@ bool usingPhysicalPIDTuner = false;
 // PID is being tuned
 bool runningLinearPIDTest = false;
 
-
 /**
  * RUNTIME VARS: (**DO NOT MODIFY**)
 */
@@ -63,6 +62,8 @@ pros::Controller controller(pros::E_CONTROLLER_MASTER);
 /**
  * NOTE: The mogo mech is the front of the robot, from a driving perspective and an auton perspective
  */
+// 14.7 inches width
+// 16.6 inches length
 pros::Motor left_front(-2);
 pros::Motor left_mid(-3);
 pros::Motor left_back(-1);
