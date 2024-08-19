@@ -12,11 +12,11 @@ Intake::Intake(
 }
 
 void Intake::intake() {
-    intake_motors.move(127);
+    intake_motors.move(-127);
 }
 
 void Intake::outtake() {
-    intake_motors.move(-127);
+    intake_motors.move(127);
 }
 
 void Intake::brake() {

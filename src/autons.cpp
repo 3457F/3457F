@@ -11,7 +11,22 @@
 #define waitd chassis.waitUntilDone()
 
 void red_right_side() {
+    chassis.setPose(-58.5, -35.719, 90);
 
+    chassis.moveToPoint(-20.019, -36.498, TO);
+    waitd;
+    chassis.swingToHeading(135, DriveSide::RIGHT, 650);
+    waitd;
+    chassis.moveToPoint(-9.105, -42.929, 500);
+    waitd;
+    mogo.toggle();
+
+    pros::delay(100);
+
+    intake.intake();
+    chassis.turnToPoint(-23.332, -47.217, TO, {false});
+    waitd;
+    chassis.moveToPoint(-23.332, -47.217, TO, {false});
 };
 
 void red_left_side(){    
@@ -33,5 +48,5 @@ void red_left_side(){
     pros::delay(250);
 
     // move to second set of rings
-    
+
 };
