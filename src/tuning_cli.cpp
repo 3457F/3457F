@@ -109,6 +109,7 @@ void tuningCLI() {
 	// informs user what MODE they're tuning
 	std::cout << "currently tuning " << (TuningCLI::runningLinearPIDTest ? "LINEAR" : "ANGULAR") << " PID!" << std::endl << std::endl;
 
+
 	while (TuningCLI::tuningPID) {
 		try {
 			// informs user they can start typing command

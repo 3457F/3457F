@@ -27,7 +27,7 @@ pros::Motor right_front(6);
 pros::Motor right_mid(12);
 pros::Motor right_back(5);
 
-pros::Imu imu(2);
+pros::Imu imu(10);
 
 // motor groups
 pros::MotorGroup left_motors({
