@@ -43,6 +43,7 @@
 #include "arm.hpp"
 #include "intake.hpp"
 #include "mogo.hpp"
+#include "slapper.hpp"
 
 extern lemlib::Chassis chassis;
 extern MogoMech mogo;
