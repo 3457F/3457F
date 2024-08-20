@@ -40,7 +40,7 @@ void red_left_side(){
     waitd;
 
     // go to first set of rings
-    chassis.moveToPose(-5.402, 34.245, 180, TO);
+    chassis.moveToPose(-7.156, 35.804, 175, TO);
     waitd;
 
     // start intaking rings
@@ -48,5 +48,15 @@ void red_left_side(){
     pros::delay(250);
 
     // move to second set of rings
+
+    // next two lines of code do Motion Chaining (Aarav's experiment)
+
+    chassis.moveToPose(-6, 56, 180, TO, {.minSpeed=72, .earlyExitRange=8});
+    
+    //gathering the two rings
+
+    chassis.moveToPose(-23.916, 35.025, 180, TO, {.minSpeed= 72, .earlyExitRange=8});
+
+
 
 };
