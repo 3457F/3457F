@@ -228,11 +228,11 @@ void competition_initialize() {
  * from where it left off.
  */
 void autonomous() {
-	// Run the selected autonomous function
-	selector.run_auton();
+	// Run the selected autonomous function - UNCOMMENT ONCE DONE TESTING AUTONS
+	// selector.run_auton();
 	chassis.setBrakeMode(pros::motor_brake_mode_e::E_MOTOR_BRAKE_BRAKE);
 
-	red_right_side();
+	red_left_side();
 
 	// calls the auton chosen in the auton selector
 	// autonMap[autonNames[curr_auton]]();
@@ -276,9 +276,9 @@ void opcontrol() {
 		* CONTROL FETCHING:
 		*/
 		///// HOLD controls
-		// outtake
-		bool R1_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1);
 		// intake
+		bool R1_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1);
+		// outtake
 		bool R2_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2);
 
 		// bool UP_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_UP);
@@ -312,11 +312,11 @@ void opcontrol() {
 		} else if (R1_pressed) {
 			// intaking
 
-			intake.outtake();
+			intake.intake();
 		} else if (R2_pressed) {
 			// outtaking
 
-			intake.intake();
+			intake.outtake();
 		}
 
 		/**
@@ -351,3 +351,5 @@ void opcontrol() {
 	
 	}
 }
+
+

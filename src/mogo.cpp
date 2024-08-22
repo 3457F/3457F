@@ -4,6 +4,7 @@
 MogoMech::MogoMech(
     std::uint8_t mogo_pistons_port
 ) : mogo_pistons(mogo_pistons_port, pros::E_ADI_DIGITAL_OUT) {
+    // ENABLES mogo mech
     mogo_pistons.set_value(true);
 };
 
