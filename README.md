@@ -1,0 +1,1 @@
+If ever needed, go to (https://drive.google.com/drive/u/0/folders/1ivq0dIdll-lTTqlfLnoHIUXu5DD_ElJB), this is where all the path generation happens. Or else go to Pathjerryio (https://path.jerryio.com/) to create a new path! Also lemlib docs - (https://lemlib.readthedocs.io/en/stable/index.html). 
