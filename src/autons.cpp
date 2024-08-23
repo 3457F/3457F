@@ -56,7 +56,7 @@ void blue_left_side() {
     // 6.778 -41.663 -> mogo mech slips OFF of mogo
     chassis.turnToPoint(6, -42.441, 500);
     waitd;
-    chassis.moveToPoint(6, -42.441, 750);
+    chassis.moveToPoint(6, -42.441, 2000, {.maxSpeed = 72});
     waitd;
     // toggles mogo mech and waits for it to fully retract
     mogo.toggle();
