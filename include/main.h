@@ -41,6 +41,7 @@
 #include "autons.hpp"
 
 #include "arm.hpp"
+#include "hang.hpp"
 #include "intake.hpp"
 #include "mogo.hpp"
 #include "slapper.hpp"
@@ -48,6 +49,7 @@
 extern lemlib::Chassis chassis;
 extern MogoMech mogo;
 extern Intake intake;
+extern Slapper slapper;
 
 /**
  * If you find doing pros::Motor() to be tedious and you'd prefer just to do

@@ -42,6 +42,31 @@
 //     , .earlyExitRange = 0
 // };
 
+// "same" scenario as red right side; mirrored
+void blue_left_side() {
+    // WORKS PERFECTLY (hits the ring a bit but this calibration is amazing)
+    // x: 61.638 ; robot at BACK of tile
+    chassis.setPose(55.597, -36.303, 270);
+
+    // GOING TO CAPTURE MIDDLE MOGO
+    // x: 11.358; hits the mogo a bit
+    chassis.moveToPose(12, -35.719, 270, 1500);
+    waitd;
+    // 0.542 -47.704 -> goes WAYYY too far
+    // 6.778 -41.663 -> mogo mech slips OFF of mogo
+    chassis.turnToPoint(6, -42.441, 500);
+    waitd;
+    chassis.moveToPoint(6, -42.441, 750);
+    waitd;
+    // toggles mogo mech and waits for it to fully retract
+    mogo.toggle();
+    pros::delay(500);
+
+    // instantly starts intake, and waits for preload to be fully scored
+    intake.intake();
+    pros::delay(500);
+};
+
 void red_right_side() {
     chassis.setPose(-58.5, -35.719, 90);
 
@@ -71,10 +96,12 @@ void red_left_side(){
     // chassis.turnToPoint(-30.25, 25.378, TO);
     // old pt -30.25, 25.378
     // moved up and a BIT left -30.25, 27.522
-    // MOVED FORWARD -29.471; 27.132
-    chassis.swingToPoint(-27.717, 26.158, DriveSide::LEFT, TO);
+
+    // MOVED FORWARD -29.471; 27.132 -> one that works good but still not reliable
+    // -24.306, 22.552
+    chassis.swingToPoint(-24.306, 22.552, DriveSide::LEFT, TO);
     waitd;
-    chassis.moveToPoint(-27.717, 26.158, TO);
+    chassis.moveToPoint(-24.306, 22.552, TO, {.maxSpeed = 100});
     waitd;
     // captures mogo
     mogo.toggle();
@@ -84,28 +111,63 @@ void red_left_side(){
     // starts intake
     intake.intake();
     // waits for preload ring to go in
-    pros::delay(250);
+    pros::delay(500);
 
     // moves into first set of rings, aims to intake just one ring
     // chassis.moveToPose(-3.746, 51.493, 180, 12000, {.forwards = false});
     // chassis.moveToPose(-3.746, 52, 180, 12000, {.forwards = false});
     // change timeout; might be too big but not affecting auton rn
-    // TRY NOT TO TURN WHILE INTAKING PRELOAD
-    chassis.moveToPose(-3.746, 52, 180, 2500, {.forwards = false, .minSpeed = 72, .earlyExitRange = 10});
+    // at 2000ms timeout it works fine!!!
+    // old: -3.746, 52
+    chassis.moveToPose(-5.597, 52, 180, 2000, {.forwards = false, .minSpeed = 72, .earlyExitRange = 10});
     waitd;
     // moves further forward, getting second ring
     // change timeout; might be too big but not affecting auton rn
-    chassis.moveToPoint(-4.25, 60, 2000, {.forwards = false});
+    // IF WANT TO IMPROVE TIME HERE, MOVE BACKWARDS WHILE INTAKING hopefully might work? but dont want to move while intaking... think about it
+    // old: -4.25, 61
+    chassis.moveToPoint(-7.597, 61, 1000, {.forwards = false});
     waitd;
+
+    // wait for the second ring to be intaked
+    pros::delay(1000);
 
     intake.outtake();
     // chassis.moveToPoint(-8.91, 45.744, 2500);
 
     // moves all the way back from the ring, in prep to turn to third ring
     chassis.moveToPoint(-13, 30.153, 2500);
+    waitd;
     // chassis.turnToPoint(-23.332, 46.718, 1000, {.forwards = false});
     chassis.turnToPoint(-22.552, 48.082, 1000, {.forwards = false});
+    waitd;
+
+    // resume intaking (to get fourth ring!)
+    intake.intake();
+    // move towards fourth ring and intake it
     chassis.moveToPoint(-22.552, 48.082, 1500, {.forwards = false});
+    waitd;
+    // wait a bit and then move backwards, just in case blue ring is intaked
+    pros::delay(500);
+    chassis.moveToPoint(-18.265, 37.948, 500);
+    waitd;
+
+    // turn towards last ring
+    chassis.turnToPoint(-48, 0, 750, {.forwards = false});
+    waitd;
+    // release mogo
+    mogo.toggle();
+    // wait a bit to make sure mogo mech is fully opened
+    pros::delay(500);
+    // moves forward so NOT contacting mogo
+    chassis.moveToPoint(-36.974, 22.942, 750, {.forwards = false});
+    waitd;
+
+    // MOGO OPEN AT END OF AUTON
+
+
+    /**
+     * NON-TUNED CODE BELOW!
+     */
 
     // REVERSE INTAKE WHILE MOVING BACK
     // REVERSE INTAKE WHILE MOVING BACK

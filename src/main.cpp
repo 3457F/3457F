@@ -167,6 +167,10 @@ MogoMech mogo = MogoMech('A');
 
 // Arm arm = Arm(10, pros::E_MOTOR_BRAKE_HOLD);
 
+Slapper slapper = Slapper('C');
+
+Hang hang = Hang('D');
+
 rd::Selector selector({
     {"Red right side AWP", &red_right_side},
     {"Red left side AWP", &red_left_side},
@@ -232,7 +236,7 @@ void autonomous() {
 	// selector.run_auton();
 	chassis.setBrakeMode(pros::motor_brake_mode_e::E_MOTOR_BRAKE_BRAKE);
 
-	red_left_side();
+	blue_left_side();
 
 	// calls the auton chosen in the auton selector
 	// autonMap[autonNames[curr_auton]]();
@@ -289,6 +293,10 @@ void opcontrol() {
 		bool X_new_press = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X);
 		// mogo mech
 		bool L2_new_press = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2);
+		// toggle slapper
+		bool Y_new_press = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y);
+		// toggle hang
+		bool DOWN_new_press = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN);
 
 		/**
 			* ARM
@@ -301,10 +309,16 @@ void opcontrol() {
 		// 		arm.arm_down();
 		// }
 
+		/**
+		 * HANG:
+		 */
+		if (DOWN_new_press) {
+			hang.toggle();
+		}
 
 		/**
 		 * INTAKE:
-		*/
+		 */
 		if (R1_pressed == R2_pressed) {
 			// if both controls are pressed or depressed, brake (stop) the intake
 
@@ -329,10 +343,17 @@ void opcontrol() {
 
 		/**
 		 * MOGO:
-		*/
+		 */
 
 		if (L2_new_press) {
 			mogo.toggle();
+		}
+
+		/**
+		 * SLAPPER:
+	     */
+		if (Y_new_press) {
+			slapper.toggle();
 		}
 
 		/**
