@@ -10,39 +10,6 @@
 #define TO 1200 // default timeout for when im lazy to specify
 #define waitd chassis.waitUntilDone()
 
-// lemlib::TurnToPointParams turnWithIntake = {
-//     .forwards = false
-//     , .direction = lemlib::AngularDirection::AUTO
-//     , .maxSpeed = 127
-//     , .minSpeed = 0
-//     , .earlyExitRange = 0
-// };
-
-// lemlib::SwingToPointParams swingWithIntake = {
-//     .forwards = false
-//     , .direction = lemlib::AngularDirection::AUTO
-//     , .maxSpeed = 127
-//     , .minSpeed = 0
-//     , .earlyExitRange = 0
-// };
-
-// lemlib::MoveToPointParams moveWithIntake = {
-//     .forwards = false
-//     , .maxSpeed = 127
-//     , .minSpeed = 0
-//     , .earlyExitRange = 0
-// };
-
-// lemlib::MoveToPoseParams moveWithIntakePose = {
-//     .forwards = false
-//     , .horizontalDrift = 5
-//     , .lead = 0.6
-//     , .maxSpeed = 127
-//     , .minSpeed = 0
-//     , .earlyExitRange = 0
-// };
-
-// "same" scenario as red right side; mirrored
 void blue_left_side() {
     // WORKS PERFECTLY (hits the ring a bit but this calibration is amazing)
     // x: 61.638 ; robot at BACK of tile
@@ -67,6 +34,8 @@ void blue_left_side() {
     pros::delay(500);
 };
 
+
+
 void red_right_side() {
     chassis.setPose(-58.5, -35.719, 90);
 
@@ -85,6 +54,8 @@ void red_right_side() {
     waitd;
     chassis.moveToPoint(-23.332, -47.217, TO, {false});
 };
+
+
 
 void red_left_side(){    
     std::cout << "Running left side auton" << std::endl;
@@ -162,6 +133,50 @@ void red_left_side(){
     chassis.moveToPoint(-36.974, 22.942, 750, {.forwards = false});
     waitd;
 
+};
+
+
+
+
+
+
+//Old programs stuff down here
+
+// lemlib::TurnToPointParams turnWithIntake = {
+//     .forwards = false
+//     , .direction = lemlib::AngularDirection::AUTO
+//     , .maxSpeed = 127
+//     , .minSpeed = 0
+//     , .earlyExitRange = 0
+// };
+
+// lemlib::SwingToPointParams swingWithIntake = {
+//     .forwards = false
+//     , .direction = lemlib::AngularDirection::AUTO
+//     , .maxSpeed = 127
+//     , .minSpeed = 0
+//     , .earlyExitRange = 0
+// };
+
+// lemlib::MoveToPointParams moveWithIntake = {
+//     .forwards = false
+//     , .maxSpeed = 127
+//     , .minSpeed = 0
+//     , .earlyExitRange = 0
+// };
+
+// lemlib::MoveToPoseParams moveWithIntakePose = {
+//     .forwards = false
+//     , .horizontalDrift = 5
+//     , .lead = 0.6
+//     , .maxSpeed = 127
+//     , .minSpeed = 0
+//     , .earlyExitRange = 0
+// };
+
+// "same" scenario as red right side; mirrored
+
+
     // MOGO OPEN AT END OF AUTON
 
 
@@ -217,4 +232,3 @@ void red_left_side(){
 
     // // stops intake
     // intake.brake();
-};
