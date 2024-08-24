@@ -173,7 +173,7 @@ Hang hang = Hang('D');
 
 rd::Selector selector({
     {"Blue 5 ring", &blue_left_side},
-    {"Red 3 ring 2 mogo", &red_left_side},
+    {"Red 3 rings 2 mogos", &red_left_side},
 });
 
 // Create robodash console
