@@ -172,8 +172,8 @@ Slapper slapper = Slapper('C');
 Hang hang = Hang('D');
 
 rd::Selector selector({
-    {"Red right side AWP", &red_right_side},
-    {"Red left side AWP", &red_left_side},
+    {"Blue 5 ring", &blue_left_side},
+    {"Red 3 ring 2 mogo", &red_left_side},
 });
 
 // Create robodash console
