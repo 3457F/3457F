@@ -167,7 +167,7 @@ MogoMech mogo = MogoMech('A');
 
 // Arm arm = Arm(10, pros::E_MOTOR_BRAKE_HOLD);
 
-Slapper slapper = Slapper('C');
+Slapper slapper = Slapper('E');
 
 Hang hang = Hang('D');
 

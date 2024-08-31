@@ -7,7 +7,7 @@
 #include "pros/rtos.hpp"
 #include <ctime>
 
-#define TO 1200 // default timeout for when im lazy to specify
+#define TO 300 // default timeout for when im lazy to specify
 #define waitd chassis.waitUntilDone()
 
 void blue_left_side() {
@@ -135,6 +135,84 @@ void red_left_side(){
 
 };
 
+
+void blue_right_side(){    
+    std::cout << "Running right side auton" << std::endl;
+    
+    // start position (as per initial path) -> X: -59.386, 30.348
+    chassis.setPose(55.293, 40.092, 270);
+
+
+    // go to mogo
+    // chassis.turnToPoint(-30.25, 25.378, TO);
+    // old pt -30.25, 25.378
+    // moved up and a BIT left -30.25, 27.522
+
+    // MOVED FORWARD -29.471; 27.132 -> one that works good but still not reliable
+    // -24.306, 22.552
+    chassis.swingToPoint(24.306, 22.552, DriveSide::LEFT, TO);
+    waitd;
+    chassis.moveToPoint(24.306, 22.552, TO, {.maxSpeed = 100});
+    waitd;
+    // captures mogo
+    mogo.toggle();
+    // wait for mogo mech to fully retract
+    pros::delay(500);
+
+    // starts intake
+    intake.intake();
+    // waits for preload ring to go in
+    pros::delay(500);
+
+    // moves into first set of rings, aims to intake just one ring
+    // chassis.moveToPose(-3.746, 51.493, 180, 12000, {.forwards = false});
+    // chassis.moveToPose(-3.746, 52, 180, 12000, {.forwards = false});
+    // change timeout; might be too big but not affecting auton rn
+    // at 2000ms timeout it works fine!!!
+    // old: -3.746, 52
+    chassis.moveToPose(5.597, 52, 0, 2000, {.forwards = false, .minSpeed = 72, .earlyExitRange = 10});
+    waitd;
+    // moves further forward, getting second ring
+    // change timeout; might be too big but not affecting auton rn
+    // IF WANT TO IMPROVE TIME HERE, MOVE BACKWARDS WHILE INTAKING hopefully might work? but dont want to move while intaking... think about it
+    // old: -4.25, 61
+    chassis.moveToPoint(7.597, 61, 1000, {.forwards = false});
+    waitd;
+
+    // wait for the second ring to be intaked
+    pros::delay(1000);
+
+    intake.outtake();
+    // chassis.moveToPoint(-8.91, 45.744, 2500);
+
+    // moves all the way back from the ring, in prep to turn to third ring
+    chassis.moveToPoint(13, 30.153, 2500);
+    waitd;
+    // chassis.turnToPoint(-23.332, 46.718, 1000, {.forwards = false});
+    chassis.turnToPoint(22.552, 48.082, 1000, {.forwards = false});
+    waitd;
+
+    // resume intaking (to get fourth ring!)
+    intake.intake();
+    // move towards fourth ring and intake it
+    chassis.moveToPoint(22.552, 48.082, 1500, {.forwards = false});
+    waitd;
+    // wait a bit and then move backwards, just in case blue ring is intaked
+    pros::delay(500);
+    chassis.moveToPoint(18.265, 37.948, 500);
+    waitd;
+
+    // turn towards last ring
+    chassis.turnToPoint(48, 0, 750, {.forwards = false});
+    waitd;
+    // release mogo
+    mogo.toggle();
+    // wait a bit to make sure mogo mech is fully opened
+    pros::delay(500);
+    // moves forward so NOT contacting mogo
+    chassis.moveToPoint(36.974, 22.942, 750, {.forwards = false});
+    waitd;
+};
 
 
 
