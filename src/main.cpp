@@ -167,7 +167,7 @@ MogoMech mogo = MogoMech('A');
 
 // Arm arm = Arm(10, pros::E_MOTOR_BRAKE_HOLD);
 
-Slapper slapper = Slapper('E');
+Doinker doinker = Doinker('E');
 
 Hang hang = Hang('D');
 
@@ -236,7 +236,7 @@ void autonomous() {
 	// selector.run_auton();
 	chassis.setBrakeMode(pros::motor_brake_mode_e::E_MOTOR_BRAKE_BRAKE);
 
-	blue_left_side();
+	red_left_side();
 
 	// calls the auton chosen in the auton selector
 	// autonMap[autonNames[curr_auton]]();
@@ -353,7 +353,7 @@ void opcontrol() {
 		 * SLAPPER:
 	     */
 		if (Y_new_press) {
-			slapper.toggle();
+			doinker.toggle();
 		}
 
 		/**

@@ -44,12 +44,12 @@
 #include "hang.hpp"
 #include "intake.hpp"
 #include "mogo.hpp"
-#include "slapper.hpp"
+#include "doinker.hpp"
 
 extern lemlib::Chassis chassis;
 extern MogoMech mogo;
 extern Intake intake;
-extern Slapper slapper;
+extern Doinker doinker;
 
 /**
  * If you find doing pros::Motor() to be tedious and you'd prefer just to do
