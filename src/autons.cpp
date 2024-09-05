@@ -101,7 +101,7 @@ void red_left_side(){
     // change timeout; might be too big but not affecting auton rn
     // at 2000ms timeout it works fine!!!
     // old: -3.746, 52
-    chassis.moveToPose(-3, 52, 180, 750, {.forwards = false, .horizontalDrift = 2, .lead = 0.2, .minSpeed = 80w, .earlyExitRange = 10});
+    chassis.moveToPose(-3, 52, 180, 750, {.forwards = false, .horizontalDrift = 2, .lead = 0.2, .minSpeed = 80, .earlyExitRange = 10});
     waitd;
     // moves further forward, getting second ring
     // change timeout; might be too big but not affecting auton rn
