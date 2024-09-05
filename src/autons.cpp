@@ -75,16 +75,11 @@ void red_left_side(){
     // start position (as per new path) -> X: -55.293, 40.092
     chassis.setPose(-55.25, 40, 90);
 
-    // go to mogo
-    // chassis.turnToPoint(-30.25, 25.378, TO);
-    // old pt -30.25, 25.378
-    // moved up and a BIT left -30.25, 27.522
-
-    // MOVED FORWARD -29.471; 27.132 -> one that works good but still not reliable
-    // FINAL: -24.306, 22.552
+    // SWINGS towards mogo
     chassis.swingToPoint(-24.25, 22.5, DriveSide::RIGHT, 750);
     waitd;
     // NOTE: can probably work with .maxSpeed = 100, but better to err on the side of caution
+    // goes aggressively towards mogo (OVERSHOOTS A BIT TO FORCE MOGO INTO CORRECT ORIENTATION)
     chassis.moveToPoint(-24.25, 22.5, 750, {.maxSpeed = 90});
     waitd;
     // captures mogo
@@ -100,38 +95,66 @@ void red_left_side(){
     // moves into FIRST SET OF RINGS, aims to intake just one ring
     // change timeout; might be too big but not affecting auton rn
     // at 2000ms timeout it works fine!!!
-    // old: -3.746, 52
-    chassis.moveToPose(-3, 52, 180, 750, {.forwards = false, .horizontalDrift = 2, .lead = 0.2, .minSpeed = 80w, .earlyExitRange = 10});
-    waitd;
-    // moves further forward, getting second ring
-    // change timeout; might be too big but not affecting auton rn
-    // IF WANT TO IMPROVE TIME HERE, MOVE BACKWARDS WHILE INTAKING hopefully might work? but dont want to move while intaking... think about it
-    // old: -4.25, 61
-    chassis.moveToPoint(-3.5, 61, 750, {.forwards = false, .maxSpeed = 72});
+    
+    chassis.moveToPose(-5.6, 52, 180, 2000, {.forwards = false, .minSpeed = 72, .earlyExitRange = 10});
     waitd;
 
-    // wait for the second ring to be intaked
+    // moves FURTHER, to get the second ring in the set -> THIS ONE IS MOST INACCURATE!
+    // CAN TUNE TIMEOUT HERE
+    // OVERSHOOTS BY A LOT TO MAKE SURE RING GOTTEN!
+    chassis.moveToPoint(-7.6, 61, 1000, {.forwards = false, .minSpeed = 72});
+    waitd;
+
+    // wait a bit more for the second ring to be intaked, in case the moveToPoint function already finished before 1000ms timeout
+    // CAN TUNE TIMEOUT HERE
     pros::delay(1000);
 
+    // we do NOT want the blue rings to get in; stop just in case the blue ring does a funny
     intake.outtake();
     // chassis.moveToPoint(-8.91, 45.744, 2500);
 
     // moves all the way back from the ring, in prep to turn to third ring
-    chassis.moveToPoint(-13, 30.153, 750);
+    chassis.moveToPoint(-13, 30, 750);
     waitd;
-    // // chassis.turnToPoint(-23.332, 46.718, 1000, {.forwards = false});
-    // chassis.turnToPoint(-22.552, 48.082, 750, {.forwards = false});
+
+    // turns towards fourth ring
+    chassis.turnToPoint(-18, 50, 1000, {.forwards = false});
+    waitd;
+
+    // resume intaking (to get fourth ring!)
+    intake.intake();
+    // move towards fourth ring and intake it
+    chassis.moveToPoint(-18, 50, 750, {.forwards = false, .maxSpeed = 72});
+    waitd;
+    // wait a bit to intake the ring, and then move in preparation to touch the ladder
+    pros::delay(1250);
+    // turns on outtake so blue ring doesn't get intaked on accident
+    intake.outtake();
+    // moves towards a position where it can prepare to turn towards the ladder
+    chassis.moveToPoint(-24.25, 22.5, 1250);
+    waitd;
+
+    // turns towards ladder (backwards)
+    chassis.turnToPoint(-11.5, 9.5, 1250, {.forwards = false});
+    waitd;
+
+    // releases mogo
+    mogo.toggle();
+    // waits a bit for mogo mech to fully open
+    pros::delay(500);
+    // STOPS intake incase rings get stuck
+    intake.brake();
+    // moves towards ladder AND turns 
+    // old: -12.5, 10.5
+    chassis.moveToPose(-11.5, 9.5, 135, 1250);
+    waitd;
+    // chassis.turnToPoint(-12.5, 10.5, 1250);
     // waitd;
 
-    // // resume intaking (to get fourth ring!)
-    // intake.intake();
-    // // move towards fourth ring and intake it
-    // chassis.moveToPoint(-22.552, 48.082, 750, {.forwards = false});
-    // waitd;
-    // // wait a bit and then move backwards, just in case blue ring is intaked
-    // pros::delay(1000);
-    // chassis.moveToPoint(-18.265, 37.948, 750);
-    // waitd;
+    // moves AND turns in preparation to hit the ladder
+
+
+    // moves towards
 
     // // turn towards last ring
     // chassis.turnToPoint(-48, 0, 750, {.forwards = false});
@@ -141,8 +164,10 @@ void red_left_side(){
     // // wait a bit to make sure mogo mech is fully opened
     // pros::delay(500);
     // // moves forward so NOT contacting mogo
-    // chassis.moveToPoint(-36.974, 22.942, 750, {.forwards = false});
+    // chassis.moveToPoint(-37, 23, 750, {.forwards = false});
     // waitd;
+
+
 };
 
 
