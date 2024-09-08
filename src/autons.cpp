@@ -5,6 +5,7 @@
 #include "pros/imu.h"
 #include "pros/rtos.h"
 #include "pros/rtos.hpp"
+#include <algorithm>
 #include <ctime>
 
 #define TO 300 // default timeout for when im lazy to specify
@@ -19,28 +20,37 @@ void blue_left_side() {
 
     // GOING TO CAPTURE MIDDLE MOGO
     // x: 11.358; hits the mogo a bit
-    // x: 12 -> works fine but crosses central barrier
-    chassis.moveToPose(17.399, -36.303, 270, TO);
+    chassis.moveToPose(41, -36.303, 270, 1800);
+
     waitd;
-    // 0.542 -47.704 -> goes WAYYY too far
-    // 6.778 -41.663 -> mogo mech slips OFF of mogo
-    chassis.turnToPoint(5.511, -44.294, TO);
-    waitd;
-    chassis.moveToPose(5.511, -44.294, 235, TO, {.maxSpeed = 72});
-    waitd;
-    // toggles mogo mech and waits for it to fully retract
+
+    chassis.turnToHeading(305, 1200);
+
+    waitd; 
+
+    chassis.moveToPoint(27, -26, TO);
+
     mogo.toggle();
-    // might need to reduce timeout to reduce chances of crossing autonomous line
-    pros::delay(500);
 
-    // starts moving while leaving the premises so less chance of being caught crossing the autonomous barrier
-    chassis.moveToPose(17.399, -36.303, 235, TO, {.forwards = false});
-    // move waitd down so intake runs while moving back...?
-    waitd;
+    // 0.542 -47.704 -> goes WAYYY too far
+    // // 6.778 -41.663 -> mogo mech slips OFF of mogo
+    // chassis.turnToPoint(5.511, -44.294, TO);
+    // waitd;
+    // chassis.moveToPose(5.511, -44.294, 235, TO, {.maxSpeed = 72});
+    // waitd;
+    // // toggles mogo mech and waits for it to fully retract
+    // mogo.toggle();
+    // // might need to reduce timeout to reduce chances of crossing autonomous line
+    // pros::delay(500);
 
-    // instantly starts intake, and waits for preload to be fully scored
-    intake.intake();
-    pros::delay(500);
+    // // starts moving while leaving the premises so less chance of being caught crossing the autonomous barrier
+    // chassis.moveToPose(17.399, -36.303, 235, TO, {.forwards = false});
+    // // move waitd down so intake runs while moving back...?
+    // waitd;
+
+    // // instantly starts intake, and waits for preload to be fully scored
+    // intake.intake();
+    // pros::delay(500);
 
     
 };
