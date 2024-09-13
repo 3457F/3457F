@@ -160,20 +160,24 @@ Intake intake = Intake(
 	}
 	, pros::E_MOTOR_BRAKE_HOLD	// brake mode of intake
 
-	, 'B'						// intake piston port
+	// was B
+	, 'E'						// intake piston port
 );
 
 MogoMech mogo = MogoMech('A');
 
 // Arm arm = Arm(10, pros::E_MOTOR_BRAKE_HOLD);
 
-Doinker doinker = Doinker('E');
+// was E
+Doinker doinker = Doinker('B');
 
 Hang hang = Hang('D');
 
 rd::Selector selector({
-    {"Blue 5 ring", &blue_left_side},
-    {"Red 3 rings 2 mogos", &red_left_side},
+    {.name="BLUE LEFT (3 ring)", .action=&blue_left_side},
+	{.name = "BLUE RIGHT (4 ring)", .action=&blue_right_side},
+    {.name="RED LEFT (4 ring)", .action=&red_left_side},
+	{.name="RED RIGHT (3 ring)", .action=&red_right_side}
 });
 
 // Create robodash console
