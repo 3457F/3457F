@@ -264,9 +264,82 @@ void red_right_side() {
     waitd;
 }
 
-void red_left_side() {
-    // mogo starts automatically toggled open!
+// void red_left_side() {
+//     // mogo starts automatically toggled open!
 
+//     std::cout << "Running RED left side auton" << std::endl;
+    
+//     // starts at the SECOND-TO-LEFT tile from the top left, at the TOP RIGHT corner, facing RIGHT
+//     chassis.setPose(-55.25, 40, 90);
+
+//     // SWINGS towards mogo
+//     chassis.swingToPoint(-24.25, 22.5, DriveSide::RIGHT, 750);
+//     waitd;
+//     // NOTE: can probably work with .maxSpeed = 100, but better to err on the side of caution
+//     // goes aggressively towards mogo (OVERSHOOTS A BIT TO FORCE MOGO INTO CORRECT ORIENTATION)
+//     chassis.moveToPoint(-24.25, 22.5, 750, {.maxSpeed = 70});
+//     waitd;
+//     // captures mogo
+//     mogo.toggle();
+//     // wait for mogo mech to fully retract
+//     pros::delay(500);
+
+//     // starts intake
+//     intake.intake();
+//     // waits for preload ring to go in
+//     pros::delay(500);
+
+//     // moves into FIRST SET OF RINGS, aims to intake just one ring
+//     chassis.moveToPose(-5.6, 52, 180, 2000, {.forwards = false, .minSpeed = 72, .earlyExitRange = 10});
+//     waitd;
+
+//     // moves FURTHER, to get the second ring in the set -> THIS ONE IS MOST INACCURATE; moving SLOWLY
+//     // OVERSHOOTS BY A LOT TO MAKE SURE RING GOTTEN!
+//     chassis.moveToPoint(-7.6, 61, 1000, {.forwards = false, .minSpeed = 40});
+//     waitd;
+
+//     // wait a bit more for the second ring to be intaked, in case the moveToPoint function already finished before 1000ms timeout
+//     pros::delay(1000);
+
+//     // we do NOT want the blue rings to get in; stop just in case the blue ring does a funny
+//     intake.brake();
+
+//     // moves all the way back from the ring, in prep to turn to third ring
+//     chassis.moveToPoint(-13, 30, 750);
+//     waitd;
+
+//     // turns towards fourth ring
+//     chassis.turnToPoint(-19, 51, 1000, {.forwards = false});
+//     waitd;
+
+//     // resume intaking (to get fourth ring!)
+//     intake.intake();
+//     // move towards fourth ring and intake it
+//     // -18, 50
+//     chassis.moveToPoint(-19, 51, 1250, {.forwards = false, .maxSpeed = 60});
+//     waitd;
+//     // wait a bit to intake the ring, and then move in preparation to touch the ladder
+//     pros::delay(1250);
+//     // turns on outtake so blue ring doesn't get intaked on accident
+//     intake.brake();
+
+//     // turns MOGO away from ladder
+//     chassis.turnToPoint(-9, 12, 750, {.forwards = false});
+//     // releases mogo
+//     mogo.toggle();
+//     // waits a bit for mogo mech to fully open
+//     pros::delay(500);
+
+//     // STOPS intake incase rings get stuck
+//     intake.brake();
+//     // MOVES and turns so it will be facing towards ladder yes yes
+//     // -11, 9
+//     chassis.moveToPose(-9, 12, 135, 2500, {.lead = 0.7, .minSpeed = 80});
+//     waitd;
+// };
+
+// FROM SEP 5 COMMIT
+void red_left_side() { 
     std::cout << "Running RED left side auton" << std::endl;
     
     // starts at the SECOND-TO-LEFT tile from the top left, at the TOP RIGHT corner, facing RIGHT
@@ -277,7 +350,7 @@ void red_left_side() {
     waitd;
     // NOTE: can probably work with .maxSpeed = 100, but better to err on the side of caution
     // goes aggressively towards mogo (OVERSHOOTS A BIT TO FORCE MOGO INTO CORRECT ORIENTATION)
-    chassis.moveToPoint(-24.25, 22.5, 750, {.maxSpeed = 70});
+    chassis.moveToPoint(-24.25, 22.5, 750, {.maxSpeed = 90});
     waitd;
     // captures mogo
     mogo.toggle();
@@ -319,9 +392,11 @@ void red_left_side() {
     chassis.moveToPoint(-19, 51, 1250, {.forwards = false, .maxSpeed = 60});
     waitd;
     // wait a bit to intake the ring, and then move in preparation to touch the ladder
+    // changed 1250 -> 1000 ON FRI
     pros::delay(1250);
     // turns on outtake so blue ring doesn't get intaked on accident
-    intake.brake();
+    // changed brake -> outtake ON FRI
+    intake.outtake();
 
     // turns MOGO away from ladder
     chassis.turnToPoint(-9, 12, 750, {.forwards = false});
@@ -337,6 +412,7 @@ void red_left_side() {
     chassis.moveToPose(-9, 12, 135, 2500, {.lead = 0.7, .minSpeed = 80});
     waitd;
 };
+
 
 
 void blue_right_side(){    
