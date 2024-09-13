@@ -367,7 +367,8 @@ void blue_right_side(){
     // chassis.turnToPoint(23, 20.5, 500);
     // moves towards that slightly off angle point, so that the robot
     // hits the mogo correctly
-    chassis.moveToPoint(23, 20.5, 750);
+    // CORRECTION ON FRIDAY -> tried to set minSpeed HIGHER so it moves faster...?
+    chassis.moveToPoint(23, 20.5, 750, {.minSpeed = 80});
     /**
       * OLD MOGO GETTING SOLUTION */
     // // goes aggressively towards mogo (OVERSHOOTS A BIT TO FORCE MOGO INTO CORRECT ORIENTATION)
@@ -376,7 +377,7 @@ void blue_right_side(){
     // chassis.moveToPoint(24.25, 22.5, 1000, {.maxSpeed = 60});
     // waits for LESS time than the motion takes to complete (so that the mogo can toggle WHILE the 
     // bot is moving!)
-    pros::delay(750);
+    pros::delay(500);
     // captures mogo
     mogo.toggle();
     // waits for the rest of the movement to run
