@@ -48,6 +48,7 @@
 
 extern lemlib::Chassis chassis;
 extern MogoMech mogo;
+extern Hang hang;
 extern Intake intake;
 extern Doinker doinker;
 

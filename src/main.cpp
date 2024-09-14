@@ -264,6 +264,9 @@ void autonomous() {
 
 
 void opcontrol() {
+	// bc hang open at end of some autons, just do this so yeah
+	hang.toggle();
+
 	// opcontrol runs forever! (while in driver control; it's its own task so we gucci)
 	while (true) {
 //		if (!tuningPID) {
@@ -293,8 +296,8 @@ void opcontrol() {
 		// bool DOWN_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN);
 
 		///// TOGGLE controls
-		// intake lift
-		bool X_new_press = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X);
+		// intake lift -> not using bc can just tip over a stack in driver control
+		// bool X_new_press = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X);
 		// mogo mech
 		bool L2_new_press = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2);
 		// toggle slapper
@@ -337,13 +340,13 @@ void opcontrol() {
 			intake.outtake();
 		}
 
-		/**
-		 * INTAKE LIFT: 
-		 */
+		// /**
+		//  * INTAKE LIFT: 
+		//  */
 		
-		if (X_new_press) {
-			intake.toggle();
-		}
+		// if (X_new_press) {
+		// 	intake.toggle();
+		// }
 
 		/**
 		 * MOGO:
