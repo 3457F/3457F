@@ -240,7 +240,7 @@ void autonomous() {
 	// selector.run_auton();
 	chassis.setBrakeMode(pros::motor_brake_mode_e::E_MOTOR_BRAKE_BRAKE);
 
-	red_left_side();
+	blue_right_side();
 
 	// calls the auton chosen in the auton selector
 	// autonMap[autonNames[curr_auton]]();
@@ -265,7 +265,7 @@ void autonomous() {
 
 void opcontrol() {
 	// bc hang open at end of some autons, just do this so yeah
-	hang.toggle();
+	// hang.toggle();
 
 	// opcontrol runs forever! (while in driver control; it's its own task so we gucci)
 	while (true) {
