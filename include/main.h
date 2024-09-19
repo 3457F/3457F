@@ -25,6 +25,7 @@
  * not convenient for most student programmers.
  */
 #include "lemlib/chassis/chassis.hpp"
+#include "pros/misc.hpp"
 #define PROS_USE_SIMPLE_NAMES
 
 /**
@@ -51,6 +52,7 @@
 
 #include "util.hpp"
 
+extern pros::Controller controller;
 extern MogoMech mogo;
 extern Intake intake;
 

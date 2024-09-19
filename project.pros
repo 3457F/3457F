@@ -301,7 +301,7 @@
       "icon": "pros",
       "description": "PID TUNER",
       "after": "none",
-      "slot": 2
+      "slot": 3
     },
     "use_early_access": false
   }

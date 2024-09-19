@@ -3,6 +3,7 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include <cstdio>
 
 #include "api.h"
 #include "lemlib/api.hpp"
