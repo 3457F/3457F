@@ -36,23 +36,18 @@
  */
 #define PROS_USE_LITERALS
 
-#include <string>
-#include <vector>
-
 #include "api.h"
 #include "lemlib/api.hpp"
 
 #include "autons.hpp"
-
-#include "arm.hpp"
 #include "intake.hpp"
+#include "arm.hpp"
 #include "mogo.hpp"
 #include "slapper.hpp"
 #include "tuning_cli.hpp"
 
 #include "util.hpp"
 
-extern pros::Controller controller;
 extern MogoMech mogo;
 extern Intake intake;
 

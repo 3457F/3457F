@@ -183,25 +183,25 @@ void autonomous() {};
  * task, not resume it from where it left off.
  */
  
+void test_input() {
+	bool A_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_A);
+	bool X_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_X);
 
+	std::stringstream ss;
+	ss << "A: " << (A_pressed ? "YES" : "NO") << " | X: " << (X_pressed ? "YES" : "NO") << "  ";
+	std::string keyString = ss.str();
+
+	std::string testStringM = "MMMMMMMMMMMMMMMMMMMMMMM";
+	std::string testLower = "enter command:";
+	std::string testStringSpace = "               ";
+	std::string testString2 = "            -";
+
+	controller.set_text(0, 0, testLower);
+}
 
 void opcontrol() {
 	// opcontrol runs forever! (while in driver control; it's its own task so we gucci)
 	while (true) {
-		bool A_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_A);
-		bool X_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_X);
-
-		std::stringstream ss;
-		ss << "A: " << (A_pressed ? "YES" : "NO") << " | X: " << (X_pressed ? "YES" : "NO") << "  ";
-		std::string keyString = ss.str();
-
-		std::string testStringM = "MMMMMMMMMMMMMMMMMMMMMMM";
-		std::string testLower = "enter command:";
-		std::string testStringSpace = "               ";
-		std::string testString2 = "            -";
-
-		controller.set_text(0, 0, testLower);
-
 		if (!TuningCLI::tuningPID) {
 			/* normal driver control */
 
@@ -300,6 +300,7 @@ void opcontrol() {
 			/* tuning PID! wee! */
 
 			tuningCLI();
+			// test_input();
 		}
 
 		// delay to save system resources

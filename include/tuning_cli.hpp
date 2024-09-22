@@ -1,14 +1,27 @@
 #pragma once
 
-#include <vector>
-#include <string>
-#include <iostream>
-#include <cstdio>
-
-#include "api.h"
-#include "lemlib/api.hpp"
+// for format strings
+#include <sstream>
+#include <variant>
 
 #include "util.hpp"
+
+enum class CommandBtns;
+enum class PIDBtns;
+enum class ValBtns;
+enum class CtrlBtns;
+enum class TuningCLIState;
+
+template <typename btn, bool>
+class btnMap {
+    public:
+        std::map<btn, bool> america;
+
+        btnMap(
+            std::initializer_list<std::variant<CommandBtns, PIDBtns, ValBtns, CtrlBtns>> btns 
+            , std::initializer_list<bool> states
+        );
+};
 
 namespace TuningCLI {
     /**
