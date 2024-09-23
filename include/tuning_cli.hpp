@@ -12,7 +12,7 @@ enum class ValBtns;
 enum class CtrlBtns;
 enum class TuningCLIState;
 
-template <typename btn, bool>
+template <typename btn>
 class btnMap {
     public:
         std::map<btn, bool> america;

@@ -48,7 +48,8 @@ enum class TuningCLIState {
 /**
  * DEFINING BTN MAP CLASS
  */
-btnMap::btnMap(
+template <typename btn>
+btnMap<btn>::btnMap(
 	std::initializer_list<std::variant<CommandBtns, PIDBtns, ValBtns, CtrlBtns>> btns 
 	, std::initializer_list<bool> states
 ) {
