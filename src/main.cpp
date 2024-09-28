@@ -236,15 +236,14 @@ void competition_initialize() {
  * from where it left off.
  */
 void autonomous() {
-	// Run the selected autonomous function - UNCOMMENT ONCE DONE TESTING AUTONS
-	// selector.run_auton();
 	chassis.setBrakeMode(pros::motor_brake_mode_e::E_MOTOR_BRAKE_BRAKE);
+		
+	// Run the selected autonomous function - UNCOMMENT ONCE DONE TESTING AUTONS
+	selector.run_auton();
 
-	blue_right_side();
+	// prog_skills();
 
-	// calls the auton chosen in the auton selector
-	// autonMap[autonNames[curr_auton]]();
-
+	// blue_right_side();
 };
 
 /**
@@ -264,6 +263,9 @@ void autonomous() {
 
 
 void opcontrol() {
+	// brake mode back to coast!
+	chassis.setBrakeMode(pros::motor_brake_mode_e::E_MOTOR_BRAKE_COAST);
+
 	// bc hang open at end of some autons, just do this so yeah
 	// hang.toggle();
 
