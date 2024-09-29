@@ -65,7 +65,7 @@ pros::Controller controller(pros::E_CONTROLLER_MASTER);
 // 14.7 inches width
 // 16.6 inches length
 pros::Motor left_front(-2);
-pros::Motor left_mid(-3);
+pros::Motor left_mid(-7);
 pros::Motor left_back(-1);
 
 pros::Motor right_front(6);
@@ -77,7 +77,7 @@ pros::Imu imu(10);
 // motor groups
 pros::MotorGroup left_motors({
 	-2
-	, -3
+	, -7
 	, -1
 }, pros::MotorGearset::blue);
 
@@ -236,7 +236,8 @@ void autonomous() {
 	// selector.run_auton();
 	chassis.setBrakeMode(pros::motor_brake_mode_e::E_MOTOR_BRAKE_BRAKE);
 
-	blue_left_side();
+blue_right_side();
+//move();
 
 	// calls the auton chosen in the auton selector
 	// autonMap[autonNames[curr_auton]]();
