@@ -263,7 +263,11 @@ void blue_left_side() {
     // away from the path btwn bot -> ladder)
     chassis.turnToPoint(12, -12, 1000, {.forwards = false});
     // releases mogo
+<<<<<<< HEAD
     // mogo.toggle();
+=======
+    mogo.toggle();
+>>>>>>> 967d8ce342ed8ea90441c242cfc35a6766c7b8cb
     // waits for a bit to make sure mogo was fully uncaptured
     pros::delay(500);
     // // stops intake -> SEE IF NECESSARY
