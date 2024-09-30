@@ -1,23 +1,22 @@
 #include "tuning_cli.hpp"
+#include "pros/misc.h"
 
 // RMBR: 20 ms delay for normal pros funcs;
 // 50 ms delay for printing to controller!
 
-lemlib::MoveToPointParams linearPIDTestMoveToPointParams = {
-	.forwards = false
-	, .maxSpeed = 127
-	, .minSpeed = 0
-	, .earlyExitRange = 0
-};
-
 /**
  * enums representing different "commands" represented by buttons!
  */
+
 enum class CommandBtns {
 	NONE = 0
 	, SET = 1
 	, GET = 2
-	, TUNE = 3
+	, MOVEFWD = 3
+	, TURNLEFT = 4
+	, STOP = 5
+	, EXIT_X = 6
+	, EXIT_A = 7
 };
 
 enum class PIDBtns {
@@ -27,33 +26,25 @@ enum class PIDBtns {
 };
 
 enum class ValBtns {
-	PLUSONE = 0
-	, PLUSTWO = 1
-	, MINUSONE = 2
-	, MINUSTWO = 3
+	NONE = 0
+	, PLUSONE = 1
+	, PLUSTWO = 2
+	, MINUSONE = 3
+	, MINUSTWO = 4
 };
 
 enum class CtrlBtns {
-	NEXT = 0
+	NONE = 0
+	, NEXT = 0
 };
 
 enum class TuningCLIState {
-	CMD = 0
+	NONE = 0
+	, CMD = 0
 	, VAR = 1
 	, VAL = 2
 	, DISP = 3
 	, TUNE = 4
-};
-
-/**
- * DEFINING BTN MAP CLASS
- */
-template <typename btn>
-btnMap<btn>::btnMap(
-	std::initializer_list<std::variant<CommandBtns, PIDBtns, ValBtns, CtrlBtns>> btns 
-	, std::initializer_list<bool> states
-) {
-	
 };
 
 namespace TuningCLI {
@@ -65,53 +56,66 @@ namespace TuningCLI {
     /**
      * CONFIG vars:
      */
-    const bool usingPhysicalPIDTuner = false;
+	// legacy: when we had the actual optical shaft encoders to adjust kP and kD :P
+    // const bool usingPhysicalPIDTuner = false;
 
     const bool runningLinearPIDTest = false;
 
     /**
      * RUNTIME vars:
      */
+	
+	/**
+	 * DEFAULTS to true; in other words, driver control NOT default enabled!
+	 */
     bool tuningPID = true;
 
 	/**
 	 * Whether we're tuning linear or angular PID
+	 * TODO: consider adding wrapper to runningLinearPIDTest so when changed, will automatically change the pid variable!
 	 */
 	lemlib::PID* pid = &(TuningCLI::runningLinearPIDTest ? chassis.lateralPID
 											  			 : chassis.angularPID);
 
-    bool runningPIDTest = false;
-
-	// runtime var GROUP -> handles input
+	// runtime vars that handle input
 	TuningCLIState state = TuningCLIState::CMD;
-
 	CommandBtns command = CommandBtns::NONE;
 	PIDBtns pid_const = PIDBtns::NONE;
 	float* pid_const_var = nullptr;
+	bool pid_test_auton_ran = false;
 
-	std::string curr_text = ""; 
+	std::string curr_text = "";
+
+	void resetState() {
+		state = TuningCLIState::CMD;
+		command = CommandBtns::NONE;
+		pid_const = PIDBtns::NONE;
+		pid_const_var = nullptr;
+		pid_test_auton_ran = false;
+	};
 
 	/**
 	 * Function to print if necessary, and clear the
 	 * controller before doing so
 	 */
-	void ctrlPrint(std::uint8_t line, std::uint8_t col, std::string text) {
-		// clears line (prints max length string with whitespace)
-		// so artifacts from a bigger line do not persist
-		// when printing a shorter line
+	// void ctrlPrint(std::uint8_t line, std::uint8_t col, std::string text) {
+	void ctrlPrint(std::string text) {
+		// IF printing a string that's not already on the screen
 		if (text != curr_text) {
 			std::cout << "getting new text!" << std::endl;
 			
 			curr_text = text;
 
-			// controller.set_text(line, col, ctrlClearText);
+			// clears line (prints max length string with whitespace)
+			// so artifacts from a bigger line do not persist
+			// when printing a shorter line
 			controller.clear_line(0);
 
 			pros::delay(50);
 		}
 
 		// prints line anyways bc has to be constantly printed in order to work
-		controller.set_text(line, col, text);
+		controller.set_text(0, 0, text);
 	}
 };
 
@@ -119,24 +123,20 @@ void tuning_cli_screen_task(void* chassis) {
 	lemlib::Chassis* myChassis = (lemlib::Chassis *)(chassis);
 
 	while (true) {
-		char runningPIDTestBufferString[20];
-
-		// the space in the format string is important... don't delete it!
-		std::snprintf(
-			runningPIDTestBufferString
-			, sizeof(runningPIDTestBufferString)
-			, " PID Test? %s"
-			, TuningCLI::runningPIDTest ? "YES" : "NO"
-		);
-
+		// char runningPIDTestBufferString[20];
+		
+		// space in format string is important!
+		std::stringstream running_pid_test_ss;
+		running_pid_test_ss <<
+			"Tuning? "
+			<< (TuningCLI::tuningPID ? "YES" : "NO")
+			<< " | PID test? "
+			<< (myChassis->isInMotion() ? "YES" : "NO");
+		std::string running_pid_test_text = running_pid_test_ss.str();
+		
 		// first value: whether tuning PID / normal driver control is enabled
 		// second value: if tuning PID, whether test PID auton running or not
-		pros::lcd::print(
-			0
-			, "Tuning? %s%s"
-			, TuningCLI::tuningPID ? "YES" : "NO"
-			, TuningCLI::tuningPID ? runningPIDTestBufferString : ""
-		);
+		pros::lcd::set_text(0, running_pid_test_text);
 
 		pros::lcd::print(1, "Pos X (Relative): %f", myChassis->getPose().x);
 		pros::lcd::print(2, "Pos Y (Relative): %f", myChassis->getPose().y);
@@ -146,82 +146,102 @@ void tuning_cli_screen_task(void* chassis) {
 			4
 			, "CURRENT %s kP: %f"
 			, TuningCLI::runningLinearPIDTest ? "LINEAR" : "ANGULAR"
-			, TuningCLI::runningLinearPIDTest ? myChassis->lateralPID.kP : myChassis->angularPID.kP 
+			, TuningCLI::pid->kP
 		);
 
 		pros::lcd::print(
 			5
 			, "CURRENT %s kD: %f"
 			, TuningCLI::runningLinearPIDTest ? "LINEAR" : "ANGULAR"
-			, TuningCLI::runningLinearPIDTest ? myChassis->lateralPID.kD : myChassis->angularPID.kD
+			, TuningCLI::pid->kD
 		);
 		
 		pros::delay(20);
 	}
 }
 
+/**
+ * INPUT part of the tuning cli function
+ */
 void btnListener(void* param) {
 	std::cout << "started btnListener!" << std::endl;
 	
 	while (TuningCLI::tuningPID) {
 		if (TuningCLI::state == TuningCLIState::CMD) {
-			std::map<CommandBtns, bool> cmdBtnMap {
-				// SET: X
-				{
+			btnMapper<CommandBtns> cmdBtnMap(
+				{ 
 					CommandBtns::SET
-					, static_cast<bool>(
-						controller.get_digital_new_press(
-							pros::E_CONTROLLER_DIGITAL_X
-						)
-					)
-				
-				// GET: A
+					, CommandBtns::GET
+					, CommandBtns::MOVEFWD
+					, CommandBtns::TURNLEFT
+					, CommandBtns::EXIT_X
+					, CommandBtns::EXIT_A
 				}, {
-					CommandBtns::GET
-					, static_cast<bool>(
-						controller.get_digital_new_press(
-							pros::E_CONTROLLER_DIGITAL_A
-						)
-					)
+					pros::E_CONTROLLER_DIGITAL_Y	// SET
+					, pros::E_CONTROLLER_DIGITAL_B	// GET
+					, pros::E_CONTROLLER_DIGITAL_UP // move forward (pid tuning auton)
+					, pros::E_CONTROLLER_DIGITAL_LEFT	// turn left (pid tuning auton)
+					, pros::E_CONTROLLER_DIGITAL_X
+					, pros::E_CONTROLLER_DIGITAL_A
 				}
-			};
+			);
+			
+			// has to reach x AND a pressed (or 2)
+			int exit_cond = 0;
 
-			for (const auto& btn : cmdBtnMap) {
-				// if a button is pressed
-				if (btn.second) {
-					TuningCLI::state = TuningCLIState::VAR;
-					TuningCLI::command = btn.first;
-				
+			for (const auto& btnState : cmdBtnMap.btnMap) {
+				CommandBtns commandBtn = btnState.isPressed();
+				// if a button is pressed, handle it accordingly
+				if (commandBtn != CommandBtns::NONE) {
+					if ((commandBtn == CommandBtns::EXIT_A)
+						|| (commandBtn == CommandBtns::EXIT_X)) {
+						
+						exit_cond++;
+
+						if (exit_cond >= 2) {
+							TuningCLI::resetState();
+
+							TuningCLI::tuningPID = false;
+
+							break;
+						} else {
+							// continue to see if the other button was also pressed simultaneously!
+							
+							continue;
+						}
+					}
+
+					if (commandBtn == CommandBtns::STOP) {
+						chassis.cancelAllMotions();
+					} else if ((commandBtn == CommandBtns::MOVEFWD) || (commandBtn == CommandBtns::TURNLEFT)) {
+						TuningCLI::state = TuningCLIState::TUNE;
+					} else {
+						TuningCLI::state = TuningCLIState::VAR;
+					}
+
+					TuningCLI::command = commandBtn;
+					
 					// ignore all other buttons!
 					break;
 				}
 			}
 		} else if (TuningCLI::state == TuningCLIState::VAR) {
-			std::map<PIDBtns, bool> varBtnMap {
-				// P: X
-				{
+			btnMapper<PIDBtns> varBtnMap(
+				{ 
 					PIDBtns::P
-					, static_cast<bool>(
-						controller.get_digital_new_press(
-							pros::E_CONTROLLER_DIGITAL_X
-						)
-					)
-				
-				// D: A
+					, PIDBtns::D
 				}, {
-					PIDBtns::D
-					, static_cast<bool>(
-						controller.get_digital_new_press(
-							pros::E_CONTROLLER_DIGITAL_A
-						)
-					)
+					pros::E_CONTROLLER_DIGITAL_X	// kP
+					, pros::E_CONTROLLER_DIGITAL_A	// kD
 				}
-			};
+			);
 
-			for (const auto& btn : varBtnMap) {
+			for (const auto& btnState : varBtnMap.btnMap) {
+				PIDBtns pidBtn = btnState.isPressed();
+
 				// if a button is being pressed
-				if (btn.second) {
-					TuningCLI::pid_const = btn.first;
+				if (pidBtn != PIDBtns::NONE) {
+					TuningCLI::pid_const = pidBtn;
 
 					if (TuningCLI::command == CommandBtns::SET) {
 						TuningCLI::state = TuningCLIState::VAL;
@@ -234,73 +254,44 @@ void btnListener(void* param) {
 				}
 			}
 		} else if (TuningCLI::state == TuningCLIState::VAL) {
-			std::map<ValBtns, bool> valBtnMap = {
-				// +1: UP ARROW
+			btnMapper<ValBtns> valBtnMap(
 				{
 					ValBtns::PLUSONE
-					, static_cast<bool>(
-						controller.get_digital_new_press(
-							pros::E_CONTROLLER_DIGITAL_UP
-						)
-					)
-				
-				// +2: RIGHT ARROW
+					, ValBtns::PLUSTWO
+					, ValBtns::MINUSONE
+					, ValBtns::MINUSTWO
 				}, {
-					ValBtns::PLUSTWO
-					, static_cast<bool>(
-						controller.get_digital_new_press(
-							pros::E_CONTROLLER_DIGITAL_RIGHT
-						)
-					)
-				
-				// -1: DOWN ARROW
-				}, {
-					ValBtns::MINUSONE
-					, static_cast<bool>(
-						controller.get_digital_new_press(
-							pros::E_CONTROLLER_DIGITAL_DOWN
-						)
-					)
-				
-				// -2: LEFT ARROW
-				}, {
-					ValBtns::MINUSTWO
-					, static_cast<bool>(
-						controller.get_digital_new_press(
-							pros::E_CONTROLLER_DIGITAL_LEFT
-						)
-					)
+					pros::E_CONTROLLER_DIGITAL_UP		// +1
+					, pros::E_CONTROLLER_DIGITAL_RIGHT	// +2
+					, pros::E_CONTROLLER_DIGITAL_DOWN	// -1
+					, pros::E_CONTROLLER_DIGITAL_LEFT	// -2
 				}
-			};
+			);
 
-			for (const auto& btn : valBtnMap) {
+			for (const auto& btnState : valBtnMap.btnMap) {
+				ValBtns valBtn = btnState.isPressed();
 				// if a button is being pressed
-				if (btn.second) {
-					std::cout << "button pressed!" << std::endl;
-
+				if (valBtn != ValBtns::NONE) {
 					TuningCLI::pid_const_var = &(TuningCLI::pid_const == PIDBtns::P ? TuningCLI::pid->kP
 																					: TuningCLI::pid->kD);
-					switch (btn.first) {
+					
+					switch (valBtn) {
 						case ValBtns::PLUSONE:
 							++(*TuningCLI::pid_const_var);
-							TuningCLI::state = TuningCLIState::DISP;
-
-							break;
-						case ValBtns::MINUSONE:
-							--(*TuningCLI::pid_const_var);
-							TuningCLI::state = TuningCLIState::DISP;
-
 							break;
 						case ValBtns::PLUSTWO:
 							*TuningCLI::pid_const_var += 2;
-							TuningCLI::state = TuningCLIState::DISP;
-
+							break;
+						case ValBtns::MINUSONE:
+							--(*TuningCLI::pid_const_var);
 							break;
 						case ValBtns::MINUSTWO:
 							*TuningCLI::pid_const_var -= 2;
-							TuningCLI::state = TuningCLIState::DISP;
-
 							break;
+					}
+
+					if (valBtn != ValBtns::NONE) {
+						TuningCLI::state = TuningCLIState::DISP;
 					}
 				
 					// ignore all other buttons!
@@ -308,40 +299,27 @@ void btnListener(void* param) {
 				}
 			}
 		} else if (TuningCLI::state == TuningCLIState::DISP) {
-			std::map<CtrlBtns, bool> ctrlBtnMap = {
-				{
-					CtrlBtns::NEXT
-					, static_cast<bool>(
-						controller.get_digital_new_press(
-							pros::E_CONTROLLER_DIGITAL_B
-						)
-					)
-				}
-			};
+			btnMapper<CtrlBtns> ctrlBtnMap(
+				{ CtrlBtns::NEXT }
+				, { pros::E_CONTROLLER_DIGITAL_B }
+			);
 
-			for (const auto& btn : ctrlBtnMap) {
-				switch (btn.first) {
-					case CtrlBtns::NEXT:
-						// IF the NEXT button is pressed,
-						// RESET ALL VARS!
-						if (btn.second) {
-							TuningCLI::state = TuningCLIState::CMD;
-
-							TuningCLI::command = CommandBtns::NONE;
-							TuningCLI::pid_const = PIDBtns::NONE;
-							TuningCLI::pid_const_var = nullptr;
-
-							std::string curr_text = "";
+			for (const auto& btnState : ctrlBtnMap.btnMap) {
+				CtrlBtns ctrlBtn = btnState.isPressed();
+				
+				// if a button is being pressed
+				if (ctrlBtn != CtrlBtns::NONE) {
+					switch (ctrlBtn) {
+						case CtrlBtns::NEXT:
+							TuningCLI::resetState();
 
 							break;
-						}
+					}
 				}
 
 				// ignore all other buttons!
 				break;
 			}
-		} else if (TuningCLI::state == TuningCLIState::TUNE) {
-
 		}
 		
 		// delay to save system resources
@@ -349,6 +327,9 @@ void btnListener(void* param) {
 	}
 }
 
+/**
+ * PRINTING part of the tuning cli function
+ */
 void tuningCLI() {
 	// informs user what MODE they're tuning
 	std::cout << "currently tuning " << (TuningCLI::runningLinearPIDTest ? "LINEAR" : "ANGULAR") << " PID!" << std::endl << std::endl; 
@@ -356,24 +337,24 @@ void tuningCLI() {
 	// starts btn listener task
 	pros::Task btn_listener(
 		btnListener
-		, (void*)""
+		, (void*)"" // dummy param bc required by pros::Task
 	);
 
 	while (TuningCLI::tuningPID) {
 		try {
 			if (TuningCLI::state == TuningCLIState::CMD) {
 				// informs user they can start typing command
-				// std::cout << "enter command> ";
+				std::cout << "enter command> ";
 				
-				TuningCLI::ctrlPrint(0, 0, "enter command:");	
+				TuningCLI::ctrlPrint("enter command>");	
 			} else if (TuningCLI::state == TuningCLIState::VAR) {
 				switch (TuningCLI::command) {
 					case CommandBtns::SET:
-						TuningCLI::ctrlPrint(0, 0, "const to set:");
+						TuningCLI::ctrlPrint("const to set:");
 
 						break;
 					case CommandBtns::GET:
-						TuningCLI::ctrlPrint(0, 0, "const to get:");
+						TuningCLI::ctrlPrint("const to get:");
 
 						break;
 					default:
@@ -382,53 +363,57 @@ void tuningCLI() {
 			} else if (TuningCLI::state == TuningCLIState::VAL) {
 				switch (TuningCLI::pid_const) {
 					case PIDBtns::P:
-						TuningCLI::ctrlPrint(0, 0, "NEW kP val: ");
+						TuningCLI::ctrlPrint("NEW kP val: ");
 
 						break;
 					case PIDBtns::D:
-						TuningCLI::ctrlPrint(0, 0, "NEW kD val: ");
+						TuningCLI::ctrlPrint("NEW kD val: ");
 
 						break;
 					default:
 						break;
 				}
  			} else if (TuningCLI::state == TuningCLIState::DISP) {
+				// displays either the kP or kD constant, based on what the user changed
 				std::stringstream pid_const_text_ss;
 				pid_const_text_ss << 
 					((TuningCLI::pid_const == PIDBtns::P) ? "kP" : "kD")
 					 << " val: "
 					 << ((TuningCLI::pid_const == PIDBtns::P) ? TuningCLI::pid->kP : TuningCLI::pid->kD);
+				
+				// converts it to a string and prints it to the controller!
 				std::string pid_const_text = pid_const_text_ss.str();
+				TuningCLI::ctrlPrint(pid_const_text);
 
-				TuningCLI::ctrlPrint(0, 0, pid_const_text);
+			} else if (TuningCLI::state == TuningCLIState::TUNE) {
+				// CODE STOPS AT THIS IF STATEMENT
+				
+				// waits until robot has come to a complete stop
+				if (!chassis.isInMotion()) {
+					if (!TuningCLI::pid_test_auton_ran) {
+						TuningCLI::ctrlPrint("running...");
+						
+						chassis.setPose(0, 0, 0);
+
+						switch (TuningCLI::command) {
+							case CommandBtns::MOVEFWD:
+								chassis.moveToPoint(0, -24, 3000, {}, false);
+
+								TuningCLI::resetState();
+
+
+								break;
+							case CommandBtns::TURNLEFT:
+								chassis.turnToHeading(90, 1500, {}, false);
+
+								TuningCLI::resetState();
+
+								break;
+						}
+					}
+				}
 			}
 			
-		// 	} else if (command == "turn-left") { // returns robot to original position IF tuning angular PID
-		// 		if (!TuningCLI::runningLinearPIDTest) {
-		// 			chassis.setPose(0, 0, 0);
-
-		// 			chassis.turnToHeading(-90, 1500, {}, false);
-		// 		}
-
-		// 	} else if (command == "run" || command == "r") {
-		// 		TuningCLI::runningPIDTest = true;
-
-		// 		// resets position before runs, in case test auton is being run multiple times
-		// 		chassis.setPose(0, 0, 0);
-
-		// 		// running linear PID test
-		// 		if (TuningCLI::runningLinearPIDTest) {
-		// 			chassis.moveToPoint(0, -24, 3000, linearPIDTestMoveToPointParams, false);
-				
-		// 		// running angular PID test
-		// 		} else {
-		// 			chassis.turnToHeading(90, 1500, {}, false);
-
-		// 			pros::delay(1000);
-		// 		}
-			
-		// 	} else if (command == "stop") {
-		// 		chassis.cancelAllMotions();
 			
 		// 	} else if (command == "exit") {
 		// 		std::cout << " | switching to driver control..." << std::endl << std::endl << "---" << std::endl << std::endl;
@@ -443,7 +428,7 @@ void tuningCLI() {
 		// 	}
 			pros::delay(50);
 		} catch (std::exception e) {
-			TuningCLI::ctrlPrint(0, 0, "ERROR");
+			TuningCLI::ctrlPrint("ERROR");
 
 			std::cout << " | something went wrong. please remove the try/catch statements and manually catch the error!" << std::endl;
 		}

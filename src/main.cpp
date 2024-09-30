@@ -8,12 +8,12 @@
 #include <sstream>
 #include <cstdio>
 
-#include "main.h"
 #include "pros/abstract_motor.hpp"
 #include "pros/misc.h"
 #include "pros/motors.h"
-
 #include "robodash/api.h"
+
+#include "main.h"
 
 // constants
 const int DRIVE_SPEED = 127;
@@ -300,6 +300,7 @@ void opcontrol() {
 			/* tuning PID! wee! */
 
 			tuningCLI();
+			
 			// test_input();
 		}
 
