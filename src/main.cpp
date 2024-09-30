@@ -65,7 +65,7 @@ pros::Controller controller(pros::E_CONTROLLER_MASTER);
 // 14.7 inches width
 // 16.6 inches length
 pros::Motor left_front(-2);
-pros::Motor left_mid(-3);
+pros::Motor left_mid(-7);
 pros::Motor left_back(-1);
 
 pros::Motor right_front(6);
@@ -77,7 +77,7 @@ pros::Imu imu(10);
 // motor groups
 pros::MotorGroup left_motors({
 	-2
-	, -3
+	, -7
 	, -1
 }, pros::MotorGearset::blue);
 
@@ -241,7 +241,15 @@ void autonomous() {
 	// Run the selected autonomous function - UNCOMMENT ONCE DONE TESTING AUTONS
 	selector.run_auton();
 
+<<<<<<< HEAD
+blue_right_side();
+//move();
+
+	// calls the auton chosen in the auton selector
+	// autonMap[autonNames[curr_auton]]();
+=======
 	// prog_skills();
+>>>>>>> 967d8ce342ed8ea90441c242cfc35a6766c7b8cb
 
 	// blue_right_side();
 };
