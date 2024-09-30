@@ -10,6 +10,16 @@
 #define TO 300 // default timeout for when im lazy to specify
 #define waitd chassis.waitUntilDone()
 
+void turnAndMoveToPoint(float x, float y, int turnTO, int mvTO, bool fwd = true) {
+    chassis.turnToPoint(x, y, turnTO, { .forwards = fwd });
+    waitd;
+
+    chassis.moveToPoint(x, y, mvTO, { .forwards = fwd });
+    waitd;
+}
+
+
+
 // void prog_skills() {
 //     // policy of OVERSHOOTING on all rings!
 
@@ -605,7 +615,7 @@ void red_left_side() {
 // hooks hit mogo! (mogo is tilted TOO FAR TOWARDS ROBOT when clamped)
 // OVERSHOOT AND MVWFWD NEED TO BE TUNED!
 void red_left_side_no_ladder() { 
-    std::cout << "Running RED left side auton" << std::endl;
+    std::cout << "Running RED left side auton; NO LADDER" << std::endl;
     
     // starts at the SECOND-TO-LEFT tile from the top left, at the TOP RIGHT corner, facing RIGHT
     chassis.setPose(-55.25, 40, 90);
@@ -739,6 +749,75 @@ void red_left_side_no_ladder() {
     // // toggle hang to touch ladder bc zipties are not reliable 
     // hang.toggle();
 };
+
+void red_left_side_solo_awp() {
+    // remember, mogo mech is default OPEN
+    // ALSO TIMING ON THIS IS VERY TIGHT SO TUNE IT! 
+
+    std::cout << "Running RED left side auton, SOLO AUTON WIN POINT" << std::endl;
+
+    // on starting line, facing our alliance immobile robot
+    // (which is further into the corner)
+    chassis.setPose(-58.5, 24, 17);
+
+    // pushes into alliance robot WITH INTAKE,
+    // NOT intending to go all the way
+    // this is to make sure alliance isn't touching starting line
+    // MIGHT NEED TUNING
+    chassis.moveToPoint(-47, 58, 500, { .forwards = false });
+    waitd;
+
+    // backs and turns around to go to mogo
+    // TRACTION WHEELS: horizontalDrift should be 8!
+    chassis.moveToPose(-23.25, 24, 120, 750, { .horizontalDrift = 8 });
+    waitd;
+
+    // clamps mogo; waits for a bit
+    mogo.toggle();
+    pros::delay(250);
+
+    // intakes preload ring -> might be too fast?
+    intake.intake();
+    pros::delay(750);
+
+    // turns and moves towards first ring on field; KEEPS intake running
+    // turnAndMoveToPoint(-23.25, 47.5, 500, 750);
+    // remember, all headings are where the MOGO MECH points
+    chassis.moveToPose(-23.25, 47.5, 225, 750);
+    waitd;
+    // waits for second ring to be intaked
+    pros::delay(750);
+
+    // turns around and releases mogo; waits for a bit to finish
+    chassis.turnToHeading(45, 500);
+    waitd;
+    mogo.toggle();
+    pros::delay(250);
+
+    intake.lift(1);
+    // moves towards third ring and "pre-emptively" loads it in
+    chassis.moveToPose(-47, 0, 0, 750);
+    waitd;
+    // sets down intake piston
+    intake.lift(0);
+    // waits for a bit for ring to get into intake
+    pros::delay(250);
+    intake.brake();
+
+    // moves towards second mogo
+    chassis.moveToPose(-23.5, -23.5, 119, 750);
+    mogo.toggle();
+    pros::delay(250);
+    
+    intake.intake();
+
+    // moves towards third ring on field
+    chassis.moveToPose(-23.5, -47.25, 0, 750);
+    pros::delay(750);
+
+    // drive into ladder; WILL NEED TO RAISE LIFT LATER
+    chassis.moveToPose(-13, -11, 225, 1000);
+}
 
 
 
