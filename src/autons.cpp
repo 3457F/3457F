@@ -758,13 +758,13 @@ void red_left_side_solo_awp() {
 
     // on starting line, facing our alliance immobile robot
     // (which is further into the corner)
-    chassis.setPose(-58.5, 24, 17);
+    chassis.setPose(-58.5, 24, 197);
 
     // pushes into alliance robot WITH INTAKE,
     // NOT intending to go all the way
     // this is to make sure alliance isn't touching starting line
     // MIGHT NEED TUNING
-    chassis.moveToPoint(-47, 58, 500, { .forwards = false });
+    chassis.moveToPoint(-47, 58, 1500, { .forwards = false });
     waitd;
 
     // backs and turns around to go to mogo
@@ -780,43 +780,43 @@ void red_left_side_solo_awp() {
     intake.intake();
     pros::delay(750);
 
-    // turns and moves towards first ring on field; KEEPS intake running
-    // turnAndMoveToPoint(-23.25, 47.5, 500, 750);
-    // remember, all headings are where the MOGO MECH points
-    chassis.moveToPose(-23.25, 47.5, 225, 750);
-    waitd;
-    // waits for second ring to be intaked
-    pros::delay(750);
+    // // turns and moves towards first ring on field; KEEPS intake running
+    // // turnAndMoveToPoint(-23.25, 47.5, 500, 750);
+    // // remember, all headings are where the MOGO MECH points
+    // chassis.moveToPose(-23.25, 47.5, 225, 750);
+    // waitd;
+    // // waits for second ring to be intaked
+    // pros::delay(750);
 
-    // turns around and releases mogo; waits for a bit to finish
-    chassis.turnToHeading(45, 500);
-    waitd;
-    mogo.toggle();
-    pros::delay(250);
+    // // turns around and releases mogo; waits for a bit to finish
+    // chassis.turnToHeading(45, 500);
+    // waitd;
+    // mogo.toggle();
+    // pros::delay(250);
 
-    intake.lift(1);
-    // moves towards third ring and "pre-emptively" loads it in
-    chassis.moveToPose(-47, 0, 0, 750);
-    waitd;
-    // sets down intake piston
-    intake.lift(0);
-    // waits for a bit for ring to get into intake
-    pros::delay(250);
-    intake.brake();
+    // intake.lift(1);
+    // // moves towards third ring and "pre-emptively" loads it in
+    // chassis.moveToPose(-47, 0, 0, 750);
+    // waitd;
+    // // sets down intake piston
+    // intake.lift(0);
+    // // waits for a bit for ring to get into intake
+    // pros::delay(250);
+    // intake.brake();
 
-    // moves towards second mogo
-    chassis.moveToPose(-23.5, -23.5, 119, 750);
-    mogo.toggle();
-    pros::delay(250);
+    // // moves towards second mogo
+    // chassis.moveToPose(-23.5, -23.5, 119, 750);
+    // mogo.toggle();
+    // pros::delay(250);
     
-    intake.intake();
+    // intake.intake();
 
-    // moves towards third ring on field
-    chassis.moveToPose(-23.5, -47.25, 0, 750);
-    pros::delay(750);
+    // // moves towards third ring on field
+    // chassis.moveToPose(-23.5, -47.25, 0, 750);
+    // pros::delay(750);
 
-    // drive into ladder; WILL NEED TO RAISE LIFT LATER
-    chassis.moveToPose(-13, -11, 225, 1000);
+    // // drive into ladder; WILL NEED TO RAISE LIFT LATER
+    // chassis.moveToPose(-13, -11, 225, 1000);
 }
 
 

@@ -239,17 +239,12 @@ void autonomous() {
 	chassis.setBrakeMode(pros::motor_brake_mode_e::E_MOTOR_BRAKE_HOLD);
 		
 	// Run the selected autonomous function - UNCOMMENT ONCE DONE TESTING AUTONS
-	selector.run_auton();
+	// selector.run_auton();
 
-<<<<<<< HEAD
-blue_right_side();
-//move();
+	red_left_side_solo_awp();
 
 	// calls the auton chosen in the auton selector
 	// autonMap[autonNames[curr_auton]]();
-=======
-	// prog_skills();
->>>>>>> 967d8ce342ed8ea90441c242cfc35a6766c7b8cb
 
 	// blue_right_side();
 };
