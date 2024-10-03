@@ -147,43 +147,42 @@ void btnListener(void* param) {
 			int exit_cond = 0;
 
 			// for (const auto& commandBtn : cmdBtnMap.btnMap) {
-bool 
+			CommandBtns commandBtn = cmdBtnMap.firstBtn;
 
-				// if a button is pressed, handle it accordingly
-				if (commandBtn != CommandBtns::NONE) {
-					if ((commandBtn == CommandBtns::EXIT_A)
-						|| (commandBtn == CommandBtns::EXIT_X)) {
-						
-						exit_cond++;
-
-						std::cout << "a requirement met for exiting!";
-
-						if (exit_cond >= 2) {
-							std::cout << "switching to driver control!";
-
-							TuningCLI::resetState();
-
-							TuningCLI::tuningPID = false;
-
-							break;
-						}
-					} else {
-						std::cout << "sending to another command: " << (int)commandBtn << std::endl;
-
-						TuningCLI::command = commandBtn;
-					}
-
-					if (commandBtn == CommandBtns::STOP) {
-						chassis.cancelAllMotions();
-					} else if ((commandBtn == CommandBtns::MOVEFWD) || (commandBtn == CommandBtns::TURNLEFT)) {
-						TuningCLI::state = TuningCLIState::TUNE;
-					} else {
-						TuningCLI::state = TuningCLIState::VAR;
-					}
+			// if a button is pressed, handle it accordingly
+			if (commandBtn != CommandBtns::NONE) {
+				if ((commandBtn == CommandBtns::EXIT_A)
+					|| (commandBtn == CommandBtns::EXIT_X)) {
 					
-					// ignore all other buttons!
-					break;
+					exit_cond++;
+
+					std::cout << "a requirement met for exiting!";
+
+					if (exit_cond >= 2) {
+						std::cout << "switching to driver control!";
+
+						TuningCLI::resetState();
+
+						TuningCLI::tuningPID = false;
+
+						break;
+					}
+				} else {
+					std::cout << "sending to another command: " << (int)commandBtn << std::endl;
+
+					TuningCLI::command = commandBtn;
 				}
+
+				if (commandBtn == CommandBtns::STOP) {
+					chassis.cancelAllMotions();
+				} else if ((commandBtn == CommandBtns::MOVEFWD) || (commandBtn == CommandBtns::TURNLEFT)) {
+					TuningCLI::state = TuningCLIState::TUNE;
+				} else {
+					TuningCLI::state = TuningCLIState::VAR;
+				}
+				
+				// ignore all other buttons!
+				break;
 			}
 		} else if (TuningCLI::state == TuningCLIState::VAR) {
 			btnMapper<PIDBtns> varBtnMap(
@@ -196,22 +195,22 @@ bool
 				}
 			);
 
-			for (const auto& pidBtn : varBtnMap.btnMap) {
-				// if a button is being pressed
-				if (pidBtn != PIDBtns::NONE) {
-					TuningCLI::pid_const = pidBtn;
+			PIDBtns pidBtn = varBtnMap.firstBtn;
 
-					if (TuningCLI::command == CommandBtns::SET) {
-						TuningCLI::state = TuningCLIState::VAL;
-					} else if (TuningCLI::command == CommandBtns::GET) {
-						std::cout << "this is running...?" << std::endl;
-						
-						TuningCLI::state = TuningCLIState::DISP;
-					}
+			// if a button is being pressed
+			if (pidBtn != PIDBtns::NONE) {
+				TuningCLI::pid_const = pidBtn;
 
-					// ignore all other buttons!
-					break;
+				if (TuningCLI::command == CommandBtns::SET) {
+					TuningCLI::state = TuningCLIState::VAL;
+				} else if (TuningCLI::command == CommandBtns::GET) {
+					std::cout << "this is running...?" << std::endl;
+					
+					TuningCLI::state = TuningCLIState::DISP;
 				}
+
+				// ignore all other buttons!
+				break;
 			}
 		} else if (TuningCLI::state == TuningCLIState::VAL) {
 			btnMapper<ValBtns> valBtnMap(
@@ -228,34 +227,34 @@ bool
 				}
 			);
 
-			for (const auto& valBtn : valBtnMap.btnMap) {
-				// if a button is being pressed
-				if (valBtn != ValBtns::NONE) {
-					TuningCLI::pid_const_var = &(TuningCLI::pid_const == PIDBtns::P ? TuningCLI::pid->kP
-																					: TuningCLI::pid->kD);
-					
-					switch (valBtn) {
-						case ValBtns::PLUSONE:
-							++(*TuningCLI::pid_const_var);
-							break;
-						case ValBtns::PLUSTWO:
-							*TuningCLI::pid_const_var += 2;
-							break;
-						case ValBtns::MINUSONE:
-							--(*TuningCLI::pid_const_var);
-							break;
-						case ValBtns::MINUSTWO:
-							*TuningCLI::pid_const_var -= 2;
-							break;
-					}
+			ValBtns valBtn = valBtnMap.firstBtn;
 
-					if (valBtn != ValBtns::NONE) {
-						TuningCLI::state = TuningCLIState::DISP;
-					}
+			// if a button is being pressed
+			if (valBtn != ValBtns::NONE) {
+				TuningCLI::pid_const_var = &(TuningCLI::pid_const == PIDBtns::P ? TuningCLI::pid->kP
+																				: TuningCLI::pid->kD);
 				
-					// ignore all other buttons!
-					break;
+				switch (valBtn) {
+					case ValBtns::PLUSONE:
+						++(*TuningCLI::pid_const_var);
+						break;
+					case ValBtns::PLUSTWO:
+						*TuningCLI::pid_const_var += 2;
+						break;
+					case ValBtns::MINUSONE:
+						--(*TuningCLI::pid_const_var);
+						break;
+					case ValBtns::MINUSTWO:
+						*TuningCLI::pid_const_var -= 2;
+						break;
 				}
+
+				if (valBtn != ValBtns::NONE) {
+					TuningCLI::state = TuningCLIState::DISP;
+				}
+			
+				// ignore all other buttons!
+				break;
 			}
 		} else if (TuningCLI::state == TuningCLIState::DISP) {
 			btnMapper<CtrlBtns> ctrlBtnMap(
@@ -263,22 +262,22 @@ bool
 				, { pros::E_CONTROLLER_DIGITAL_B }
 			);
 
-			for (const auto& ctrlBtn : ctrlBtnMap.btnMap) {
-				// if a button is being pressed
-				if (ctrlBtn != CtrlBtns::NONE) {
-					switch (ctrlBtn) {
-						case CtrlBtns::NEXT:
-							std::cout << "moving to next command!" << std::endl;
+			CtrlBtns ctrlBtn = ctrlBtnMap.firstBtn;
 
-							TuningCLI::resetState();
+			// if a button is being pressed
+			if (ctrlBtn != CtrlBtns::NONE) {
+				switch (ctrlBtn) {
+					case CtrlBtns::NEXT:
+						std::cout << "moving to next command!" << std::endl;
 
-							break;
-					}
+						TuningCLI::resetState();
+
+						break;
 				}
-
-				// ignore all other buttons!
-				break;
 			}
+
+			// ignore all other buttons!
+			break;
 		}
 		
 		// delay to save system resources
