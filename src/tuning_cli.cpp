@@ -4,49 +4,6 @@
 // RMBR: 20 ms delay for normal pros funcs;
 // 50 ms delay for printing to controller!
 
-/**
- * enums representing different "commands" represented by buttons!
- */
-
-enum class CommandBtns {
-	NONE = 0
-	, SET = 1
-	, GET = 2
-	, MOVEFWD = 3
-	, TURNLEFT = 4
-	, STOP = 5
-	, EXIT_X = 6
-	, EXIT_A = 7
-};
-
-enum class PIDBtns {
-	NONE = 0
-	, P = 1
-	, D = 2
-};
-
-enum class ValBtns {
-	NONE = 0
-	, PLUSONE = 1
-	, PLUSTWO = 2
-	, MINUSONE = 3
-	, MINUSTWO = 4
-};
-
-enum class CtrlBtns {
-	NONE = 0
-	, NEXT = 0
-};
-
-enum class TuningCLIState {
-	NONE = 0
-	, CMD = 0
-	, VAR = 1
-	, VAL = 2
-	, DISP = 3
-	, TUNE = 4
-};
-
 namespace TuningCLI {
 	/**
 	 * string that clears controller text
@@ -177,20 +134,21 @@ void btnListener(void* param) {
 					, CommandBtns::EXIT_X
 					, CommandBtns::EXIT_A
 				}, {
-					pros::E_CONTROLLER_DIGITAL_Y	// SET
-					, pros::E_CONTROLLER_DIGITAL_B	// GET
-					, pros::E_CONTROLLER_DIGITAL_UP // move forward (pid tuning auton)
+					pros::E_CONTROLLER_DIGITAL_Y		// SET
+					, pros::E_CONTROLLER_DIGITAL_B		// GET
+					, pros::E_CONTROLLER_DIGITAL_UP 	// move forward (pid tuning auton)
 					, pros::E_CONTROLLER_DIGITAL_LEFT	// turn left (pid tuning auton)
 					, pros::E_CONTROLLER_DIGITAL_X
 					, pros::E_CONTROLLER_DIGITAL_A
 				}
 			);
-			
+
 			// has to reach x AND a pressed (or 2)
 			int exit_cond = 0;
 
-			for (const auto& btnState : cmdBtnMap.btnMap) {
-				CommandBtns commandBtn = btnState.isPressed();
+			// for (const auto& commandBtn : cmdBtnMap.btnMap) {
+bool 
+
 				// if a button is pressed, handle it accordingly
 				if (commandBtn != CommandBtns::NONE) {
 					if ((commandBtn == CommandBtns::EXIT_A)
@@ -198,17 +156,21 @@ void btnListener(void* param) {
 						
 						exit_cond++;
 
+						std::cout << "a requirement met for exiting!";
+
 						if (exit_cond >= 2) {
+							std::cout << "switching to driver control!";
+
 							TuningCLI::resetState();
 
 							TuningCLI::tuningPID = false;
 
 							break;
-						} else {
-							// continue to see if the other button was also pressed simultaneously!
-							
-							continue;
 						}
+					} else {
+						std::cout << "sending to another command: " << (int)commandBtn << std::endl;
+
+						TuningCLI::command = commandBtn;
 					}
 
 					if (commandBtn == CommandBtns::STOP) {
@@ -218,8 +180,6 @@ void btnListener(void* param) {
 					} else {
 						TuningCLI::state = TuningCLIState::VAR;
 					}
-
-					TuningCLI::command = commandBtn;
 					
 					// ignore all other buttons!
 					break;
@@ -236,9 +196,7 @@ void btnListener(void* param) {
 				}
 			);
 
-			for (const auto& btnState : varBtnMap.btnMap) {
-				PIDBtns pidBtn = btnState.isPressed();
-
+			for (const auto& pidBtn : varBtnMap.btnMap) {
 				// if a button is being pressed
 				if (pidBtn != PIDBtns::NONE) {
 					TuningCLI::pid_const = pidBtn;
@@ -246,6 +204,8 @@ void btnListener(void* param) {
 					if (TuningCLI::command == CommandBtns::SET) {
 						TuningCLI::state = TuningCLIState::VAL;
 					} else if (TuningCLI::command == CommandBtns::GET) {
+						std::cout << "this is running...?" << std::endl;
+						
 						TuningCLI::state = TuningCLIState::DISP;
 					}
 
@@ -268,8 +228,7 @@ void btnListener(void* param) {
 				}
 			);
 
-			for (const auto& btnState : valBtnMap.btnMap) {
-				ValBtns valBtn = btnState.isPressed();
+			for (const auto& valBtn : valBtnMap.btnMap) {
 				// if a button is being pressed
 				if (valBtn != ValBtns::NONE) {
 					TuningCLI::pid_const_var = &(TuningCLI::pid_const == PIDBtns::P ? TuningCLI::pid->kP
@@ -304,13 +263,13 @@ void btnListener(void* param) {
 				, { pros::E_CONTROLLER_DIGITAL_B }
 			);
 
-			for (const auto& btnState : ctrlBtnMap.btnMap) {
-				CtrlBtns ctrlBtn = btnState.isPressed();
-				
+			for (const auto& ctrlBtn : ctrlBtnMap.btnMap) {
 				// if a button is being pressed
 				if (ctrlBtn != CtrlBtns::NONE) {
 					switch (ctrlBtn) {
 						case CtrlBtns::NEXT:
+							std::cout << "moving to next command!" << std::endl;
+
 							TuningCLI::resetState();
 
 							break;
@@ -343,9 +302,6 @@ void tuningCLI() {
 	while (TuningCLI::tuningPID) {
 		try {
 			if (TuningCLI::state == TuningCLIState::CMD) {
-				// informs user they can start typing command
-				std::cout << "enter command> ";
-				
 				TuningCLI::ctrlPrint("enter command>");	
 			} else if (TuningCLI::state == TuningCLIState::VAR) {
 				switch (TuningCLI::command) {

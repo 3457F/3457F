@@ -1,3 +1,37 @@
+/**
+ * ---
+ * COMMANDS:
+ * 
+ * CMD: (state)
+ * - Y -> SET
+ * - B -> GET
+ * - UP -> MOVEFWD (pid test auton - LATERAL)
+ * - LEFT -> TURNLEFT (pid test auton - ANGULAR)
+ * - X & A -> exit pid tuner
+ * 
+ * ---
+ * 
+ * ---
+ * VAR: (state)
+ * - X -> kP
+ * - A -> kD
+ * ---
+ * 
+ * ---
+ * VAL: (state)
+ * - UP -> PLUS ONE
+ * - RIGHT -> PLUS TWO
+ * - DOWN -> MINUS ONE
+ * - LEFT -> MINUS TWO
+ * ---
+ * 
+ * ---
+ * DISP: (state)
+ * - B -> NEXT (command)
+ * ---
+ - Commands
+ */
+
 #pragma once
 
 // for format strings
@@ -7,13 +41,49 @@
 
 #include "util.hpp"
 
-enum class TuningCLIState;
+/**
+ * enums representing different "commands" represented by buttons!
+ */
 
-enum class NoneBtns;
-enum class CommandBtns;
-enum class PIDBtns;
-enum class ValBtns;
-enum class CtrlBtns;
+enum class TuningCLIState {
+	NONE = 0
+	, CMD = 0
+	, VAR = 1
+	, VAL = 2
+	, DISP = 3
+	, TUNE = 4
+};
+
+
+enum class CommandBtns {
+	NONE = 0
+	, SET = 1
+	, GET = 2
+	, MOVEFWD = 3
+	, TURNLEFT = 4
+	, STOP = 5
+	, EXIT_X = 6
+	, EXIT_A = 7
+};
+
+enum class PIDBtns {
+	NONE = 0
+	, P = 1
+	, D = 2
+};
+
+enum class ValBtns {
+	NONE = 0
+	, PLUSONE = 1
+	, PLUSTWO = 2
+	, MINUSONE = 3
+	, MINUSTWO = 4
+};
+
+enum class CtrlBtns {
+	NONE = 0
+	, NEXT = 0
+};
 
 // std::variant<CommandBtns, PIDBtns, ValBtns, CtrlBtns>
 template <typename btn>
@@ -52,7 +122,9 @@ btn buttonState<btn>::isPressed() const {
 template <typename btn>
 class btnMapper {
     public:
-        std::vector<buttonState<btn>> btnMap;
+        // std::vector<buttonState<btn>> btnMap;
+        // std::vector<btn> btnMap;
+        btn firstBtn;
 
         btnMapper(
             std::initializer_list<btn> btns 
@@ -64,7 +136,7 @@ template <typename btn>
 btnMapper<btn>::btnMapper(
     std::initializer_list<btn> btns 
     , std::initializer_list<pros::controller_digital_e_t> states
-) {
+): firstBtn(btn::NONE) {
     if (btns.size() != states.size()) {
         std::cout << "GRRR NOT SAME SIZE";
     }
@@ -74,14 +146,17 @@ btnMapper<btn>::btnMapper(
 
     for (int i = 0; i < btns.size(); i++) {
         btn stateBtn = *btnIt;
-        pros::controller_digital_e_t state = *statesIt;
+        bool state = controller.get_digital_new_press(*statesIt);
 
-        buttonState<btn> btnState(
-            stateBtn
-            , state
-        );
+        if (state) {
+            // buttonState<btn> btnState(
+            //     stateBtn
+            //     , controller.get_digital_new_press(state)
+            // );
+            firstBtn = stateBtn;
+        }
 
-        btnMap.push_back(btnState);
+        break;
     }
 }
 
