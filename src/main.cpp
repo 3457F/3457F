@@ -164,14 +164,20 @@ Intake intake = Intake(
 	, 'E'						// intake piston port
 );
 
-MogoMech mogo = MogoMech('A');
+/**
+ * TODO: add mogo ports!
+ */
+MogoMech mogo = MogoMech(
+	'A'
+	, {'A', 'A'}
+);
 
 // Arm arm = Arm(10, pros::E_MOTOR_BRAKE_HOLD);
 
 // was E
 Doinker doinker = Doinker('B');
 
-Hang hang = Hang('D');
+// Hang hang = Hang('D');
 
 rd::Selector selector({
     {.name="BLUE LEFT (3 ring)", .action=&blue_left_side},
@@ -307,8 +313,8 @@ void opcontrol() {
 		bool L2_new_press = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2);
 		// toggle slapper
 		bool Y_new_press = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y);
-		// toggle hang
-		bool DOWN_new_press = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN);
+		// toggle tilt
+		bool DOWN_new_press = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP);
 
 		/**
 			* ARM
@@ -321,12 +327,12 @@ void opcontrol() {
 		// 		arm.arm_down();
 		// }
 
-		/**
-		 * HANG:
-		 */
-		if (DOWN_new_press) {
-			hang.toggle();
-		}
+		// /**
+		//  * HANG:
+		//  */
+		// if (DOWN_new_press) {
+		// 	hang.toggle();
+		// }
 
 		/**
 		 * INTAKE:
@@ -357,9 +363,25 @@ void opcontrol() {
 		 * MOGO:
 		 */
 
+		// clamp + tilt toggling
 		if (L2_new_press) {
 			mogo.toggle();
 		}
+
+		// just tilt toggling
+		if (DOWN_new_press) {
+			// cannot tilt when clamp isn't in effect!
+			if (mogo.mogo_clamp_open) {
+				// gives feedback to driver
+				controller.rumble(".");
+			
+			// otherwise all is well and tilt can toggle :D
+			} else {
+				mogo.tilt_toggle();
+			}
+		}
+
+
 
 		/**
 		 * SLAPPER:
