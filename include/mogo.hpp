@@ -9,21 +9,23 @@ class MogoMech {
         /**
          * RETRACTING clamps mogo;
          * EXTENDING unclamps mogo! */
-        pros::adi::Port mogo_clamp_piston;
+        // pros::adi::Port mogo_clamp_piston;
+        std::vector<pros::adi::Port> mogo_clamp_pistons;
         bool mogo_clamp_open = true;
 
         /**
          * RETRACTING tilts mogo;
          * EXTENDING untilts mogo! */
-        std::vector<pros::adi::Port> mogo_tilt_pistons;
+        // std::vector<pros::adi::Port> mogo_tilt_pistons;
+        pros::adi::Port mogo_tilt_piston;
         bool mogo_tilt_open = true;
 
         /**
          * The mogo clamp piston AND the mogo tilt
          * pistons start OPEN! */
         MogoMech(
-            std::uint8_t mogo_clamp_piston_port,
-            std::initializer_list<std::uint8_t> mogo_tilt_pistons_ports
+            std::initializer_list<std::uint8_t> mogo_clamp_pistons_ports
+            , std::uint8_t mogo_tilt_piston_port
         );
 
         // INTERNAL FUNCTIONS

@@ -8,6 +8,7 @@
 #include <vector>
 
 #include "main.h"
+#include "lemlib/chassis/trackingWheel.hpp"
 #include "pros/abstract_motor.hpp"
 #include "pros/misc.h"
 #include "pros/motors.h"
@@ -62,29 +63,32 @@ pros::Controller controller(pros::E_CONTROLLER_MASTER);
 /**
  * NOTE: The mogo mech is the front of the robot, from a driving perspective and an auton perspective
  */
-// 14.7 inches width
-// 16.6 inches length
-pros::Motor left_front(-2);
-pros::Motor left_mid(-7);
-pros::Motor left_back(-1);
+/**
+ * TODO: add dt ports!
+ */
+// 10 9 -8
+// -2 3 4
+pros::Motor left_front(4);
+pros::Motor left_mid(3);
+pros::Motor left_back(-2);
 
-pros::Motor right_front(6);
-pros::Motor right_mid(12);
-pros::Motor right_back(5);
+pros::Motor right_front(-8);
+pros::Motor right_mid(9);
+pros::Motor right_back(10);
 
 pros::Imu imu(10);
 
 // motor groups
 pros::MotorGroup left_motors({
-	-2
-	, -7
-	, -1
+	4
+	, 3
+	, -2
 }, pros::MotorGearset::blue);
 
 pros::MotorGroup right_motors({
-	6
-	, 12
-	, 5
+	-8
+	, 9
+	, 10
 }, pros::MotorGearset::blue);
 
 // liblem
@@ -92,9 +96,12 @@ pros::MotorGroup right_motors({
 lemlib::Drivetrain drivetrain(
 	&left_motors, &right_motors,
 	14,
-	lemlib::Omniwheel::NEW_325,
+	lemlib::Omniwheel::NEW_275,
 	450,
-	2
+
+	// bc we have central traction wheels; refer to
+	// https://lemlib.readthedocs.io/en/stable/tutorials/6_lateral_motion.html
+	8
 );
 
 // lateral PID controller
@@ -155,27 +162,29 @@ void arcade() {
 // right intake normal; left intake reversed 
 Intake intake = Intake(
 	{
-		-19						// left intake (reversed)
-		, 4						// right intake (normal)
+		6						// left intake (reversed)
+		, 7						// right intake (normal)
 	}
 	, pros::E_MOTOR_BRAKE_HOLD	// brake mode of intake
 
-	// was B
-	, 'E'						// intake piston port
+	/**
+	 * TODO: add intake piston ports!
+	 */
+	, 'A'						// intake piston port
 );
 
 /**
  * TODO: add mogo ports!
  */
 MogoMech mogo = MogoMech(
-	'A'
-	, {'A', 'A'}
+	{ 'C' }
+	, 'A'
 );
 
 // Arm arm = Arm(10, pros::E_MOTOR_BRAKE_HOLD);
 
 // was E
-Doinker doinker = Doinker('B');
+// Doinker doinker = Doinker('B');
 
 // Hang hang = Hang('D');
 
@@ -274,6 +283,7 @@ void autonomous() {
 void opcontrol() {
 	// brake mode back to coast!
 	chassis.setBrakeMode(pros::motor_brake_mode_e::E_MOTOR_BRAKE_COAST);
+	intake.intake_motors.set_brake_mode(pros::motor_brake_mode_e::E_MOTOR_BRAKE_COAST);
 
 	// bc hang open at end of some autons, just do this so yeah
 	// hang.toggle();
@@ -340,13 +350,19 @@ void opcontrol() {
 		if (R1_pressed == R2_pressed) {
 			// if both controls are pressed or depressed, brake (stop) the intake
 
+			std::cout << "braking" << std::endl;
+
 			intake.brake();
 		} else if (R1_pressed) {
 			// intaking
 
+			std::cout << "intaking" << std::endl;
+
 			intake.intake();
 		} else if (R2_pressed) {
 			// outtaking
+
+			std::cout << "outtaking" << std::endl;
 
 			intake.outtake();
 		}
@@ -365,6 +381,8 @@ void opcontrol() {
 
 		// clamp + tilt toggling
 		if (L2_new_press) {
+			std::cout << "toggling!" << std::endl;
+
 			mogo.toggle();
 		}
 
@@ -386,9 +404,9 @@ void opcontrol() {
 		/**
 		 * SLAPPER:
 	     */
-		if (Y_new_press) {
-			doinker.toggle();
-		}
+		// if (Y_new_press) {
+		// 	doinker.toggle();
+		// }
 
 		/**
 		 * DRIVING:
