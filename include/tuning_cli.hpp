@@ -29,14 +29,15 @@
  * DISP: (state)
  * - B -> NEXT (command)
  * ---
- - Commands
+ * 
+ * REMEMBER:
+ * - tuning:
+ * - doesn't oscillate? record kP and kD; INCREASE kP
+ * - otherwise (oscillates)? INCREASE kD
  */
 
 #pragma once
 
-// for format strings
-#include <sstream>
-#include <variant>
 #include <vector>
 
 #include "util.hpp"
@@ -47,11 +48,11 @@
 
 enum class TuningCLIState {
 	NONE = 0
-	, CMD = 0
-	, VAR = 1
-	, VAL = 2
-	, DISP = 3
-	, TUNE = 4
+	, CMD = 1
+	, VAR = 2
+	, VAL = 3
+	, DISP = 4
+	, TUNE = 5
 };
 
 
@@ -82,7 +83,7 @@ enum class ValBtns {
 
 enum class CtrlBtns {
 	NONE = 0
-	, NEXT = 0
+	, NEXT = 1
 };
 
 // std::variant<CommandBtns, PIDBtns, ValBtns, CtrlBtns>
@@ -126,11 +127,15 @@ class btnMapper {
         // std::vector<btn> btnMap;
         btn firstBtn;
 
+        // for CommandBtns handling ONLY
+        int exit_cond = 0;
+
         btnMapper(
             std::initializer_list<btn> btns 
             , std::initializer_list<pros::controller_digital_e_t> states
         );
 };
+
 
 template <typename btn>
 btnMapper<btn>::btnMapper(
@@ -149,14 +154,20 @@ btnMapper<btn>::btnMapper(
         bool state = controller.get_digital_new_press(*statesIt);
 
         if (state) {
-            // buttonState<btn> btnState(
-            //     stateBtn
-            //     , controller.get_digital_new_press(state)
-            // );
             firstBtn = stateBtn;
+            if constexpr (std::is_same_v<btn, CommandBtns>) {
+                // exit_cond = 2 ONLY if both pressed!
+                if ((firstBtn == CommandBtns::EXIT_A)
+					|| (firstBtn == CommandBtns::EXIT_X)) {
+                    exit_cond++;
+                }
+            } else {
+                break;
+            }
         }
 
-        break;
+        ++btnIt;
+        ++statesIt;
     }
 }
 

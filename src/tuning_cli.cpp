@@ -1,5 +1,48 @@
+#include <sstream>
+#include <type_traits>
+
 #include "tuning_cli.hpp"
 #include "pros/misc.h"
+
+// define string names for enums
+std::vector<std::string> TuningCLIStateNames = {
+    "NONE"
+    , "CHOOSE COMMAND"
+    , "CHOOSE CONSTANT"
+    , "CHOOSE VALUE"
+    , "DISPLAY VALUE"
+    , "RUN TEST AUTON"
+};
+
+std::vector<std::string> CommandBtnsNames = {
+	"NONE"
+	, "SET VARIABLE"
+	, "GET VARIABLE"
+	, "MOVE FORWARD"
+	, "TURN LEFT"
+	, "STOP AUTON"
+	, "EXIT_X"			// probably won't be used; just here in case
+	, "EXIT_A"			// probably won't be used; just here in case
+};
+
+std::vector<std::string> PIDBtnsNames = {
+	"NONE"
+	, "kP"
+	, "kD"
+};
+
+std::vector<std::string> ValBtnsNames = {
+	"NONE"
+	, "PLUS ONE"
+	, "PLUS TWO"
+	, "MINUS ONE"
+	, "MINUS TWO"
+};
+
+std::vector<std::string> CtrlBtnsNames = {
+	"NONE"
+	, "NEXT"
+};
 
 // RMBR: 20 ms delay for normal pros funcs;
 // 50 ms delay for printing to controller!
@@ -68,6 +111,13 @@ namespace TuningCLI {
 			// when printing a shorter line
 			controller.clear_line(0);
 
+			// prints PID text to terminal
+			std::cout << (TuningCLI::runningLinearPIDTest ? "[LINEAR] " : "[ANGULAR] ")
+					  << "kP: " << TuningCLI::pid->kP
+					  << " | "
+					  << "kD: " << TuningCLI::pid->kD
+					  << std::endl;
+
 			pros::delay(50);
 		}
 
@@ -121,7 +171,7 @@ void tuning_cli_screen_task(void* chassis) {
  * INPUT part of the tuning cli function
  */
 void btnListener(void* param) {
-	std::cout << "started btnListener!" << std::endl;
+	std::cout << "started btnListener!" << std::endl << std::endl;
 	
 	while (TuningCLI::tuningPID) {
 		if (TuningCLI::state == TuningCLIState::CMD) {
@@ -151,24 +201,14 @@ void btnListener(void* param) {
 
 			// if a button is pressed, handle it accordingly
 			if (commandBtn != CommandBtns::NONE) {
-				if ((commandBtn == CommandBtns::EXIT_A)
-					|| (commandBtn == CommandBtns::EXIT_X)) {
-					
-					exit_cond++;
+				if (cmdBtnMap.exit_cond >= 2) {
+					std::cout << "switching to driver control!" << std::endl;
 
-					std::cout << "a requirement met for exiting!";
+					TuningCLI::resetState();
 
-					if (exit_cond >= 2) {
-						std::cout << "switching to driver control!";
-
-						TuningCLI::resetState();
-
-						TuningCLI::tuningPID = false;
-
-						break;
-					}
+					TuningCLI::tuningPID = false;
 				} else {
-					std::cout << "sending to another command: " << (int)commandBtn << std::endl;
+					std::cout << "sending to command: " << CommandBtnsNames[(int)commandBtn] << std::endl;
 
 					TuningCLI::command = commandBtn;
 				}
@@ -180,9 +220,8 @@ void btnListener(void* param) {
 				} else {
 					TuningCLI::state = TuningCLIState::VAR;
 				}
-				
-				// ignore all other buttons!
-				break;
+
+				std::cout << "setting state to: " << TuningCLIStateNames[(int)TuningCLI::state] << std::endl;
 			}
 		} else if (TuningCLI::state == TuningCLIState::VAR) {
 			btnMapper<PIDBtns> varBtnMap(
@@ -203,14 +242,12 @@ void btnListener(void* param) {
 
 				if (TuningCLI::command == CommandBtns::SET) {
 					TuningCLI::state = TuningCLIState::VAL;
-				} else if (TuningCLI::command == CommandBtns::GET) {
-					std::cout << "this is running...?" << std::endl;
-					
+				} else if (TuningCLI::command == CommandBtns::GET) {					
 					TuningCLI::state = TuningCLIState::DISP;
 				}
 
-				// ignore all other buttons!
-				break;
+				std::cout << "using PID const: " << PIDBtnsNames[(int)pidBtn] << std::endl;
+				std::cout << "setting state to: " << TuningCLIStateNames[(int)TuningCLI::state] << std::endl;
 			}
 		} else if (TuningCLI::state == TuningCLIState::VAL) {
 			btnMapper<ValBtns> valBtnMap(
@@ -249,12 +286,10 @@ void btnListener(void* param) {
 						break;
 				}
 
-				if (valBtn != ValBtns::NONE) {
-					TuningCLI::state = TuningCLIState::DISP;
-				}
+				TuningCLI::state = TuningCLIState::DISP;
 			
-				// ignore all other buttons!
-				break;
+				std::cout << "modifying const to: " << ValBtnsNames[(int)valBtn] << std::endl;
+				std::cout << "setting state to: " << TuningCLIStateNames[(int)TuningCLI::state] << std::endl;
 			}
 		} else if (TuningCLI::state == TuningCLIState::DISP) {
 			btnMapper<CtrlBtns> ctrlBtnMap(
@@ -275,9 +310,6 @@ void btnListener(void* param) {
 						break;
 				}
 			}
-
-			// ignore all other buttons!
-			break;
 		}
 		
 		// delay to save system resources
@@ -353,13 +385,12 @@ void tuningCLI() {
 						switch (TuningCLI::command) {
 							case CommandBtns::MOVEFWD:
 								chassis.moveToPoint(0, -24, 3000, {}, false);
-
+								
 								TuningCLI::resetState();
-
 
 								break;
 							case CommandBtns::TURNLEFT:
-								chassis.turnToHeading(90, 1500, {}, false);
+								chassis.turnToHeading(-90, 1500, {}, false);
 
 								TuningCLI::resetState();
 
