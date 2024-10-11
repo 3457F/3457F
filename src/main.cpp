@@ -174,10 +174,11 @@ Doinker doinker = Doinker('B');
 Hang hang = Hang('D');
 
 rd::Selector selector({
-    {.name="BLUE LEFT (3 ring)", .action=&blue_left_side},
-	{.name = "BLUE RIGHT (4 ring)", .action=&blue_right_side},
-    {.name="RED LEFT (4 ring)", .action=&red_left_side},
-	{.name="RED RIGHT (3 ring)", .action=&red_right_side}
+	{.name="RED LEFT SOLO AWP", .action=&red_left_side_solo_awp}
+    , {.name="BLUE LEFT (3 ring)", .action=&blue_left_side}
+	, {.name = "BLUE RIGHT (4 ring)", .action=&blue_right_side}
+    , {.name="RED LEFT (4 ring)", .action=&red_left_side}
+	, {.name="RED RIGHT (3 ring)", .action=&red_right_side}
 });
 
 // Create robodash console
@@ -239,14 +240,9 @@ void autonomous() {
 	chassis.setBrakeMode(pros::motor_brake_mode_e::E_MOTOR_BRAKE_HOLD);
 		
 	// Run the selected autonomous function - UNCOMMENT ONCE DONE TESTING AUTONS
-	// selector.run_auton();
+	selector.run_auton();
 
-	red_left_side_solo_awp();
-
-	// calls the auton chosen in the auton selector
-	// autonMap[autonNames[curr_auton]]();
-
-	// blue_right_side();
+	// red_left_side_solo_awp();
 };
 
 /**

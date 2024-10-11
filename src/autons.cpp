@@ -769,7 +769,8 @@ void red_left_side_solo_awp() {
 
     // backs and turns around to go to mogo
     // TRACTION WHEELS: horizontalDrift should be 8!
-    chassis.moveToPose(-23.25, 24, 120, 750, { .horizontalDrift = 8 });
+    // -23.25, 24
+    chassis.moveToPose(-21.25, 28, 120, 1500, { .horizontalDrift = 8 });
     waitd;
 
     // clamps mogo; waits for a bit
