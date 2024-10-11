@@ -8,7 +8,8 @@ void clampMogo(void* mogoPointer) {
     // wait for a bit so mogo doesn't get stuck on robot...
     pros::delay(250);
     // ...THEN clamps
-    mogoMech->clamp(0);
+    // switched 0 -> 1
+    mogoMech->clamp(1);
 }
 
 MogoMech::MogoMech(
@@ -69,7 +70,8 @@ void MogoMech::toggle() {
         // driver wants to clamp!
 
         // unclamps
-        this->clamp(1);
+        // switched 1 -> 0
+        this->clamp(0);
         // untilts
         this->tilt(1);
     }

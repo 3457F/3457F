@@ -66,29 +66,28 @@ pros::Controller controller(pros::E_CONTROLLER_MASTER);
 /**
  * TODO: add dt ports!
  */
-// 10 9 -8
-// -2 3 4
-pros::Motor left_front(4);
-pros::Motor left_mid(3);
-pros::Motor left_back(-2);
-
-pros::Motor right_front(-8);
-pros::Motor right_mid(9);
-pros::Motor right_back(10);
+// reversed port 9 from 9 -> -9
+pros::Motor left_front(10);
+pros::Motor left_mid(-9);
+pros::Motor left_back(-8);
+pros::Motor right_front(-2);
+pros::Motor right_mid(3);
+pros::Motor right_back(4);
 
 pros::Imu imu(10);
 
 // motor groups
 pros::MotorGroup left_motors({
-	4
-	, 3
-	, -2
+	10
+	, -9
+	, -8
 }, pros::MotorGearset::blue);
 
+// reversed port 9 from 9 -> -9
 pros::MotorGroup right_motors({
-	-8
-	, 9
-	, 10
+	-2
+	, 3
+	, 4
 }, pros::MotorGearset::blue);
 
 // liblem
@@ -254,14 +253,9 @@ void autonomous() {
 	chassis.setBrakeMode(pros::motor_brake_mode_e::E_MOTOR_BRAKE_HOLD);
 		
 	// Run the selected autonomous function - UNCOMMENT ONCE DONE TESTING AUTONS
-	// selector.run_auton();
+	selector.run_auton();
 
-	red_left_side_solo_awp();
-
-	// calls the auton chosen in the auton selector
-	// autonMap[autonNames[curr_auton]]();
-
-	// blue_right_side();
+	// red_left_side_solo_awp();
 };
 
 /**
