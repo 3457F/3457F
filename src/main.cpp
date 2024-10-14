@@ -67,27 +67,30 @@ pros::Controller controller(pros::E_CONTROLLER_MASTER);
  * TODO: add dt ports!
  */
 // reversed port 9 from 9 -> -9
-pros::Motor left_front(10);
-pros::Motor left_mid(-9);
-pros::Motor left_back(-8);
-pros::Motor right_front(-2);
-pros::Motor right_mid(3);
-pros::Motor right_back(4);
+// made everything un-what it was + swapped sides
+// 10 -9 -8
+// -2 3 4
+pros::Motor left_front(2);
+pros::Motor left_mid(-3);
+pros::Motor left_back(-4);
+pros::Motor right_front(-10);
+pros::Motor right_mid(9);
+pros::Motor right_back(8);
 
 pros::Imu imu(10);
 
 // motor groups
 pros::MotorGroup left_motors({
-	10
-	, -9
-	, -8
+	-10
+	, 9
+	, 8
 }, pros::MotorGearset::blue);
 
 // reversed port 9 from 9 -> -9
 pros::MotorGroup right_motors({
-	-2
-	, 3
-	, 4
+	2
+	, -3
+	, -4
 }, pros::MotorGearset::blue);
 
 // liblem
@@ -150,19 +153,18 @@ void arcade() {
 	int move = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
 	int turn = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
 
-	left_motors.move(((move + turn) / 127.0) * DRIVE_SPEED);
-	right_motors.move(((move - turn) / 127.0) * DRIVE_SPEED);
+	left_motors.move(((move - turn) / 127.0) * DRIVE_SPEED);
+	right_motors.move(((move + turn) / 127.0) * DRIVE_SPEED);
 }
 
 /**
  * SUBSYSTEM INITIALIZATION:
 */
 
-// right intake normal; left intake reversed 
 Intake intake = Intake(
 	{
-		6						// left intake (reversed)
-		, 7						// right intake (normal)
+		-6						// left intake (reversed)
+		, -7						// right intake (normal)
 	}
 	, pros::E_MOTOR_BRAKE_HOLD	// brake mode of intake
 
@@ -176,8 +178,8 @@ Intake intake = Intake(
  * TODO: add mogo ports!
  */
 MogoMech mogo = MogoMech(
-	{ 'C' }
-	, 'A'
+	{ 'C' } // -> ONE piston
+	, 'A'		  // -> TWO pistons
 );
 
 // Arm arm = Arm(10, pros::E_MOTOR_BRAKE_HOLD);
@@ -318,7 +320,7 @@ void opcontrol() {
 		// toggle slapper
 		bool Y_new_press = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y);
 		// toggle tilt
-		bool DOWN_new_press = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP);
+		bool DOWN_new_press = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN);
 
 		/**
 			* ARM
@@ -382,15 +384,16 @@ void opcontrol() {
 
 		// just tilt toggling
 		if (DOWN_new_press) {
-			// cannot tilt when clamp isn't in effect!
-			if (mogo.mogo_clamp_open) {
-				// gives feedback to driver
-				controller.rumble(".");
+			// // cannot tilt when clamp isn't in effect!
+			// if (mogo.mogo_clamp_val) {
+			// 	// gives feedback to driver that disallowed
+			// 	controller.rumble(".");
 			
-			// otherwise all is well and tilt can toggle :D
-			} else {
-				mogo.tilt_toggle();
-			}
+			// // otherwise all is well and tilt can toggle :D
+			// } else {
+			// 	mogo.clamp(0);
+			// }
+			mogo.tilt(1);
 		}
 
 

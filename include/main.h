@@ -35,8 +35,9 @@
  */
 #define PROS_USE_LITERALS
 
-#include "api.h"
 #include "lemlib/api.hpp"
+
+#include "util.hpp"
 
 #include "autons.hpp"
 
