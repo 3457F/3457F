@@ -770,24 +770,24 @@ void red_left_side_solo_awp() {
     // backs and turns around to go to mogo
     // TRACTION WHEELS: horizontalDrift should be 8!
     // -23.25, 24
-    chassis.moveToPose(-21.25, 28, 120, 1500, { .horizontalDrift = 8 });
+    chassis.moveToPose(-21.25, 28, 120, 1500);
     waitd;
 
     // clamps mogo; waits for a bit
     mogo.toggle();
     pros::delay(250);
 
-    // intakes preload ring -> might be too fast?
     intake.intake();
     pros::delay(750);
 
-    // // turns and moves towards first ring on field; KEEPS intake running
-    // // turnAndMoveToPoint(-23.25, 47.5, 500, 750);
-    // // remember, all headings are where the MOGO MECH points
-    // chassis.moveToPose(-23.25, 47.5, 225, 750);
-    // waitd;
-    // // waits for second ring to be intaked
-    // pros::delay(750);
+    // turns and moves towards first ring on field; KEEPS intake running
+    // turnAndMoveToPoint(-23.25, 47.5, 500, 750);
+    // chassis.moveToPose(-23.25, 47.5, 45, 1250, {.forwards = false});
+    // -23.25, 47.5
+    chassis.moveToPoint(-25.25, 49.5, 1000, {.forwards = false});
+    waitd;
+    // waits for second ring to be intaked
+    pros::delay(750);
 
     // // turns around and releases mogo; waits for a bit to finish
     // chassis.turnToHeading(45, 500);

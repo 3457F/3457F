@@ -94,7 +94,7 @@ lemlib::Drivetrain drivetrain(
 	14,
 	lemlib::Omniwheel::NEW_325,
 	450,
-	2
+	8
 );
 
 // lateral PID controller
