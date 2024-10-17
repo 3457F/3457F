@@ -22,37 +22,37 @@ const int DRIVE_SPEED = 127;
 pros::Controller controller(pros::E_CONTROLLER_MASTER);
 
 // motor definitions
-pros::Motor left_front(-2);
+pros::Motor left_front(2);
 pros::Motor left_mid(-3);
-pros::Motor left_back(-1);
+pros::Motor left_back(-4);
 
-pros::Motor right_front(6);
-pros::Motor right_mid(12);
-pros::Motor right_back(5);
+pros::Motor right_front(-10);
+pros::Motor right_mid(9);
+pros::Motor right_back(8);
 
-pros::Imu imu(10);
+pros::Imu imu(1);
 
 // motor groups
 pros::MotorGroup left_motors({
-	-2
+	2
 	, -3
-	, -1
+	, -4
 }, pros::MotorGearset::blue);
 
 pros::MotorGroup right_motors({
-	6
-	, 12
-	, 5
+	-10
+	, 9
+	, 8
 }, pros::MotorGearset::blue);
 
 // liblem
 
 lemlib::Drivetrain drivetrain(
 	&left_motors, &right_motors,
-	14,
-	lemlib::Omniwheel::NEW_325,
+	15,
+	lemlib::Omniwheel::NEW_275,
 	450,
-	2
+	8
 );
 
 // lateral PID controller
@@ -68,9 +68,9 @@ lemlib::ControllerSettings lateral_controller(2, // proportional gain (kP)
 );
 
 // angular PID controller
-lemlib::ControllerSettings angular_controller(2, // proportional gain (kP)
+lemlib::ControllerSettings angular_controller(10, // proportional gain (kP)
                                               0, // integral gain (kI)
-                                              12, // derivative gain (kD)
+                                              3, // derivative gain (kD)
                                               0, // anti windup
                                               0, // small error range, in inches
                                               0, // small error range timeout, in milliseconds
