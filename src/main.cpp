@@ -15,46 +15,8 @@
 
 #include "robodash/api.h"
 
-/**
- * CONFIG VARS:
-*/
-// whether PID is being tuned, or normal
-// driver control should run
-bool tuningPID = false;
-// whether the physical PID tuner is being 
-// used, or P, I, and D values are being set
-// manually, through the C++ structs
-// `lateralController` and
-// `angularController`
-bool usingPhysicalPIDTuner = false;
-// if `tuningPID` is set to `true`, whether
-// LINEAR PID is being tuned, or ANGULAR
-// PID is being tuned
-bool runningLinearPIDTest = false;
-
-/**
- * RUNTIME VARS: (**DO NOT MODIFY**)
-*/
-// if `tuningPID` is set to `true`, whether
-// the robot is CURRENTLY running a test
-// auton with target kP and kD values!
-bool runningPIDTest = false;
-// represents the TARGET (NOT actual) kP,
-// that you want to be set
-int kp_target = 0;
-// represents the TARGET (NOT actual) kD,
-// that you want to be set
-int kd_target = 0;
-
 // constants
 const int DRIVE_SPEED = 127;
-
-lemlib::MoveToPointParams linearPIDTestMoveToPointParams = {
-	.forwards = false
-	, .maxSpeed = 127
-	, .minSpeed = 0
-	, .earlyExitRange = 0
-};
 
 // controller definition
 pros::Controller controller(pros::E_CONTROLLER_MASTER);
@@ -66,10 +28,6 @@ pros::Controller controller(pros::E_CONTROLLER_MASTER);
 /**
  * TODO: add dt ports!
  */
-// reversed port 9 from 9 -> -9
-// made everything un-what it was + swapped sides
-// 10 -9 -8
-// -2 3 4
 pros::Motor left_front(2);
 pros::Motor left_mid(-3);
 pros::Motor left_back(-4);
@@ -77,27 +35,27 @@ pros::Motor right_front(-10);
 pros::Motor right_mid(9);
 pros::Motor right_back(8);
 
-pros::Imu imu(10);
-
-// motor groups
-pros::MotorGroup left_motors({
-	-10
-	, 9
-	, 8
-}, pros::MotorGearset::blue);
+pros::Imu imu(1);
 
 // reversed port 9 from 9 -> -9
-pros::MotorGroup right_motors({
+pros::MotorGroup left_motors({
 	2
 	, -3
 	, -4
 }, pros::MotorGearset::blue);
 
-// liblem
+// motor groups
+pros::MotorGroup right_motors({
+	-10
+	, 9
+	, 8
+}, pros::MotorGearset::blue);
 
+// track width: 15 inches
+// wheelbase: 16 inches
 lemlib::Drivetrain drivetrain(
 	&left_motors, &right_motors,
-	14,
+	15,
 	lemlib::Omniwheel::NEW_275,
 	450,
 
@@ -153,8 +111,8 @@ void arcade() {
 	int move = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
 	int turn = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
 
-	left_motors.move(((move - turn) / 127.0) * DRIVE_SPEED);
-	right_motors.move(((move + turn) / 127.0) * DRIVE_SPEED);
+	left_motors.move(((move + turn) / 127.0) * DRIVE_SPEED);
+	right_motors.move(((move - turn) / 127.0) * DRIVE_SPEED);
 }
 
 /**
@@ -184,8 +142,7 @@ MogoMech mogo = MogoMech(
 
 // Arm arm = Arm(10, pros::E_MOTOR_BRAKE_HOLD);
 
-// was E
-// Doinker doinker = Doinker('B');
+Doinker doinker = Doinker('E');
 
 // Hang hang = Hang('D');
 
@@ -279,7 +236,7 @@ void autonomous() {
 void opcontrol() {
 	// brake mode back to coast!
 	chassis.setBrakeMode(pros::motor_brake_mode_e::E_MOTOR_BRAKE_COAST);
-	intake.intake_motors.set_brake_mode(pros::motor_brake_mode_e::E_MOTOR_BRAKE_COAST);
+	intake.intake_motors.set_brake_mode_all(pros::motor_brake_mode_e::E_MOTOR_BRAKE_COAST);
 
 	// bc hang open at end of some autons, just do this so yeah
 	// hang.toggle();
@@ -354,13 +311,15 @@ void opcontrol() {
 
 			std::cout << "intaking" << std::endl;
 
-			intake.intake();
+			// intake.intake();
+			intake.outtake();
 		} else if (R2_pressed) {
 			// outtaking
 
 			std::cout << "outtaking" << std::endl;
 
-			intake.outtake();
+			// intake.outtake();
+			intake.intake();
 		}
 
 		// /**
@@ -399,11 +358,11 @@ void opcontrol() {
 
 
 		/**
-		 * SLAPPER:
+		 * DOINKER:
 	     */
-		// if (Y_new_press) {
-		// 	doinker.toggle();
-		// }
+		if (Y_new_press) {
+			doinker.toggle();
+		}
 
 		/**
 		 * DRIVING:

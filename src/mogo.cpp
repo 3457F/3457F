@@ -49,7 +49,8 @@ void clampMogoTilt(void* mogoPointer) {
     MogoMech* mogoMech = (MogoMech *)(mogoPointer);
 
     // wait for a bit so mogo doesn't get stuck on robot...
-    pros::delay(250);
+    // delay changed from 250 -> 100
+    pros::delay(100);
     // ...THEN clamps
     // 1 -> 0
     mogoMech->tilt(1);
