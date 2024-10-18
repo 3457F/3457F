@@ -51,7 +51,8 @@ pros::MotorGroup right_motors({
 	, 8
 }, pros::MotorGearset::blue);
 
-// track width: 15 inches
+// track width: 15 inches NOT 15 inches, but 12.426 (cad moment :nerd:)
+// -> measured by tape measure: ~ 12 and 7 / 16 inches (~12.4375)
 // wheelbase: 16 inches
 lemlib::Drivetrain drivetrain(
 	&left_motors, &right_motors,
@@ -130,6 +131,8 @@ Intake intake = Intake(
 	 * TODO: add intake piston ports!
 	 */
 	, 'A'						// intake piston port
+
+	, 'B'						// pressure hood port
 );
 
 /**
