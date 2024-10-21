@@ -56,7 +56,7 @@ pros::MotorGroup right_motors({
 // wheelbase: 16 inches
 lemlib::Drivetrain drivetrain(
 	&left_motors, &right_motors,
-	15,
+	12.426,
 	lemlib::Omniwheel::NEW_275,
 	450,
 
@@ -65,10 +65,10 @@ lemlib::Drivetrain drivetrain(
 	8
 );
 
-// lateral PID controller
-lemlib::ControllerSettings lateral_controller(8, // proportional gain (kP)
+// lateral PID controller -> FOR REFERENCE, maine bot constants WERE kP 8 kD 21
+lemlib::ControllerSettings lateral_controller(10, // proportional gain (kP)
                                               0, // integral gain (kI)
-                                              21, // derivative gain (kD)
+                                              3, // derivative gain (kD)
                                               3, // anti windup
                                               1, // small error range, in inches
                                               100, // small error range timeout, in milliseconds
@@ -77,10 +77,10 @@ lemlib::ControllerSettings lateral_controller(8, // proportional gain (kP)
                                               20 // maximum acceleration (slew)
 );
 
-// angular PID controller
-lemlib::ControllerSettings angular_controller(3, // proportional gain (kP)
+// angular PID controller -> FOR REFERENCE, maine bot constants WERE kP 3 and kD 24
+lemlib::ControllerSettings angular_controller(2, // proportional gain (kP)
                                               0, // integral gain (kI)
-                                              24, // derivative gain (kD)
+                                              10, // derivative gain (kD)
                                               3, // anti windup
                                               1, // small error range, in inches
                                               100, // small error range timeout, in milliseconds
@@ -130,7 +130,7 @@ Intake intake = Intake(
 	/**
 	 * TODO: add intake piston ports!
 	 */
-	, 'A'						// intake piston port
+	, 'D'						// intake piston port
 
 	, 'B'						// pressure hood port
 );
@@ -150,10 +150,11 @@ Doinker doinker = Doinker('E');
 // Hang hang = Hang('D');
 
 rd::Selector selector({
-    {.name="BLUE LEFT (3 ring)", .action=&blue_left_side},
-	{.name = "BLUE RIGHT (4 ring)", .action=&blue_right_side},
-    {.name="RED LEFT (4 ring)", .action=&red_left_side},
-	{.name="RED RIGHT (3 ring)", .action=&red_right_side}
+    {.name="RED LEFT SOLO AWP", .action=&red_left_side_solo_awp}
+    , {.name="BLUE LEFT (3 ring)", .action=&blue_left_side}
+	, {.name = "BLUE RIGHT (4 ring)", .action=&blue_right_side}
+    , {.name="RED LEFT (4 ring)", .action=&red_left_side}
+	, {.name="RED RIGHT (3 ring)", .action=&red_right_side}
 });
 
 // Create robodash console
@@ -215,9 +216,9 @@ void autonomous() {
 	chassis.setBrakeMode(pros::motor_brake_mode_e::E_MOTOR_BRAKE_HOLD);
 		
 	// Run the selected autonomous function - UNCOMMENT ONCE DONE TESTING AUTONS
-	selector.run_auton();
+	// selector.run_auton();
 
-	// red_left_side_solo_awp();
+	red_left_side_solo_awp();
 };
 
 /**

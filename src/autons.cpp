@@ -756,8 +756,10 @@ void red_left_side_solo_awp() {
 
     std::cout << "Running RED left side auton, SOLO AUTON WIN POINT" << std::endl;
 
-    // on starting line, facing our alliance immobile robot
+    // on starting line, facing our alliance immobile robot -> shld be a little more leftward (relative to front of robot)
+    // so that it gets mogo correctly methinks so...?
     // (which is further into the corner)
+    // 197 = 17 + 180! (INTAKE facing 17, NOT "front" of robot)
     chassis.setPose(-58.5, 24, 197);
 
     // pushes into alliance robot WITH INTAKE,
@@ -768,8 +770,17 @@ void red_left_side_solo_awp() {
     waitd;
 
     // backs and turns around to go to mogo
-    // TRACTION WHEELS: horizontalDrift should be 8!
-    chassis.moveToPose(-23.25, 24, 120, 750, { .horizontalDrift = 8 });
+    // chassis.moveToPose(-23.25, 24, 120, 750, { .minSpeed = 90 });
+    // 1500 90
+    // timeout 1000 minSpeed 120 but not far enough
+    // with 1250 minSpeed 120 i think it's going too fast and kinda knocks the mogo
+    // chassis.moveToPose(-29, 27.5, 130, 1250, {.minSpeed = 120});
+    // 5000 timeout, no minspeed works!
+    // 2000 (+ no minspeed) -> too slow?
+    // 2000 minSpeed 80 -> JUST BARELY MISSES
+    // -29, 27.5 -> diagonally too northwest
+    // minSpeed 80 -> too fast?
+    chassis.moveToPose(-27, 25.5, 130, 2250, {.minSpeed = 80});
     waitd;
 
     // clamps mogo; waits for a bit
@@ -778,7 +789,7 @@ void red_left_side_solo_awp() {
 
     // intakes preload ring -> might be too fast?
     intake.intake();
-    pros::delay(750);
+    // pros::delay(750);
 
     // // turns and moves towards first ring on field; KEEPS intake running
     // // turnAndMoveToPoint(-23.25, 47.5, 500, 750);
