@@ -59,7 +59,7 @@ namespace TuningCLI {
 	// legacy: when we had the actual optical shaft encoders to adjust kP and kD :P
     // const bool usingPhysicalPIDTuner = false;
 
-    const bool runningLinearPIDTest = false;
+    const bool runningLinearPIDTest = true;
 
     /**
      * RUNTIME vars:
@@ -384,7 +384,12 @@ void tuningCLI() {
 
 						switch (TuningCLI::command) {
 							case CommandBtns::MOVEFWD:
-								chassis.moveToPoint(0, -24, 3000, {}, false);
+								// turns around: NOT part of PID testing, just so it's more convenient and so that the robot doesn't go all around the place
+								// chassis.turnToHeading(180, 1500, {}, false);
+
+								// TuningCLI::resetState();
+
+								chassis.moveToPoint(0, 24, 3000, {}, false);
 								
 								TuningCLI::resetState();
 

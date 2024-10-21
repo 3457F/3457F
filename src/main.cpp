@@ -49,13 +49,13 @@ pros::MotorGroup right_motors({
 
 lemlib::Drivetrain drivetrain(
 	&left_motors, &right_motors,
-	15,
+	12.426,
 	lemlib::Omniwheel::NEW_275,
 	450,
 	8
 );
 
-// lateral PID controller
+// lateral PID controller -> using kP 10 kD 3
 lemlib::ControllerSettings lateral_controller(10, // proportional gain (kP)
                                               0, // integral gain (kI)
                                               3, // derivative gain (kD)
@@ -67,7 +67,8 @@ lemlib::ControllerSettings lateral_controller(10, // proportional gain (kP)
                                               0 // maximum acceleration (slew)
 );
 
-// angular PID controller
+// angular PID controller: using kP 2, kD 10 bc VERY accurate
+// "TUNED" constant values: kP 5, kD 31 OR kP 6, kD 43
 lemlib::ControllerSettings angular_controller(2, // proportional gain (kP)
                                               0, // integral gain (kI)
                                               10, // derivative gain (kD)
