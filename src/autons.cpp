@@ -759,14 +759,18 @@ void red_left_side_solo_awp() {
     // on starting line, facing our alliance immobile robot -> shld be a little more leftward (relative to front of robot)
     // so that it gets mogo correctly methinks so...?
     // (which is further into the corner)
-    // 197 = 17 + 180! (INTAKE facing 17, NOT "front" of robot)
-    chassis.setPose(-58.5, 24, 197);
 
-    // pushes into alliance robot WITH INTAKE,
+    chassis.setPose(-58.6, 24, 180);
+
+    // pushes into alliance robot WITH INTAKE SIDE
     // NOT intending to go all the way
     // this is to make sure alliance isn't touching starting line
     // MIGHT NEED TUNING
-    chassis.moveToPoint(-47, 58, 1500, { .forwards = false });
+    // chassis.moveToPoint(-47.5, 47, 1500, { .forwards = false });
+
+    // minSpeed 110 bc if go too fast the CoG does a funny
+    // 750ms for barcbots
+    chassis.moveToPoint(-56, 47, 1000, {.forwards = false, .minSpeed = 110});
     waitd;
 
     // backs and turns around to go to mogo
@@ -780,7 +784,24 @@ void red_left_side_solo_awp() {
     // 2000 minSpeed 80 -> JUST BARELY MISSES
     // -29, 27.5 -> diagonally too northwest
     // minSpeed 80 -> too fast?
-    chassis.moveToPose(-27, 25.5, 130, 2250, {.minSpeed = 80});
+
+    // turns further and moves towards mogo
+    // ~1s for barcbots
+    // -23.75, 23.75 angle 120 ; too far IN and the bot goes too fast and kabooms
+    // -25.75, 25.75 angle 120 ; hits mogo TOO FAR LEFT
+    // -24.75, 24.75 angle 125 minSpeed 120 (minSpeed same for above) -> turns TOO MUCH at the end instead of curving and bumps the mogo out, also point still bit too far left/high
+    // -24.75 24 angle 120 minSpeed none -> not far ENOUGH
+
+    // chassis.moveToPose(-24.75, 24, 120, 1500);
+    // chassis.moveToPose(-23.75, 23.75, 120, 1500, {.minSpeed = 80});
+    // -25.75, 25, angle 120, minSpeed 80 -> just a little bit too southeast
+    // -26.25, 25.5 same other settings as above -> still overshoots
+    // -28, 27.25 -> SLIGHTLY undershoots
+
+    // WORKS WELL
+    // chassis.moveToPose(-27.5, 26.75, 120, 2000);
+
+    chassis.moveToPose(-26.25, 25.5, 120, 1500, {.minSpeed = 80, .earlyExitRange = 5});
     waitd;
 
     // clamps mogo; waits for a bit
@@ -789,7 +810,7 @@ void red_left_side_solo_awp() {
 
     // intakes preload ring -> might be too fast?
     intake.intake();
-    // pros::delay(750);
+    pros::delay(750);
 
     // // turns and moves towards first ring on field; KEEPS intake running
     // // turnAndMoveToPoint(-23.25, 47.5, 500, 750);

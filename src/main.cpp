@@ -122,8 +122,8 @@ void arcade() {
 
 Intake intake = Intake(
 	{
-		-6						// left intake (reversed)
-		, -7						// right intake (normal)
+		6						// left intake (reversed)
+		, 7						// right intake (normal)
 	}
 	, pros::E_MOTOR_BRAKE_HOLD	// brake mode of intake
 
@@ -315,15 +315,15 @@ void opcontrol() {
 
 			std::cout << "intaking" << std::endl;
 
-			// intake.intake();
-			intake.outtake();
+			intake.intake();
+			// intake.outtake();
 		} else if (R2_pressed) {
 			// outtaking
 
 			std::cout << "outtaking" << std::endl;
 
-			// intake.outtake();
-			intake.intake();
+			intake.outtake();
+			// intake.intake();
 		}
 
 		// /**
