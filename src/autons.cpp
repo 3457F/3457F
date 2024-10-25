@@ -798,10 +798,12 @@ void red_left_side_solo_awp() {
     // -26.25, 25.5 same other settings as above -> still overshoots
     // -28, 27.25 -> SLIGHTLY undershoots
 
-    // WORKS WELL
-    // chassis.moveToPose(-27.5, 26.75, 120, 2000);
+    // chassis.moveToPose(-27.5, 26.75, 120, 1000);
 
-    chassis.moveToPose(-26.25, 25.5, 120, 1500, {.minSpeed = 80, .earlyExitRange = 5});
+    // chassis.moveToPose(-26.25, 25.5, 120, 1500, {.minSpeed = 80, .earlyExitRange = 5});
+
+    // WORKS WELL
+    chassis.moveToPose(-27.5, 26.75, 120, 2000);
     waitd;
 
     // clamps mogo; waits for a bit
@@ -810,15 +812,20 @@ void red_left_side_solo_awp() {
 
     // intakes preload ring -> might be too fast?
     intake.intake();
-    pros::delay(750);
+    pros::delay(2000);
 
-    // // turns and moves towards first ring on field; KEEPS intake running
-    // // turnAndMoveToPoint(-23.25, 47.5, 500, 750);
-    // // remember, all headings are where the MOGO MECH points
-    // chassis.moveToPose(-23.25, 47.5, 225, 750);
-    // waitd;
-    // // waits for second ring to be intaked
-    // pros::delay(750);
+    // turns and moves towards first ring on field; KEEPS INTAKE RUNNING
+    // turnAndMoveToPoint(-23.25, 47.5, 500, 750);
+    // remember, all headings are where the MOGO MECH points; heading 225 means INTAKE points at ring, NOT mogo!
+    // original pt, adjusted for maine bot to overshoot left: -25.25, 49.5
+    // chassis.moveToPose(-23.5, 47.25, 225, 3000); -> point is too right (relative to actual position of rings)
+    chassis.turnToPoint(-25, 48.75, 1000, {.forwards = false, .minSpeed = 120, .earlyExitRange = 20});
+    // for this intake style, need to go RLLY FAST INTO RING in order to intake!
+    chassis.moveToPoint(-25, 48.75, 1000, {.forwards = false, .minSpeed = 120});
+
+    waitd;
+    // waits for second ring to be intaked
+    pros::delay(750);
 
     // // turns around and releases mogo; waits for a bit to finish
     // chassis.turnToHeading(45, 500);
