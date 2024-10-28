@@ -8,10 +8,14 @@
 #include <vector>
 
 #include "main.h"
+#include "arm.hpp"
+#include "lemlib/chassis/trackingWheel.hpp"
 #include "pros/abstract_motor.hpp"
 #include "pros/misc.h"
 #include "pros/motors.h"
 
+#include "pros/rotation.hpp"
+#include "pros/rtos.hpp"
 #include "robodash/api.h"
 
 /**
@@ -64,34 +68,36 @@ pros::Controller controller(pros::E_CONTROLLER_MASTER);
  */
 // 14.7 inches width
 // 16.6 inches length
-pros::Motor left_front(-2);
-pros::Motor left_mid(-7);
-pros::Motor left_back(-1);
+// pros::Motor left_front(-2);
+// pros::Motor left_mid(-7);
+// pros::Motor left_back(-1);
 
-pros::Motor right_front(6);
-pros::Motor right_mid(12);
-pros::Motor right_back(5);
+// pros::Motor right_front(6);
+// pros::Motor right_mid(12);
+// pros::Motor right_back(5);
 
-pros::Imu imu(10);
+pros::Imu imu(7);
 
 // motor groups
 pros::MotorGroup left_motors({
-	-2
-	, -7
-	, -1
+	-15
+	, -16
+	, -18
 }, pros::MotorGearset::blue);
 
 pros::MotorGroup right_motors({
-	6
-	, 12
-	, 5
+	17
+	, 19
+	, 20
 }, pros::MotorGearset::blue);
+
+pros::Rotation horizontal(5);
 
 // liblem
 
 lemlib::Drivetrain drivetrain(
 	&left_motors, &right_motors,
-	14,
+	14.25,
 	lemlib::Omniwheel::NEW_325,
 	450,
 	8
@@ -110,9 +116,9 @@ lemlib::ControllerSettings lateral_controller(8, // proportional gain (kP)
 );
 
 // angular PID controller
-lemlib::ControllerSettings angular_controller(3, // proportional gain (kP)
+lemlib::ControllerSettings angular_controller(2.5, // proportional gain (kP)
                                               0, // integral gain (kI)
-                                              24, // derivative gain (kD)
+                                              26, // derivative gain (kD)
                                               3, // anti windup
                                               1, // small error range, in inches
                                               100, // small error range timeout, in milliseconds
@@ -121,9 +127,11 @@ lemlib::ControllerSettings angular_controller(3, // proportional gain (kP)
                                               0 // maximum acceleration (slew)
 );
 
+lemlib::TrackingWheel horizontal_track(&horizontal, lemlib::Omniwheel::NEW_2, -3);
+
 lemlib::OdomSensors sensors(nullptr, // vertical tracking wheel 1, set to null
                             nullptr, // vertical tracking wheel 2, set to nullptr as we are using IMEs
-                            nullptr, // horizontal tracking wheel 1
+                            &horizontal_track, // horizontal tracking wheel 1
                             nullptr, // horizontal tracking wheel 2, set to nullptr as we don't have a second one
                             &imu // inertial sensor
 );
@@ -154,31 +162,33 @@ void arcade() {
 
 // right intake normal; left intake reversed 
 Intake intake = Intake(
-	{
-		-19						// left intake (reversed)
-	}
+	
+		{14, 1}						// left intake (reversed)
+	
 	, pros::E_MOTOR_BRAKE_HOLD	// brake mode of intake
 
 	// was B
-	, 'E'						// intake piston port
+	, 'G'
+	, 9
+	, true						// intake piston port
 );
 
 MogoMech mogo = MogoMech('A');
 
-// Arm arm = Arm(10, pros::E_MOTOR_BRAKE_HOLD);
+Arm arm = Arm(6, pros::E_MOTOR_BRAKE_HOLD, 4);
 
 // was E
 Doinker doinker = Doinker('B');
 
 Hang hang = Hang('D');
 
-rd::Selector selector({
-	{.name="RED LEFT SOLO AWP", .action=&red_left_side_solo_awp}
-    , {.name="BLUE LEFT (3 ring)", .action=&blue_left_side}
-	, {.name = "BLUE RIGHT (4 ring)", .action=&blue_right_side}
-    , {.name="RED LEFT (4 ring)", .action=&red_left_side}
-	, {.name="RED RIGHT (3 ring)", .action=&red_right_side}
-});
+// rd::Selector selector({
+// 	{.name="RED LEFT SOLO AWP", .action=&red_left_side_solo_awp}
+//     , {.name="BLUE LEFT (3 ring)", .action=&blue_left_side}
+// 	, {.name = "BLUE RIGHT (4 ring)", .action=&blue_right_side}
+//     , {.name="RED LEFT (4 ring)", .action=&red_left_side}
+// 	, {.name="RED RIGHT (3 ring)", .action=&red_right_side}
+// });
 
 // Create robodash console
 rd::Console console;
@@ -193,6 +203,8 @@ void initialize() {
 	// pros::lcd::initialize();
 
 	chassis.calibrate();
+
+	// pros::Task arm_update([]() {return *arm.update};
 
 	// pros::lcd::register_btn0_cb(left_btn_cb);
 	// pros::lcd::register_btn2_cb(right_btn_cb);
@@ -221,7 +233,7 @@ void disabled() {}
  */
 void competition_initialize() {
 	// Focus auton selector on screen
-	selector.focus();
+	// selector.focus();
 };
 
 /**
@@ -239,7 +251,8 @@ void autonomous() {
 	chassis.setBrakeMode(pros::motor_brake_mode_e::E_MOTOR_BRAKE_HOLD);
 		
 	// Run the selected autonomous function - UNCOMMENT ONCE DONE TESTING AUTONS
-	selector.run_auton();
+	// selector.run_auton();
+	solo_awp();
 
 	// red_left_side_solo_awp();
 };
@@ -367,7 +380,9 @@ void opcontrol() {
 		 * DRIVING:
 		 */
 		// replace with tank() if u really don't like tank that much
-		arcade();
+		tank();
+
+		intake.update_sort();
 //		} else {
 			/* tuning PID! wee! */
 

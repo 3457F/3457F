@@ -51,6 +51,7 @@ extern MogoMech mogo;
 extern Hang hang;
 extern Intake intake;
 extern Doinker doinker;
+extern Arm arm;
 
 /**
  * If you find doing pros::Motor() to be tedious and you'd prefer just to do
