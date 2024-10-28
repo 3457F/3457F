@@ -24,16 +24,12 @@ void Intake::outtake() {
 
 void Intake::update_sort() {
     if (color) {
-        if (std::abs(color_sensor.get_hue()-200) < 50) {
-            intake();
-            pros::delay(50);
+        if (color_sensor.get_rgb().blue > 150) { // blue
             brake();
             pros::delay(100);
         }
     } else {
-        if (std::abs(color_sensor.get_hue()-12) < 10) {
-            intake();
-            pros::delay(10);
+        if (color_sensor.get_rgb().red > 150) { // red
             brake();
             pros::delay(100);
         }
