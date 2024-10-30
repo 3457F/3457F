@@ -66,8 +66,10 @@ pros::Controller controller(pros::E_CONTROLLER_MASTER);
 /**
  * NOTE: The mogo mech is the front of the robot, from a driving perspective and an auton perspective
  */
-// 14.7 inches width
-// 16.6 inches length
+// 15.75 -> length
+// 14.25 -> width
+// 12 -> track width
+
 // pros::Motor left_front(-2);
 // pros::Motor left_mid(-7);
 // pros::Motor left_back(-1);
@@ -97,10 +99,10 @@ pros::Rotation horizontal(5);
 
 lemlib::Drivetrain drivetrain(
 	&left_motors, &right_motors,
-	14.25,
+	12,
 	lemlib::Omniwheel::NEW_325,
 	450,
-	8
+	2
 );
 
 // lateral PID controller
@@ -252,7 +254,9 @@ void autonomous() {
 		
 	// Run the selected autonomous function - UNCOMMENT ONCE DONE TESTING AUTONS
 	// selector.run_auton();
-	solo_awp();
+	red_solo_awp_new_bot();
+
+	// solo_awp();
 
 	// red_left_side_solo_awp();
 };
@@ -276,6 +280,7 @@ void autonomous() {
 void opcontrol() {
 	// brake mode back to coast!
 	chassis.setBrakeMode(pros::motor_brake_mode_e::E_MOTOR_BRAKE_COAST);
+	// arm.arm_motor.set_brake_mode(pros::motor_brake_mode_e::E_MOTOR_BRAKE_COAST);
 
 	// bc hang open at end of some autons, just do this so yeah
 	// hang.toggle();
@@ -305,8 +310,8 @@ void opcontrol() {
 		// outtake
 		bool R2_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2);
 
-		// bool UP_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_UP);
-		// bool DOWN_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN);
+		bool UP_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_UP);
+		bool DOWN_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN);
 
 		///// TOGGLE controls
 		// intake lift -> not using bc can just tip over a stack in driver control
@@ -321,13 +326,13 @@ void opcontrol() {
 		/**
 			* ARM
 		*/
-		// if (UP_pressed == DOWN_pressed) {
-		// 		arm.brake();
-		// } else if (UP_pressed) {
-		// 		arm.arm_up();
-		// } else if (DOWN_pressed) {
-		// 		arm.arm_down();
-		// }
+		if (UP_pressed == DOWN_pressed) {
+			arm.brake();
+		} else if (UP_pressed) {
+			arm.arm_up();
+		} else if (DOWN_pressed) {
+			arm.arm_down();
+		}
 
 		/**
 		 * HANG:
@@ -380,7 +385,7 @@ void opcontrol() {
 		 * DRIVING:
 		 */
 		// replace with tank() if u really don't like tank that much
-		tank();
+		arcade();
 
 		intake.update_sort();
 //		} else {
