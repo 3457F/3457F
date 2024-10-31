@@ -62,6 +62,7 @@ pros::Controller controller(pros::E_CONTROLLER_MASTER);
 // 12 in -> track width
 
 // 15.433 height (based on cad)
+// -> 15.933 (added .5 after sunny cooked with budget bot)
 // -> 15.75 -> measured height
 // 14.00 -> width (based on cad)
 // -> 14.25 -> measured width
@@ -77,16 +78,18 @@ pros::Controller controller(pros::E_CONTROLLER_MASTER);
 
 pros::Imu imu(7);
 
+// swapped ports 18 and 19
+
 // motor groups
 pros::MotorGroup left_motors({
 	-15
 	, -16
-	, -18
+	, -19
 }, pros::MotorGearset::blue);
 
 pros::MotorGroup right_motors({
 	17
-	, 19
+	, 18
 	, 20
 }, pros::MotorGearset::blue);
 
@@ -307,8 +310,9 @@ void opcontrol() {
 		// outtake
 		bool R2_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2);
 
-		bool UP_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_UP);
-		bool DOWN_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN);
+		// bool UP_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_UP);
+		// bool DOWN_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN);
+
 
 		///// TOGGLE controls
 		// intake lift -> not using bc can just tip over a stack in driver control
@@ -317,26 +321,47 @@ void opcontrol() {
 		bool L2_new_press = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2);
 		// toggle slapper
 		bool Y_new_press = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y);
-		// toggle hang
-		bool DOWN_new_press = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN);
+		// // toggle hang
+		// bool DOWN_new_press = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN);
+		// arm test
+		bool UP_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_UP);
+		bool LEFT_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT);
+
+
+		// arm
+		bool DOWN_new_press = controller.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN);
+		bool RIGHT_new_press = controller.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT);
 
 		/**
 			* ARM
 		*/
-		if (UP_pressed == DOWN_pressed) {
-			arm.brake();
-		} else if (UP_pressed) {
+		// if (UP_pressed == DOWN_pressed) {
+		// 	arm.brake();
+		// } else if (UP_pressed) {
+		// 	arm.arm_up();
+		// } else if (DOWN_pressed) {
+		// 	arm.arm_down();
+		// }
+		if (DOWN_new_press) {
+			arm.down_arrow();
+		} else if (RIGHT_new_press) {
+			arm.right_arrow();
+		} 
+		
+		if (LEFT_pressed) {
 			arm.arm_up();
-		} else if (DOWN_pressed) {
+		} else if (UP_pressed) {
 			arm.arm_down();
+		} else if (LEFT_pressed == UP_pressed) {
+			arm.brake();
 		}
 
-		/**
-		 * HANG:
-		 */
-		if (DOWN_new_press) {
-			hang.toggle();
-		}
+		// /**
+		//  * HANG:
+		//  */
+		// if (DOWN_new_press) {
+		// 	hang.toggle();
+		// }
 
 		/**
 		 * INTAKE:

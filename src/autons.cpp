@@ -71,8 +71,8 @@ void red_solo_awp_new_bot() {
     // drops mogo + goes for second one
     // TODO: might need to stop intake here, in case accidentally intakes blue ring..?
     // turnAndMoveToPoint(-23.5, -23.5, 1000, 1000);
-    // using 2 points bc going AROUND ladder (moving forward for first one so can drop mogo BEHIND and THEN turn around)
-    turnAndMoveToPoint(-38, 0, 1000, 1000, false);
+    // using 2 points bc going AROUND ladder (moving with INTAKE forward first, so can drop mogo BEHIND and THEN turn around)
+    turnAndMoveToPoint(-45, -9.5, 1000, 1000, false);
     // "drops" old mogo
     mogo.toggle();
     turnAndMoveToPoint(-23.5, -23.5, 500, 1000, true, true);

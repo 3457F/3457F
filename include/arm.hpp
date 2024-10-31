@@ -4,8 +4,32 @@
 #include "lemlib/pid.hpp"
 #include "pros/rotation.hpp"
 
+// clockwise UP
+// counter-clockwise DOWN
 class Arm {
     public:
+        // actual score position -> 195.4316402 (195)
+        // OUT OF SIZE score position -> 130 (FULLY HORIZ -> OUT OF SIZE)
+
+        // angle constants for different states of the arm
+        
+        // relative to the LOWEST POSITION when "retracted"
+        // (not facing outwards)
+        // -> start pos 330.0
+        // -> load in pos 310.0
+        // -> vert pos 225.0
+
+        // length of arm: 12.159
+        // ~8in can fully extend (6 to be safe)
+        // -> ~60* (60.43164023*) max FROM HORIZ; ~30* (29.56835977*) max FROM VERT
+        // -> score pos 195.0
+
+
+        static constexpr double START_POS = 0.0; // 0.0
+        static constexpr double LOADIN_POS = 20.0; // -20.0
+        static constexpr double VERT_POS = 105.0; // -105.0
+        static constexpr double SCORE_POS = 135.0; // -135.0
+
         pros::Motor arm_motor;
 
         pros::motor_brake_mode_e brake_mode;
@@ -13,7 +37,14 @@ class Arm {
         pros::Rotation encoder;
 
         lemlib::PID pid;
-        int target;
+
+        float target;
+
+        // -1: not reset
+        // 0: START_POS
+        // 1: LOADIN_POS
+        // 2: SCORE_POS
+        int state;
 
         Arm(
             std::int8_t arm_motor_port
@@ -23,9 +54,13 @@ class Arm {
             std::int8_t encoder_port
         );
 
-        void move(int pos);
+        void set_pos(float target_val);
 
-        void update();
+        void down_arrow();
+
+        void right_arrow();
+
+        // void move(int pos);
 
         void arm_up();
 
