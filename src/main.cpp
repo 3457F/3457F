@@ -52,13 +52,6 @@ int kd_target = 0;
 // constants
 const int DRIVE_SPEED = 127;
 
-lemlib::MoveToPointParams linearPIDTestMoveToPointParams = {
-	.forwards = false
-	, .maxSpeed = 127
-	, .minSpeed = 0
-	, .earlyExitRange = 0
-};
-
 // controller definition
 pros::Controller controller(pros::E_CONTROLLER_MASTER);
 
@@ -66,9 +59,13 @@ pros::Controller controller(pros::E_CONTROLLER_MASTER);
 /**
  * NOTE: The mogo mech is the front of the robot, from a driving perspective and an auton perspective
  */
-// 15.75 -> length
-// 14.25 -> width
-// 12 -> track width
+// 12 in -> track width
+
+// 15.433 height (based on cad)
+// -> 15.75 -> measured height
+// 14.00 -> width (based on cad)
+// -> 14.25 -> measured width
+// TECHNICALLY 14.48 in w/ side skirts (based on cad)
 
 // pros::Motor left_front(-2);
 // pros::Motor left_mid(-7);
