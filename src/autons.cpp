@@ -10,14 +10,86 @@
 #define TO 300 // default timeout for when im lazy to specify
 #define waitd chassis.waitUntilDone()
 
-void turnAndMoveToPoint(float x, float y, int turnTO, int mvTO, bool fwd = true) {
+void turnAndMoveToPoint(float x, float y, int turnTO, int mvTO, bool fwd = true, bool async = false) {
     chassis.turnToPoint(x, y, turnTO, { .forwards = fwd });
     waitd;
 
     chassis.moveToPoint(x, y, mvTO, { .forwards = fwd });
-    waitd;
+    if (!async) {
+        waitd;
+    };
 }
 
+// red side, NEW BOT!
+void red_solo_awp_new_bot() {
+    // ASSUME PUSHING HAS ALR HAPPENED!
+    chassis.setPose(-58.6, 47, 90);
+
+    // turns and moves towards mogo -> 42.6867
+    // -27.5, 26.75 -> too rightward (rel to actual position, rel to bot POV)
+    // -24, 24 -> tiny bit too high
+    turnAndMoveToPoint(-24, 22, 1000, 1500, true, true);
+
+    // clamps pre-emptively
+    // 40.68 -> only finishes afterward...?
+    // 25 -> about 2-3 inches early
+    // 28 -> 1 inch
+    // 30 -> BIT too late...? (0.5 in)
+    chassis.waitUntil(29.5);
+    mogo.toggle();
+
+    // waits for rest of movement to finish
+    waitd;
+
+    // intakes preload ring + waits
+    intake.intake();
+    pros::delay(500);
+
+    /** THIS CAUSES THE HOOKS TO GO AJLKSDFJKLADSFJLKASDJFLKSADJF */
+    // // turns and moves towards first ring on field (INTAKE STILL ON!) + waits
+    // // -25 48.75 -> ring not forced into intake
+    // turnAndMoveToPoint(-24, 62, 1000, 1000, false);
+    // // waits a lot more for ring bc lots of drift on this robot
+    // pros::delay(1000);
+
+    // // comes back so can rotate -> USING MOGO SIDE BC RAMMED INTO WALL W/ INTAKE SIDE!
+    // turns and moves towards first ring on field (second overall; INTAKE STAYS ON!) + waits
+    // chassis.moveToPoint(-24, 48, 1000);
+    turnAndMoveToPoint(-24, 48, 1000, 1000, false);
+    waitd;
+    // 1000ms -> TOO SHORT
+    pros::delay(1750);
+
+    /** NOT GOING FOR RN BC DOESNT WORK */
+    // // raises intake + turns and moves towards second ring on field (INTAKE STILL ON!) + waits
+    // // -> point TOO LEFT (almost 12" left)
+    // intake.lift(1);
+    // // -47, 0 TOO far left
+    // // -50, 0 TOO far left (still)
+    // turnAndMoveToPoint(-55, 0, 1000, 2000, false);
+    // pros::delay(2000);
+
+    // drops mogo + goes for second one
+    // TODO: might need to stop intake here, in case accidentally intakes blue ring..?
+    // turnAndMoveToPoint(-23.5, -23.5, 1000, 1000);
+    // using 2 points bc going AROUND ladder (moving forward for first one so can drop mogo BEHIND and THEN turn around)
+    // -38, 0 -> not at right angle to turn to mogo
+    turnAndMoveToPoint(-45, -9.5, 1000, 1000, false);
+    // "drops" old mogo
+    mogo.toggle();
+    // turns to NEW mogo
+    turnAndMoveToPoint(-23.5, 0, 1000, 1000, true, true);
+    chassis.waitUntil(25);
+    // "gets" new mogo
+    mogo.toggle();
+    // waits for rest of movement to finish
+    waitd;
+
+    // // turns + moves towards third ring on field
+    // turnAndMoveToPoint(-23.5, -47.25, 1000, 1000);
+    // // waits for third ring to be intaked
+    // pros::delay(500);
+}
 
 
 // void prog_skills() {

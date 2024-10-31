@@ -143,7 +143,10 @@ MogoMech mogo = MogoMech(
 	, 'A'		  // -> TWO pistons
 );
 
-// Arm arm = Arm(10, pros::E_MOTOR_BRAKE_HOLD);
+// clockwise is up
+// counter-clockwise is down
+// Arm arm = Arm(11, pros::E_MOTOR_BRAKE_HOLD);
+Arm arm = Arm(11, pros::E_MOTOR_BRAKE_COAST);
 
 Doinker doinker = Doinker('E');
 
@@ -218,7 +221,8 @@ void autonomous() {
 	// Run the selected autonomous function - UNCOMMENT ONCE DONE TESTING AUTONS
 	// selector.run_auton();
 
-	red_left_side_solo_awp();
+	// red_left_side_solo_awp();
+	red_solo_awp_new_bot();
 };
 
 /**
@@ -270,8 +274,8 @@ void opcontrol() {
 		// outtake
 		bool R2_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2);
 
-		// bool UP_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_UP);
-		// bool DOWN_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN);
+		bool UP_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_UP);
+		bool DOWN_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN);
 
 		///// TOGGLE controls
 		// intake lift -> not using bc can just tip over a stack in driver control
@@ -286,13 +290,15 @@ void opcontrol() {
 		/**
 			* ARM
 		*/
-		// if (UP_pressed == DOWN_pressed) {
-		// 		arm.brake();
-		// } else if (UP_pressed) {
-		// 		arm.arm_up();
-		// } else if (DOWN_pressed) {
-		// 		arm.arm_down();
-		// }
+		if (UP_pressed == DOWN_pressed) {
+			arm.brake();
+		} else if (UP_pressed) {
+			arm.arm_up();
+		} else if (DOWN_pressed) {
+			arm.arm_down();
+		}
+
+		std::cout << arm.arm_motor.get_position() << std::endl;
 
 		// /**
 		//  * HANG:
@@ -307,20 +313,14 @@ void opcontrol() {
 		if (R1_pressed == R2_pressed) {
 			// if both controls are pressed or depressed, brake (stop) the intake
 
-			std::cout << "braking" << std::endl;
-
 			intake.brake();
 		} else if (R1_pressed) {
 			// intaking
-
-			std::cout << "intaking" << std::endl;
 
 			intake.intake();
 			// intake.outtake();
 		} else if (R2_pressed) {
 			// outtaking
-
-			std::cout << "outtaking" << std::endl;
 
 			intake.outtake();
 			// intake.intake();

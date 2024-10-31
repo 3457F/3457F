@@ -2,6 +2,8 @@
 
 // void prog_skills();
 
+void red_solo_awp_new_bot();
+
 void blue_left_side();
 void red_right_side();
 void red_left_side();

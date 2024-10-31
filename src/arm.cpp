@@ -1,4 +1,5 @@
 #include "arm.hpp"
+#include "pros/abstract_motor.hpp"
 
 Arm::Arm(
     std::int8_t arm_motor_port
@@ -7,6 +8,9 @@ Arm::Arm(
     brake_mode = arm_brake_mode;
 
     arm_motor.set_brake_mode(arm_brake_mode);
+
+    arm_motor.set_encoder_units(pros::MotorUnits::degrees);
+    arm_motor.set_zero_position(10);
 }
 
 void Arm::arm_up() {
