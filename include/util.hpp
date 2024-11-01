@@ -13,6 +13,6 @@ struct FetchInfo {
 
 struct SetInfo {
     lemlib::PID pid;
-    std::int32_t curr_pos;
+    std::int32_t curr_angle;
     float target;
 };

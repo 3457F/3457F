@@ -7,7 +7,7 @@
 float update_info(void* setInfoVoid) {
     SetInfo* setInfo = static_cast<SetInfo*>(setInfoVoid);
 
-    float error = static_cast<float>(setInfo->target - setInfo->curr_pos);
+    float error = static_cast<float>(setInfo->target - setInfo->curr_angle);
    
     float pid_unit = setInfo->pid.update(error);
 
@@ -17,6 +17,8 @@ float update_info(void* setInfoVoid) {
 void update(void* fetchInfoVoid) {
     FetchInfo* fetchInfo = static_cast<FetchInfo*>(fetchInfoVoid);
 
+    std::int32_t curr_angle;
+
     SetInfo setInfo = {
         fetchInfo->pid
         , fetchInfo->encoder->get_angle()
@@ -24,6 +26,11 @@ void update(void* fetchInfoVoid) {
     };
 
     float pid_unit = update_info(&setInfo);
+
+    std::cout << "voltage being set: " 
+              << pid_unit 
+              << " | curr position: " 
+              << fetchInfo->encoder->get_angle();
 
     fetchInfo->arm->arm_motor.move_voltage(pid_unit);
 };
@@ -44,19 +51,14 @@ Arm::Arm(
     state = 0;
 
     this->set_pos(START_POS);
+
+    // FetchInfo 
+
+    // pros::Task arm_task(update, static_cast<void*>(fetchInfo));
 }
 
 void Arm::set_pos(float target_val) {
     target = target_val;
-
-    FetchInfo* fetchInfo = new FetchInfo{
-        pid
-        , this
-        , target
-        , &encoder
-    };
-
-    pros::Task arm_task(update, static_cast<void*>(fetchInfo));
 }
 
 // void Arm::move(int pos) {
