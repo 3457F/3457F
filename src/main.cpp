@@ -171,13 +171,14 @@ Intake intake = Intake(
 
 	// was B
 	, 'G'
-	, 9
+	, 10
 	, true						// intake piston port
 );
 
 MogoMech mogo = MogoMech('A');
 
-Arm arm = Arm(6, pros::E_MOTOR_BRAKE_HOLD, 4);
+// was 4 (so starts at 0 and goes DOWN (360 -> 330 and all))
+Arm arm = Arm(6, pros::E_MOTOR_BRAKE_HOLD, -4);
 
 // was E
 Doinker doinker = Doinker('B');
@@ -329,8 +330,10 @@ void opcontrol() {
 
 
 		// arm
-		bool DOWN_new_press = controller.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN);
-		bool RIGHT_new_press = controller.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT);
+		bool DOWN_new_press = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN);
+		bool UP_new_press = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP);
+		bool RIGHT_new_press = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT);
+		bool LEFT_new_press = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_LEFT);
 
 		/**
 			* ARM
@@ -346,15 +349,19 @@ void opcontrol() {
 			arm.down_arrow();
 		} else if (RIGHT_new_press) {
 			arm.right_arrow();
-		} 
-		
-		if (LEFT_pressed) {
-			arm.arm_up();
-		} else if (UP_pressed) {
-			arm.arm_down();
-		} else if (LEFT_pressed == UP_pressed) {
-			arm.brake();
+		} else if (UP_new_press) {
+			arm.up_arrow();
+		} else if (LEFT_new_press) {
+			arm.left_arrow();
 		}
+		
+		// if (LEFT_pressed) {
+		// 	arm.arm_up();
+		// } else if (UP_pressed) {
+		// 	arm.arm_down();
+		// } else if (LEFT_pressed == UP_pressed) {
+		// 	arm.brake();
+		// }
 
 		// /**
 		//  * HANG:

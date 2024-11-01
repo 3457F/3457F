@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "3457F",
+    "project_name": "3457F-non-dt",
     "target": "v5",
     "templates": {
       "LemLib": {
@@ -299,9 +299,9 @@
     },
     "upload_options": {
       "icon": "pros",
-      "description": "Showcase of 3457F main program",
+      "description": "NO DRIVETRAIN (test subsystems)",
       "after": "screen",
-      "slot": 1
+      "slot": 4
     },
     "use_early_access": false
   }
