@@ -25,10 +25,17 @@ class Arm {
         // -> score pos 195.0
 
 
-        static constexpr double START_POS = 0.0; // 0.0
-        static constexpr double LOADIN_POS = 20.0; // -20.0
-        static constexpr double VERT_POS = 105.0; // -105.0
-        static constexpr double SCORE_POS = 135.0; // -135.0
+        static constexpr double START_POS = 0.0; // 0.0 / 360.0
+        // static constexpr double START_POS = 30.0 * 100; // 330.0
+        // static constexpr double LOADIN_POS = -50.0 * 100; // 310.0
+        // static constexpr double LOADIN_POS = 310.0 * 100;
+        static constexpr double LOADIN_POS = 50.0 * 100;
+
+        // aarav wanted to adjust +7*
+        // static constexpr double VERT_POS = 135.0 * 100; // -105.0
+        static constexpr double VERT_POS = 150.0 * 100;
+        
+        static constexpr double SCORE_POS = 195.0 * 100; // -135.0
 
         pros::Motor arm_motor;
 
@@ -58,7 +65,11 @@ class Arm {
 
         void down_arrow();
 
+        void up_arrow();
+
         void right_arrow();
+
+        void left_arrow();
 
         // void move(int pos);
 

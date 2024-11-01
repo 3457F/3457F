@@ -5,14 +5,15 @@
 #include "arm.hpp"
 
 struct FetchInfo {
-    lemlib::PID pid;
+    lemlib::PID* pid;
     Arm* arm;
-    float target;
+    float* target;
     pros::Rotation* encoder;
 };
 
 struct SetInfo {
-    lemlib::PID pid;
+    lemlib::PID* pid;
+    float error;
     std::int32_t curr_angle;
-    float target;
+    float* target;
 };

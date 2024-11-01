@@ -5,7 +5,7 @@
 #include "pros/imu.h"
 #include "pros/rtos.h"
 #include "pros/rtos.hpp"
-#include <ctime>
+#include <chrono>
 
 #define TO 1200 // default timeout for when im lazy to specify
 #define waitd chassis.waitUntilDone()
@@ -25,6 +25,8 @@ void red_solo_awp_new_bot() {
     // ASSUME PUSHING HAS ALR HAPPENED!
     chassis.setPose(-58.6, 47, 90);
 
+    auto start = std::chrono::high_resolution_clock::now();
+
     // turns and moves towards mogo -> 42.6867
     // -27.5, 26.75 -> too rightward (rel to actual position, rel to bot POV)
     // -24, 24 -> tiny bit too high
@@ -43,7 +45,8 @@ void red_solo_awp_new_bot() {
 
     // intakes preload ring + waits
     intake.intake();
-    pros::delay(500);
+    // 500ms -> 400
+    pros::delay(400);
 
     /** THIS CAUSES THE HOOKS TO GO AJLKSDFJKLADSFJLKASDJFLKSADJF */
     // // turns and moves towards first ring on field (INTAKE STILL ON!) + waits
@@ -56,8 +59,8 @@ void red_solo_awp_new_bot() {
     // chassis.moveToPoint(-24, 48, 1000);
     turnAndMoveToPoint(-24, 48, 1000, 1000, false);
     waitd;
-    // 1000ms -> TOO SHORT
-    pros::delay(1750);
+    // 1750 -> 1000
+    pros::delay(1000);
 
     /** NOT GOING FOR RN BC DOESNT WORK */
     // // raises intake + turns and moves towards second ring on field (INTAKE STILL ON!) + waits
@@ -72,10 +75,20 @@ void red_solo_awp_new_bot() {
     // TODO: might need to stop intake here, in case accidentally intakes blue ring..?
     // turnAndMoveToPoint(-23.5, -23.5, 1000, 1000);
     // using 2 points bc going AROUND ladder (moving with INTAKE forward first, so can drop mogo BEHIND and THEN turn around)
-    turnAndMoveToPoint(-45, -9.5, 1000, 1000, false);
+    // turnTO 2000 -> 1500
+    // mvTO needs most of that time so doesn't drift
+    turnAndMoveToPoint(-45, -9.5, 1500, 2000, false, true);
+    // drops mogo midway so we don't have to care about it
+    chassis.waitUntil(40);
     // "drops" old mogo
     mogo.toggle();
-    turnAndMoveToPoint(-23.5, -23.5, 500, 1000, true, true);
+    // waits for rest of movement
+    waitd;
+    
+    // pros::delay(500);
+    // -23.5, -23.5 too low
+    // -23.5, -20.5/-19.5 -> DRIFT SO INACCURATE SO UNDERSHOOT SO CAN REACH MOGO!
+    turnAndMoveToPoint(-23.5, -18.5, 2000, 2000, true, true);
     chassis.waitUntil(25);
     // "gets" new mogo + waits
     mogo.toggle();
@@ -83,10 +96,21 @@ void red_solo_awp_new_bot() {
     // waits for rest of movement to finish
     waitd;
 
-    // // turns + moves towards third ring on field
-    // turnAndMoveToPoint(-23.5, -47.25, 1000, 1000);
-    // // waits for third ring to be intaked
-    // pros::delay(500);
+    // turns + moves towards third ring on field
+    // x: -23.5 (angled bit too left due to drift; need to compensate!)
+    // ALSO ACTUAL ROBOT OVERSHOOTS A LOT BC OF DRIFT...!!!
+    turnAndMoveToPoint(-25.5, -47.25, 1000, 1000, false);
+    // waits for third ring to be intaked
+    pros::delay(500);
+
+    // going to ladder!
+    chassis.moveToPoint(-19.5, -4, 2000);
+
+    auto end = std::chrono::high_resolution_clock::now();
+
+    std::chrono::duration<double> elapsed = end - start;
+
+    std::cout << "Time elapsed: " << elapsed.count() << "seconds." << std::endl;
 }
 
 // red side -> sunny's method that goes for wall stake
