@@ -1,6 +1,7 @@
+#include <cmath>
+
 #include "arm.hpp"
 #include "lemlib/pid.hpp"
-
 #include "util.hpp"
 
 // // meant to be run as a task
@@ -14,11 +15,27 @@
 //     return pid_unit;
 // };
 
-// task
-void update(void* fetchInfoVoid) {
-    while (true) {
-        FetchInfo* fetchInfo = static_cast<FetchInfo*>(fetchInfoVoid);
+struct LoadInInfo;
 
+// task
+void loadin_unstuck(void* loadInInfoVoid) {
+    LoadInInfo* loadInInfo = static_cast<LoadInInfo*>(loadInInfoVoid);
+
+    // loadInInfo->intake->outtake();
+    // pros::delay(500);
+    // loadInInfo->intake->brake();
+
+    loadInInfo->arm->state = 1;
+
+    std::cout << "LOADIN_POS (half reset)" << std::endl;
+    loadInInfo->arm->set_pos(loadInInfo->arm->LOADIN_POS);
+}
+
+// task; RUNS EVERY 20 MS TO UPDATE ARM PID
+void update(void* fetchInfoVoid) {
+    FetchInfo* fetchInfo = static_cast<FetchInfo*>(fetchInfoVoid);
+
+    while (true) {
         std::int32_t curr_angle = fetchInfo->encoder->get_angle();
 
         float error = static_cast<float>(*fetchInfo->target - curr_angle);
@@ -45,8 +62,14 @@ void update(void* fetchInfoVoid) {
         //         << " | curr position (*): " 
         //         << (fetchInfo->encoder->get_angle() / 100)
         //         << std::endl;
+        
+        std::cout << "error: " << error << std::endl;
 
-        fetchInfo->arm->arm_motor.move_voltage(pid_unit);
+        // only if the error is suuper significant, move the motor
+        // if (std::abs(error) > (10 * 100) && std::abs(error) < (350 * 100)) { // amongus
+        if (std::abs(error) < (350 * 100)) {
+            fetchInfo->arm->arm_motor.move_voltage(pid_unit);
+        }
 
         pros::delay(20);
     }
@@ -56,8 +79,14 @@ Arm::Arm(
     std::int8_t arm_motor_port
     , pros::motor_brake_mode_e arm_brake_mode
     , std::int8_t encoder_port
+    , Intake* intake
 ): arm_motor(arm_motor_port)
     , encoder(encoder_port)
+    , intake(intake)
+    , loadInInfo(new LoadInInfo{
+        intake
+        , this
+    })
     // kP 2, kD 10
     , pid(1.5, 0, 5)
 {
@@ -71,7 +100,8 @@ Arm::Arm(
 
     state = 0;
 
-    this->set_pos(START_POS);
+    // already at start pos!
+    // this->set_pos(START_POS);
 
     FetchInfo* fetchInfo = new FetchInfo {
         &this->pid
@@ -91,8 +121,7 @@ void Arm::set_pos(float target_val) {
 //     arm_motor.move_absolute(pos, 100);
 // }
 
-// to load_in pos
-void Arm::down_arrow() {
+void Arm::score_setup() {
     // START
     if (state == 0) {
         state = 1;
@@ -103,6 +132,8 @@ void Arm::down_arrow() {
     
     // LOADIN
     else if (state == 1) {
+        // first moves the 
+
         state = 2;
 
         std::cout << "VERT_POS" << std::endl;
@@ -111,22 +142,21 @@ void Arm::down_arrow() {
 }
 
 // to score
-void Arm::up_arrow() {
+void Arm::score() {
     std::cout << "SCORE_POS" << std::endl;
     this->set_pos(SCORE_POS);
 }
 
 
 // BACK TO LOADIN
-void Arm::right_arrow() {
+void Arm::load_in() {
     state = 1;
 
-    std::cout << "LOADIN_POS (half reset)" << std::endl;
-    this->set_pos(LOADIN_POS);
+    pros::Task loadin_unstuck_task(loadin_unstuck, loadInInfo);
 }
 
 // BACK TO INIT
-void Arm::left_arrow() {
+void Arm::init_pos() {
     state = 0;
 
     std::cout << "START_POS (FULL reset)" << std::endl;

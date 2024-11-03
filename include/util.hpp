@@ -2,6 +2,16 @@
 
 #include "api.h"
 #include "lemlib/api.hpp"
+
+#include "intake.hpp"
+
+class Arm;
+
+struct LoadInInfo {
+    Intake* intake;
+    Arm* arm;
+};
+
 #include "arm.hpp"
 
 struct FetchInfo {

@@ -80,20 +80,21 @@ pros::Imu imu(7);
 
 // swapped ports 18 and 19
 // then, swapped ports 19 and 20
+// then, swapped ports 19 and 20 again
 
 // motor groups
 pros::MotorGroup left_motors({
 	-15
 	, -16
 	// , -19
-	, -20
+	, -19
 }, pros::MotorGearset::blue);
 
 pros::MotorGroup right_motors({
 	17
 	, 18
 	// , 20
-	, 19
+	, 20
 }, pros::MotorGearset::blue);
 
 pros::Rotation horizontal(5);
@@ -180,20 +181,25 @@ Intake intake = Intake(
 
 MogoMech mogo = MogoMech('A');
 
-Arm arm = Arm(6, pros::E_MOTOR_BRAKE_HOLD, -4);
+Arm arm = Arm(
+	6
+	, pros::E_MOTOR_BRAKE_HOLD
+	, -4
+	, &intake
+);
 
 // was E
 Doinker doinker = Doinker('B');
 
-Hang hang = Hang('D');
+// Hang hang = Hang('D')
 
-// rd::Selector selector({
-// 	{.name="RED LEFT SOLO AWP", .action=&red_left_side_solo_awp}
-//     , {.name="BLUE LEFT (3 ring)", .action=&blue_left_side}
-// 	, {.name = "BLUE RIGHT (4 ring)", .action=&blue_right_side}
-//     , {.name="RED LEFT (4 ring)", .action=&red_left_side}
-// 	, {.name="RED RIGHT (3 ring)", .action=&red_right_side}
-// });
+rd::Selector selector({
+	{.name="RED LEFT SOLO AWP", .action=&red_solo_awp_new_bot}
+	, {.name="RED LEFT (2 ring)", .action=&red_left_shortened_no_ladder}
+	, {.name="RED RIGHT (3 ring)", .action=&red_right_side}
+    , {.name="BLUE LEFT (3 ring)", .action=&blue_left_side}
+	, {.name = "BLUE RIGHT (4 ring)", .action=&blue_right_side}
+});
 
 // Create robodash console
 rd::Console console;
@@ -256,54 +262,33 @@ void autonomous() {
 	chassis.setBrakeMode(pros::motor_brake_mode_e::E_MOTOR_BRAKE_HOLD);
 		
 	// Run the selected autonomous function - UNCOMMENT ONCE DONE TESTING AUTONS
-	// selector.run_auton();
-	red_solo_awp_new_bot();
+	selector.run_auton();
+	// red_solo_awp_new_bot();
 
-	// solo_awp();
-
-	// red_left_side_solo_awp();
+	// red_left_shortened_no_ladder();
 };
 
 /**
- * Runs the operator control code. This function will be started in its own task
+ * Runs the operator control code. This function will be started in its *own task*
  * with the default priority and stack size whenever the robot is enabled via
  * the Field Management System or the VEX Competition Switch in the operator
  * control mode.
  *
- * If no competition control is connected, this function will run immediately
- * following initialize().
+ * *If no competition control is connected (the program is run straight from the controller),
+ * this function will run immediately following initialize()*
  *
  * If the robot is disabled or communications is lost, the
  * operator control task will be stopped. Re-enabling the robot will restart the
  * task, not resume it from where it left off.
  */
- 
-
-
 void opcontrol() {
 	// brake mode back to coast!
 	chassis.setBrakeMode(pros::motor_brake_mode_e::E_MOTOR_BRAKE_COAST);
-	// arm.arm_motor.set_brake_mode(pros::motor_brake_mode_e::E_MOTOR_BRAKE_COAST);
 
 	// bc hang open at end of some autons, just do this so yeah
 	// hang.toggle();
 
-	// opcontrol runs forever! (while in driver control; it's its own task so we gucci)
 	while (true) {
-//		if (!tuningPID) {
-			/* normal driver control */
-
-//			bool X_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_X);
-//			bool A_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_A);
-
-			// if both the X and A buttons are pressed
-//			if (X_pressed && A_pressed) {
-//				printf("X and A were both pressed, transferring to tuning PID mode...\n\n---\n\n");
-//				tuningPID = true;
-
-//				continue;
-//			}
-
 		/**
 		* CONTROL FETCHING:
 		*/
@@ -312,10 +297,6 @@ void opcontrol() {
 		bool R1_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1);
 		// outtake
 		bool R2_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2);
-
-		// bool UP_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_UP);
-		// bool DOWN_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN);
-
 
 		///// TOGGLE controls
 		// intake lift -> not using bc can just tip over a stack in driver control
@@ -341,21 +322,21 @@ void opcontrol() {
 			* ARM
 		*/
 		if (DOWN_new_press) {
-			arm.down_arrow();
+			arm.score_setup(); 
 		} else if (RIGHT_new_press) {
-			arm.right_arrow();
+			arm.load_in();
 		} else if (UP_new_press) {
-			arm.up_arrow();
+			arm.score();
 		} else if (LEFT_new_press) {
-			arm.left_arrow();
+			arm.init_pos();
 		}
 
-		// /**
-		//  * HANG:
-		//  */
-		// if (DOWN_new_press) {
-		// 	hang.toggle();
-		// }
+		/**
+		 * DOINKER:
+	     */
+		if (Y_new_press) {
+			doinker.toggle();
+		}
 
 		/**
 		 * INTAKE:
@@ -391,28 +372,15 @@ void opcontrol() {
 		}
 
 		/**
-		 * SLAPPER:
-	     */
-		if (Y_new_press) {
-			doinker.toggle();
-		}
-
-		/**
 		 * DRIVING:
 		 */
 		// replace with tank() if u really don't like tank that much
 		arcade();
 
 		// intake.update_sort();
-//		} else {
-			/* tuning PID! wee! */
-
-			// tuningCLI();
-//		}
 
 		// delay to save system resources
 		pros::delay(20);
-	
 	}
 }
 
