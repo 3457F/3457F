@@ -4,6 +4,9 @@
 #include "lemlib/pid.hpp"
 #include "pros/rotation.hpp"
 
+#include "intake.hpp"
+#include "util.hpp"
+
 // clockwise UP
 // counter-clockwise DOWN
 class Arm {
@@ -25,17 +28,17 @@ class Arm {
         // -> score pos 195.0
 
 
-        static constexpr double START_POS = 0.0; // 0.0 / 360.0
+        static constexpr double START_POS = 0.0; // 0.0 -> 360.0
         // static constexpr double START_POS = 30.0 * 100; // 330.0
         // static constexpr double LOADIN_POS = -50.0 * 100; // 310.0
         // static constexpr double LOADIN_POS = 310.0 * 100;
-        static constexpr double LOADIN_POS = 50.0 * 100;
-
+        // 50.0 -> 38.0 -> 45.0 -> 50.0
+        static constexpr double LOADIN_POS = 48.0 * 100;
 
         // aarav wanted to adjust +7*
-        // static constexpr double VERT_POS = 135.0 * 100; // -105.0
-        static constexpr double VERT_POS = 150.0 * 100;
-        
+        // basically score pos at this point lmao
+        // 135.0 -> 150.0 -> 155.0 -> 157.0 -> 175.0 -> 165.0
+        static constexpr double VERT_POS = 165.0 * 100;
         
         static constexpr double SCORE_POS = 195.0 * 100; // -135.0
 
@@ -46,6 +49,10 @@ class Arm {
         pros::Rotation encoder;
 
         lemlib::PID pid;
+
+        Intake* intake;
+
+        LoadInInfo* loadInInfo;
 
         float target;
 
@@ -61,17 +68,19 @@ class Arm {
             , pros::motor_brake_mode_e arm_brake_mode,
 
             std::int8_t encoder_port
+
+            , Intake* intake
         );
 
         void set_pos(float target_val);
 
-        void down_arrow();
+        void score_setup();
 
-        void up_arrow();
+        void score();
 
-        void right_arrow();
+        void load_in();
 
-        void left_arrow();
+        void init_pos();
 
         // void move(int pos);
 

@@ -5,7 +5,7 @@
 #include "pros/imu.h"
 #include "pros/rtos.h"
 #include "pros/rtos.hpp"
-#include <ctime>
+#include <chrono>
 
 #define TO 1200 // default timeout for when im lazy to specify
 #define waitd chassis.waitUntilDone()
@@ -25,6 +25,8 @@ void red_solo_awp_new_bot() {
     // ASSUME PUSHING HAS ALR HAPPENED!
     chassis.setPose(-58.6, 47, 90);
 
+    auto start = std::chrono::high_resolution_clock::now();
+
     // turns and moves towards mogo -> 42.6867
     // -27.5, 26.75 -> too rightward (rel to actual position, rel to bot POV)
     // -24, 24 -> tiny bit too high
@@ -43,7 +45,8 @@ void red_solo_awp_new_bot() {
 
     // intakes preload ring + waits
     intake.intake();
-    pros::delay(500);
+    // 500ms -> 400
+    pros::delay(400);
 
     /** THIS CAUSES THE HOOKS TO GO AJLKSDFJKLADSFJLKASDJFLKSADJF */
     // // turns and moves towards first ring on field (INTAKE STILL ON!) + waits
@@ -56,8 +59,8 @@ void red_solo_awp_new_bot() {
     // chassis.moveToPoint(-24, 48, 1000);
     turnAndMoveToPoint(-24, 48, 1000, 1000, false);
     waitd;
-    // 1000ms -> TOO SHORT
-    pros::delay(1750);
+    // 1750 -> 1000
+    pros::delay(1000);
 
     /** NOT GOING FOR RN BC DOESNT WORK */
     // // raises intake + turns and moves towards second ring on field (INTAKE STILL ON!) + waits
@@ -72,10 +75,20 @@ void red_solo_awp_new_bot() {
     // TODO: might need to stop intake here, in case accidentally intakes blue ring..?
     // turnAndMoveToPoint(-23.5, -23.5, 1000, 1000);
     // using 2 points bc going AROUND ladder (moving with INTAKE forward first, so can drop mogo BEHIND and THEN turn around)
-    turnAndMoveToPoint(-45, -9.5, 1000, 1000, false);
+    // turnTO 2000 -> 1500
+    // mvTO needs most of that time so doesn't drift
+    turnAndMoveToPoint(-45, -9.5, 1500, 2000, false, true);
+    // drops mogo midway so we don't have to care about it
+    chassis.waitUntil(40);
     // "drops" old mogo
     mogo.toggle();
-    turnAndMoveToPoint(-23.5, -23.5, 500, 1000, true, true);
+    // waits for rest of movement
+    waitd;
+    
+    // pros::delay(500);
+    // -23.5, -23.5 too low
+    // -23.5, -20.5/-19.5 -> DRIFT SO INACCURATE SO UNDERSHOOT SO CAN REACH MOGO!
+    turnAndMoveToPoint(-23.5, -18.5, 2000, 2000, true, true);
     chassis.waitUntil(25);
     // "gets" new mogo + waits
     mogo.toggle();
@@ -83,10 +96,137 @@ void red_solo_awp_new_bot() {
     // waits for rest of movement to finish
     waitd;
 
-    // // turns + moves towards third ring on field
-    // turnAndMoveToPoint(-23.5, -47.25, 1000, 1000);
-    // // waits for third ring to be intaked
+    // turns + moves towards third ring on field
+    // x: -23.5 (angled bit too left due to drift; need to compensate!)
+    // ALSO ACTUAL ROBOT OVERSHOOTS A LOT BC OF DRIFT...!!!
+    turnAndMoveToPoint(-25.5, -47.25, 1000, 1000, false);
+    // waits for third ring to be intaked
+    pros::delay(500);
+
+    // going to ladder!
+    chassis.moveToPoint(-19.5, -4, 2000);
+
+    auto end = std::chrono::high_resolution_clock::now();
+
+    std::chrono::duration<double> elapsed = end - start;
+
+    std::cout << "Time elapsed: " << elapsed.count() << "seconds." << std::endl;
+}
+
+/**
+ * CURRENTLY WORKING:
+ * - one ring, one mogo, touches ladder!
+ */
+
+void red_right_side() {
+    // mogo starts automatically toggled open!
+
+    std::cout << "Running RED right side auton" << std::endl;
+
+    chassis.setPose(-58.6, -47, 90);
+
+    // added new point to move towards, so we can get a 
+    // better angle when moving towards and capturing the mogo
+    chassis.moveToPoint(-47.474, -36.3, TO);
+
+    // SWINGS towards mogo; locking LEFT bc TURNING left!
+    // chassis.swingToPoint(-23.5, -23.5, DriveSide::LEFT, TO);
+    chassis.turnToPoint(-23.5, -23.5, TO);
+    waitd;
+    // moves towards where mogo is
+    // -23.5, -23.5 -> robot will be CENTERED on mogo pos!
+    // overshoots a bit to ensure correct orientation of the mogo!
+    // CONSIDER USING MOVETOPOSE? only if it doesn't go straight
+    // go fast forward and CLAMP
+    // minSpeed 90 might be too small?
+    // -23.5, -23.5 -> orig (W/O OVERSHOOT!)
+    // -19.5, -19.5 -> moves too left
+    // -17.5, -19.5 -> hopefully angle adjusted so mogo
+    chassis.moveToPoint(-17.5, -19.5, 1500, {.minSpeed = 90});
+    // funny number we calculated with pythagorean theorem,
+    // then tuned
+    // 20.8 WITH the moving forward at beginning, only hits corner of mogo
+    chassis.waitUntil(21.5);
+    // captures mogo
+    mogo.toggle();
+    waitd;
+    // waits for mogo to be fully captured -> might be useless since we have the waituntil
+    pros::delay(500);
+
+    // moves back so preload ring doesn't hit ladder when intake runs
+    chassis.moveToPoint(-23.5, -23.5, 1000, {.forwards = false});
+    waitd;
+    // starts intake
+    intake.intake();
+    // waits for preload ring to go in
+    // waiting for longer because need to ensure the ring goes in correctly!
+    pros::delay(1500);
+
+    // turns towards first red ring W/ INTAKE
+    chassis.turnToPoint(-23.5, -47.5, 1000, {.forwards = false});
+    waitd;
+    // moves towards first red ring; INTAKE FORWARD OF ROBOT
+    // (blue top, RED BOTTOM); INTAKE STILL RUNNING
+    chassis.moveToPoint(-23.5, -47.5, 1000, {.forwards = false});
+    waitd;
+    // waits a bit for the ring to be intaked!
+    // waiting for longer because need to ensure the ring goes in correctly!
+    // 1500 -> higher chance of blue ring being intaked
+    // 1250 -> higher chance of robot running off before ring intaked
+    //      - WHY IS IT DOING THIS SOMETIMES AND WORKING PERFECTLY OTHER TIMES? 
+    pros::delay(1500);
+    // OUTTAKE intake in case the blue ring is accidentally intaked too!
+    intake.outtake();
+
+    /* used with very last command for SIMPLE version of auton */
+    // // turns around (which is equivalent to turning towards initial
+    // // mogo position) -> this is to make sure mogo is released NOT
+    // // in path of bot to ladder
+    // chassis.turnToPoint(-23.5, -23.5, 1000, {.forwards = false});
+    // // lets go of mogo (now the mogo is facing opposite direction!)
+    // mogo.toggle();
+    // // wait 500 ms to make sure it was fully uncaptured
     // pros::delay(500);
+
+    // NOT GOING FOR THIRD RING; will first tune this (fri)
+    // // opens intake piston cuz we're getting the TOP ring
+    // intake.lift(1);
+    // // turns around and CURVES towards the second ring (the RED TOP blue bottom stack)
+    // // it is the FORWARD portion of the bot in this segment
+    // // y = -5 instead of y = 0 so we don't accidentally collide with opposing team ig?
+    // chassis.moveToPose(-47, -5, 0, 2500, {.forwards = false});
+    // waitd;
+    // // lifts intake down and starts intake running
+    // intake.lift(0);
+    // intake.intake();
+    // // waits for a bit to make sure the ring is intaked!
+    // // LOWER DELAY BC OF HIGHER TIMEOUT ABOVE; CHANGE AS NECESSARY!
+    // pros::delay(500);
+
+    // keeps intake running in case the ring didn't get intaked
+    // during the previous steps
+
+    // moves back to a initial mogo point, with mogo mech
+    // facing AWAY from the ladder, so mogo can be released AWAY
+    // from path of robot when it goes towards the ladder!
+    chassis.moveToPose(-23.5, -23.5, 45, 1500, {.forwards = false});
+    // release mogo
+    mogo.toggle();
+    // waits for a bit to make sure mogo was fully uncaptured
+    pros::delay(500);
+
+    // stops intake before it hits the ladder!
+    intake.brake();
+
+    // // turns around so mogo side (with zipties) is facing ladder,
+    // // AND moves toward the ladder
+    // // moving a bit LESS forward because the THIRD ziptie passes (so like a eighth of an inch should average out
+    // // to one of the zipties hitting the ladder)
+    // chassis.moveToPose(-12.25, -12.25, 45, 3000);
+    // waitd;
+    
+    // // lifts up hang at the end bc the zipties are not reliable
+    // hang.toggle();
 }
 
 // red side -> sunny's method that goes for wall stake
@@ -313,120 +453,120 @@ void solo_awp() {
 // //     mogo.toggle();
 // // }
 
-// void blue_left_side() {
-//     std::cout << "Running BLUE left side auton" << std::endl;
+void blue_left_side() {
+    std::cout << "Running BLUE left side auton" << std::endl;
 
-//     chassis.setPose(55.6, -36.3, 270);
+    chassis.setPose(55.6, -36.3, 270);
 
-//     // added new point to move towards, so we can get a 
-//     // better angle when moving towards and capturing the mogo
-//     chassis.moveToPoint(47.474, -36.3, TO);
+    // added new point to move towards, so we can get a 
+    // better angle when moving towards and capturing the mogo
+    chassis.moveToPoint(47.474, -36.3, TO);
 
-//     // SWINGS towards mogo; locking RIGHT bc turning RIGHT!
-//     chassis.swingToPoint(23.5, -23.5, DriveSide::RIGHT, TO);
-//     waitd;
-//     // moves towards where mogo is
-//     // 23.5, -23.5 -> robot will be CENTERED on mogo position
-//     // WAS at 21.5, -21.5 but moved less forward so resetting to 23.5
-//     // overshoots a bit (22.5, -22.5) to ensure correct orientation of the mogo!
-//     // MIGHT NEED TO SLOW DOWN NEAR END! -> go faster so that mogo doesn't have time to vibrate
-//     chassis.moveToPoint(17.5, -19.5, 2000, {.maxSpeed = 90});
-//     waitd;
-//     // funny number we calculated with pythagorean theorem,
-//     // then tuned
-//     // 20.8 WITH the moving forward at beginning, only hits corner of mogo
-//     chassis.waitUntil(21.5);
-//     // retracts mogo mech
-//     mogo.toggle();
-//     // waits for movement to finish
-//     waitd;
-//     // waits for mogo to be fully captured
-//     pros::delay(500);
+    // SWINGS towards mogo; locking RIGHT bc turning RIGHT!
+    chassis.swingToPoint(23.5, -23.5, DriveSide::RIGHT, TO);
+    waitd;
+    // moves towards where mogo is
+    // 23.5, -23.5 -> robot will be CENTERED on mogo position
+    // WAS at 21.5, -21.5 but moved less forward so resetting to 23.5
+    // overshoots a bit (22.5, -22.5) to ensure correct orientation of the mogo!
+    // MIGHT NEED TO SLOW DOWN NEAR END! -> go faster so that mogo doesn't have time to vibrate
+    chassis.moveToPoint(17.5, -19.5, 2000, {.maxSpeed = 90});
+    waitd;
+    // funny number we calculated with pythagorean theorem,
+    // then tuned
+    // 20.8 WITH the moving forward at beginning, only hits corner of mogo
+    chassis.waitUntil(21.5);
+    // retracts mogo mech
+    mogo.toggle();
+    // waits for movement to finish
+    waitd;
+    // waits for mogo to be fully captured
+    pros::delay(500);
 
-//     // moves back so preload ring doesn't hit ladder when intake runs
-//     chassis.moveToPoint(23.5, -23.5, 1000, {.forwards = false});
-//     waitd;
-//     // starts intake
-//     intake.intake();
-//     // waits for preload ring to go in
-//     // waiting for longer because need to ensure the ring goes in correctly!
-//     pros::delay(1500);
+    // moves back so preload ring doesn't hit ladder when intake runs
+    chassis.moveToPoint(23.5, -23.5, 1000, {.forwards = false});
+    waitd;
+    // starts intake
+    intake.intake();
+    // waits for preload ring to go in
+    // waiting for longer because need to ensure the ring goes in correctly!
+    pros::delay(1500);
 
-//     // turns AND moves towards first blue ring WITH INTAKE SIDE IN FRONT
-//     chassis.moveToPose(23.5, -47.5, 180, 1000, {.forwards = false});
-//     waitd;
-//     // waits a bit for the ring to be intaked!
-//     // waiting for longer because need to ensure the ring goes in correctly!
-//     pros::delay(1500);
-//     // STOPS intake in case blue ring is accidentally intaked too...?
-//     // -> MIGHT REMOVE
-//     intake.brake();
+    // turns AND moves towards first blue ring WITH INTAKE SIDE IN FRONT
+    chassis.moveToPose(23.5, -47.5, 180, 1000, {.forwards = false});
+    waitd;
+    // waits a bit for the ring to be intaked!
+    // waiting for longer because need to ensure the ring goes in correctly!
+    pros::delay(1500);
+    // STOPS intake in case blue ring is accidentally intaked too...?
+    // -> MIGHT REMOVE
+    intake.brake();
 
 
-//     // VERY INCONSISTENT AND OFTEN ENDS UP INTAKING RED RING!
-//     // // opens intake piston cuz we're getting the TOP ring
-//     // intake.lift(1);
-//     // // // turns around and CURVES towards the second ring (the BLUE TOP red bottom stack)
-//     // // // it is the FORWARD portion of the bot in this segment
-//     // // // y = -5 instead of y = 0 so we don't accidentally collide with opposing team ig?
-//     // // // DECREASE TIMEOUT ONCE TUNED
-//     // // chassis.moveToPose(47, -5, 0, 3000, {.forwards = false});
-//     // // turns towards second ring
-//     // chassis.turnToPoint(47, -5, 1000, {.forwards = false});
-//     // waitd;
-//     // // move towards second ring -> MIGHT CROSS INTO TEAMMATE'S AREA?
-//     // chassis.moveToPoint(47, -5, 1500, {.forwards = false});
-//     // waitd;
-//     // // lifts intake down
-//     // intake.lift(0);
-//     // // waits for that to finish
-//     // pros::delay(500);
-//     // // starts intake running, to get TOP ring
-//     // intake.intake();
-//     // // waits for a bit to make sure the ring is intaked!
-//     // // LOWER DELAY BC OF HIGHER TIMEOUT ABOVE; CHANGE AS NECESSARY!
-//     // pros::delay(500);
+    // VERY INCONSISTENT AND OFTEN ENDS UP INTAKING RED RING!
+    // // opens intake piston cuz we're getting the TOP ring
+    // intake.lift(1);
+    // // // turns around and CURVES towards the second ring (the BLUE TOP red bottom stack)
+    // // // it is the FORWARD portion of the bot in this segment
+    // // // y = -5 instead of y = 0 so we don't accidentally collide with opposing team ig?
+    // // // DECREASE TIMEOUT ONCE TUNED
+    // // chassis.moveToPose(47, -5, 0, 3000, {.forwards = false});
+    // // turns towards second ring
+    // chassis.turnToPoint(47, -5, 1000, {.forwards = false});
+    // waitd;
+    // // move towards second ring -> MIGHT CROSS INTO TEAMMATE'S AREA?
+    // chassis.moveToPoint(47, -5, 1500, {.forwards = false});
+    // waitd;
+    // // lifts intake down
+    // intake.lift(0);
+    // // waits for that to finish
+    // pros::delay(500);
+    // // starts intake running, to get TOP ring
+    // intake.intake();
+    // // waits for a bit to make sure the ring is intaked!
+    // // LOWER DELAY BC OF HIGHER TIMEOUT ABOVE; CHANGE AS NECESSARY!
+    // pros::delay(500);
 
-//     // keeps intake running in case the ring didn't get intaked
-//     // during the previous steps
+    // keeps intake running in case the ring didn't get intaked
+    // during the previous steps
 
-//     // // moves back to a initial mogo point, with mogo mech
-//     // // facing AWAY from the ladder, so mogo can be released AWAY
-//     // // from path of robot when it goes towards the ladder!
-//     // chassis.moveToPose(23.5, -23.5, 315, 1500, {.forwards = false});
-//     // waitd;
-//     // turns towards mogo point
-//     chassis.turnToPoint(21.5, -21.5, 500);
-//     // moves towards mogo point
-//     chassis.moveToPoint(21.5, -21.5, 1000);
+    // // moves back to a initial mogo point, with mogo mech
+    // // facing AWAY from the ladder, so mogo can be released AWAY
+    // // from path of robot when it goes towards the ladder!
+    // chassis.moveToPose(23.5, -23.5, 315, 1500, {.forwards = false});
+    // waitd;
+    // turns towards mogo point
+    chassis.turnToPoint(21.5, -21.5, 500);
+    // moves towards mogo point
+    chassis.moveToPoint(21.5, -21.5, 1000);
 
-//     // turns away from ladder WITH MOGO MECH FRONT (to release mogo
-//     // away from the path btwn bot -> ladder)
-//     chassis.turnToPoint(12, -12, 1000, {.forwards = false});
-//     // releases mogo
-//     mogo.toggle();
-//     // waits for a bit to make sure mogo was fully uncaptured
-//     pros::delay(500);
-//     // // stops intake -> SEE IF NECESSARY
-//     // intake.brake();
+    // turns away from ladder WITH MOGO MECH FRONT (to release mogo
+    // away from the path btwn bot -> ladder)
+    chassis.turnToPoint(12, -12, 1000, {.forwards = false});
+    // releases mogo
+    mogo.toggle();
+    // waits for a bit to make sure mogo was fully uncaptured
+    pros::delay(500);
+    // // stops intake -> SEE IF NECESSARY
+    // intake.brake();
 
-//     // // moved bottom right from 12, -12 so that only
-//     // // FRONT of robot touches ladder!
-//     // // turns TOWARDS ladder with mogo mech front (to touch ladder
-//     // // with zipties)
-//     // // 16 -16, literally where the mogo was for some reason
-//     // chassis.turnToPoint(14, -14, 1000);
-//     // // MOVES towards ladder!
-//     // chassis.moveToPoint(14, -14, 1000);
+    // // moved bottom right from 12, -12 so that only
+    // // FRONT of robot touches ladder!
+    // // turns TOWARDS ladder with mogo mech front (to touch ladder
+    // // with zipties)
+    // // 16 -16, literally where the mogo was for some reason
+    // chassis.turnToPoint(14, -14, 1000);
+    // // MOVES towards ladder!
+    // chassis.moveToPoint(14, -14, 1000);
 
-//     // // // turns around so mogo side (with zipties) is facing ladder,
-//     // // // AND moves towards the ladder
-//     // // chassis.moveToPose(-12, -12, 315, 3000);
-//     // // waitd;
+    // // // turns around so mogo side (with zipties) is facing ladder,
+    // // // AND moves towards the ladder
+    // // chassis.moveToPose(-12, -12, 315, 3000);
+    // // waitd;
 
-//     // // toggle hang to touch ladder bc zipties are not reliable 
-//     // hang.toggle();
-// }
+    // // toggle hang to touch ladder bc zipties are not reliable 
+    // hang.toggle();
+}
 
 // // void red_right_side() {
 // //     std::cout << "Running RED right side auton" << std::endl;
@@ -448,121 +588,6 @@ void solo_awp() {
 // //     waitd;
 // //     chassis.moveToPoint(-23.332, -47.217, TO, {false});
 // // };
-
-// /**
-//  * CURRENTLY WORKING:
-//  * - one ring, one mogo, touches ladder!
-//  */
-
-// void red_right_side() {
-//     // mogo starts automatically toggled open!
-
-//     std::cout << "Running RED right side auton" << std::endl;
-
-//     chassis.setPose(-55.6, -36.3, 90);
-
-//     // added new point to move towards, so we can get a 
-//     // better angle when moving towards and capturing the mogo
-//     chassis.moveToPoint(-47.474, -36.3, TO);
-
-//     // SWINGS towards mogo; locking LEFT bc TURNING left!
-//     chassis.swingToPoint(-23.5, -23.5, DriveSide::LEFT, TO);
-//     waitd;
-//     // moves towards where mogo is
-//     // -23.5, -23.5 -> robot will be CENTERED on mogo pos!
-//     // overshoots a bit to ensure correct orientation of the mogo!
-//     // CONSIDER USING MOVETOPOSE? only if it doesn't go straight
-//     // go fast forward and CLAMP
-//     // minSpeed 90 might be too small?
-//     // -23.5, -23.5 -> orig (W/O OVERSHOOT!)
-//     // -19.5, -19.5 -> moves too left
-//     // -17.5, -19.5 -> hopefully angle adjusted so mogo
-//     chassis.moveToPoint(-17.5, -19.5, 1500, {.minSpeed = 90});
-//     // funny number we calculated with pythagorean theorem,
-//     // then tuned
-//     // 20.8 WITH the moving forward at beginning, only hits corner of mogo
-//     chassis.waitUntil(21.5);
-//     // captures mogo
-//     mogo.toggle();
-//     waitd;
-//     // waits for mogo to be fully captured -> might be useless since we have the waituntil
-//     pros::delay(500);
-
-//     // moves back so preload ring doesn't hit ladder when intake runs
-//     chassis.moveToPoint(-23.5, -23.5, 1000, {.forwards = false});
-//     waitd;
-//     // starts intake
-//     intake.intake();
-//     // waits for preload ring to go in
-//     // waiting for longer because need to ensure the ring goes in correctly!
-//     pros::delay(1500);
-
-//     // turns towards first red ring W/ INTAKE
-//     chassis.turnToPoint(-23.5, -47.5, 1000, {.forwards = false});
-//     waitd;
-//     // moves towards first red ring; INTAKE FORWARD OF ROBOT
-//     // (blue top, RED BOTTOM); INTAKE STILL RUNNING
-//     chassis.moveToPoint(-23.5, -47.5, 1000, {.forwards = false});
-//     waitd;
-//     // waits a bit for the ring to be intaked!
-//     // waiting for longer because need to ensure the ring goes in correctly!
-//     // 1500 -> higher chance of blue ring being intaked
-//     // 1250 -> higher chance of robot running off before ring intaked
-//     //      - WHY IS IT DOING THIS SOMETIMES AND WORKING PERFECTLY OTHER TIMES? 
-//     pros::delay(1500);
-//     // OUTTAKE intake in case the blue ring is accidentally intaked too!
-//     intake.outtake();
-
-//     /* used with very last command for SIMPLE version of auton */
-//     // // turns around (which is equivalent to turning towards initial
-//     // // mogo position) -> this is to make sure mogo is released NOT
-//     // // in path of bot to ladder
-//     // chassis.turnToPoint(-23.5, -23.5, 1000, {.forwards = false});
-//     // // lets go of mogo (now the mogo is facing opposite direction!)
-//     // mogo.toggle();
-//     // // wait 500 ms to make sure it was fully uncaptured
-//     // pros::delay(500);
-
-//     // NOT GOING FOR THIRD RING; will first tune this (fri)
-//     // // opens intake piston cuz we're getting the TOP ring
-//     // intake.lift(1);
-//     // // turns around and CURVES towards the second ring (the RED TOP blue bottom stack)
-//     // // it is the FORWARD portion of the bot in this segment
-//     // // y = -5 instead of y = 0 so we don't accidentally collide with opposing team ig?
-//     // chassis.moveToPose(-47, -5, 0, 2500, {.forwards = false});
-//     // waitd;
-//     // // lifts intake down and starts intake running
-//     // intake.lift(0);
-//     // intake.intake();
-//     // // waits for a bit to make sure the ring is intaked!
-//     // // LOWER DELAY BC OF HIGHER TIMEOUT ABOVE; CHANGE AS NECESSARY!
-//     // pros::delay(500);
-
-//     // keeps intake running in case the ring didn't get intaked
-//     // during the previous steps
-
-//     // moves back to a initial mogo point, with mogo mech
-//     // facing AWAY from the ladder, so mogo can be released AWAY
-//     // from path of robot when it goes towards the ladder!
-//     chassis.moveToPose(-23.5, -23.5, 45, 1500, {.forwards = false});
-//     // release mogo
-//     mogo.toggle();
-//     // waits for a bit to make sure mogo was fully uncaptured
-//     pros::delay(500);
-
-//     // stops intake before it hits the ladder!
-//     intake.brake();
-
-//     // // turns around so mogo side (with zipties) is facing ladder,
-//     // // AND moves toward the ladder
-//     // // moving a bit LESS forward because the THIRD ziptie passes (so like a eighth of an inch should average out
-//     // // to one of the zipties hitting the ladder)
-//     // chassis.moveToPose(-12.25, -12.25, 45, 3000);
-//     // waitd;
-    
-//     // // lifts up hang at the end bc the zipties are not reliable
-//     // hang.toggle();
-// }
 
 // // void red_left_side() {
 // //     // mogo starts automatically toggled open!
@@ -638,106 +663,106 @@ void solo_awp() {
 // //     waitd;
 // // };
 
-// // FROM SEP 5 COMMIT -> WORKS (kinda) WITHOUT MOGO OVERSHOOT AND 
-// // MOVE FORWARD THEN TURN FOR MOGO!
-// // - IF ABOVEMENTIONED MODS DONT WORK REVERT TO THAT COMMIT!
-// // issue with overshoot & move forward vers:
-// // hooks hit mogo! (mogo is tilted TOO FAR TOWARDS ROBOT when clamped)
-// // OVERSHOOT AND MVWFWD NEED TO BE TUNED!
-// void red_left_side() { 
-//     std::cout << "Running RED left side auton" << std::endl;
+// FROM SEP 5 COMMIT -> WORKS (kinda) WITHOUT MOGO OVERSHOOT AND 
+// MOVE FORWARD THEN TURN FOR MOGO!
+// - IF ABOVEMENTIONED MODS DONT WORK REVERT TO THAT COMMIT!
+// issue with overshoot & move forward vers:
+// hooks hit mogo! (mogo is tilted TOO FAR TOWARDS ROBOT when clamped)
+// OVERSHOOT AND MVWFWD NEED TO BE TUNED!
+void red_left_side() { 
+    std::cout << "Running RED left side auton" << std::endl;
     
-//     // starts at the SECOND-TO-LEFT tile from the top left, at the TOP RIGHT corner, facing RIGHT
-//     chassis.setPose(-55.25, 40, 90);
+    // starts at the SECOND-TO-LEFT tile from the top left, at the TOP RIGHT corner, facing RIGHT
+    chassis.setPose(-55.25, 40, 90);
 
-//     // moves SLIGHTLY forward, so will be in correct position
-//     // to turn to correct angle towards mogo
-//     chassis.moveToPoint(-47, 40, TO);
+    // moves SLIGHTLY forward, so will be in correct position
+    // to turn to correct angle towards mogo
+    chassis.moveToPoint(-47, 40, TO);
     
-//     // -21.25, 20.5; 23.5 waitUntil -> HITS THE LADDER!
-//     // -  - so decreasing everything by 2 inches...?
-//     // -  - -23.5, 23.5 -> RIGHT ON MOGO! ; 21.5 waitUntil; DOES NOT CLAMP
-//     // SWINGS towards mogo
-//     chassis.swingToPoint(-23.5, 23.5, DriveSide::RIGHT, 750);
-//     waitd;
-//     // NOTE: can probably work with .maxSpeed = 100, but better to err on the side of caution
-//     // goes aggressively towards mogo (OVERSHOOTS A BIT TO FORCE MOGO INTO CORRECT ORIENTATION)
-//     // overshoots a bit
-//     chassis.moveToPoint(-23.5, 23.5, 750, {.maxSpeed = 90});
-//     // waits until robot AT mogo (NOT full path)
-//     chassis.waitUntil(22.5);
-//     // captures mogo
-//     mogo.toggle();
-//     // waits for rest of motion to finish
-//     waitd;
-//     // wait for mogo mech to fully retract
-//     pros::delay(500);
+    // -21.25, 20.5; 23.5 waitUntil -> HITS THE LADDER!
+    // -  - so decreasing everything by 2 inches...?
+    // -  - -23.5, 23.5 -> RIGHT ON MOGO! ; 21.5 waitUntil; DOES NOT CLAMP
+    // SWINGS towards mogo
+    chassis.swingToPoint(-23.5, 23.5, DriveSide::RIGHT, 750);
+    waitd;
+    // NOTE: can probably work with .maxSpeed = 100, but better to err on the side of caution
+    // goes aggressively towards mogo (OVERSHOOTS A BIT TO FORCE MOGO INTO CORRECT ORIENTATION)
+    // overshoots a bit
+    chassis.moveToPoint(-23.5, 23.5, 750, {.maxSpeed = 90});
+    // waits until robot AT mogo (NOT full path)
+    chassis.waitUntil(22.5);
+    // captures mogo
+    mogo.toggle();
+    // waits for rest of motion to finish
+    waitd;
+    // wait for mogo mech to fully retract
+    pros::delay(500);
 
-//     // starts intake
-//     intake.intake();
-//     // waits for preload ring to go in
-//     pros::delay(500);
+    // starts intake
+    intake.intake();
+    // waits for preload ring to go in
+    pros::delay(500);
 
-//     // moves into FIRST SET OF RINGS, aims to intake just one ring
-//     chassis.moveToPose(-5.6, 52, 180, 2000, {.forwards = false, .minSpeed = 72, .earlyExitRange = 10});
-//     waitd;
+    // moves into FIRST SET OF RINGS, aims to intake just one ring
+    chassis.moveToPose(-5.6, 52, 180, 2000, {.forwards = false, .minSpeed = 72, .earlyExitRange = 10});
+    waitd;
 
-//     // moves FURTHER, to get the second ring in the set -> THIS ONE IS MOST INACCURATE; moving SLOWLY
-//     // OVERSHOOTS BY A LOT TO MAKE SURE RING GOTTEN!
-//     chassis.moveToPoint(-7.6, 61, 1000, {.forwards = false, .minSpeed = 40});
-//     waitd;
+    // moves FURTHER, to get the second ring in the set -> THIS ONE IS MOST INACCURATE; moving SLOWLY
+    // OVERSHOOTS BY A LOT TO MAKE SURE RING GOTTEN!
+    chassis.moveToPoint(-7.6, 61, 1000, {.forwards = false, .minSpeed = 40});
+    waitd;
 
-//     // wait a bit more for the second ring to be intaked, in case the moveToPoint function already finished before 1000ms timeout
-//     pros::delay(1000);
+    // wait a bit more for the second ring to be intaked, in case the moveToPoint function already finished before 1000ms timeout
+    pros::delay(1000);
 
-//     // we do NOT want the blue rings to get in; stop just in case the blue ring does a funny
-//     intake.outtake();
+    // we do NOT want the blue rings to get in; stop just in case the blue ring does a funny
+    intake.outtake();
 
-//     // moves all the way back from the ring, in prep to turn to third ring
-//     chassis.moveToPoint(-13, 30, 750);
-//     waitd;
+    // moves all the way back from the ring, in prep to turn to third ring
+    chassis.moveToPoint(-13, 30, 750);
+    waitd;
 
-//     // turns towards fourth ring
-//     chassis.turnToPoint(-19, 51, 1000, {.forwards = false});
-//     waitd;
+    // turns towards fourth ring
+    chassis.turnToPoint(-19, 51, 1000, {.forwards = false});
+    waitd;
 
-//     // resume intaking (to get fourth ring!)
-//     intake.intake();
-//     // move towards fourth ring and intake it
-//     // -18, 50
-//     chassis.moveToPoint(-19, 51, 1250, {.forwards = false, .maxSpeed = 60});
-//     waitd;
-//     // wait a bit to intake the ring, and then move in preparation to touch the ladder
-//     // changed 1250 -> 1000 ON FRI
-//     pros::delay(1250);
-//     // turns on outtake so blue ring doesn't get intaked on accident
-//     // changed brake -> outtake ON FRI
-//     intake.outtake();
+    // resume intaking (to get fourth ring!)
+    intake.intake();
+    // move towards fourth ring and intake it
+    // -18, 50
+    chassis.moveToPoint(-19, 51, 1250, {.forwards = false, .maxSpeed = 60});
+    waitd;
+    // wait a bit to intake the ring, and then move in preparation to touch the ladder
+    // changed 1250 -> 1000 ON FRI
+    pros::delay(1250);
+    // turns on outtake so blue ring doesn't get intaked on accident
+    // changed brake -> outtake ON FRI
+    intake.outtake();
 
-//     // waits 500ms in case blue ring accidentally stuck
+    // waits 500ms in case blue ring accidentally stuck
 
-//     // // turns MOGO away from ladder
-//     // chassis.turnToPoint(-9, 12, 750, {.forwards = false});
-//     // // releases mogo -> not doing bc still scored!
-//     // mogo.toggle();
-//     // waits a bit for mogo mech to fully open
-//     pros::delay(500);
+    // // turns MOGO away from ladder
+    // chassis.turnToPoint(-9, 12, 750, {.forwards = false});
+    // // releases mogo -> not doing bc still scored!
+    // mogo.toggle();
+    // waits a bit for mogo mech to fully open
+    pros::delay(500);
 
-//     // STOPS intake incase rings get stuck
-//     intake.brake();
-//     // MOVES and turns so it will be facing towards ladder yes yes
-//     // -11, 9
-//     // DO NOT CHANGE LADDER APPROACH PT FROM -9, 12;
-//     // THIS SEEMS TO BE WORKING FINE
-//     // chassis.moveToPose(-9, 12, 135, 2500, {.lead = 0.7, .minSpeed = 80});
-//     // chassis.moveToPose(-9, 12, 135, 2500, {.minSpeed = 80});
-//     // IF NOT RELEASING MOGO USE A PT SHIFTED RIGHT 2 UP 2! (-7, 14)
-//     // chassis.moveToPose(-7, 14, 135, 2500, {.minSpeed = 80});
-//     // waitd;
+    // STOPS intake incase rings get stuck
+    intake.brake();
+    // MOVES and turns so it will be facing towards ladder yes yes
+    // -11, 9
+    // DO NOT CHANGE LADDER APPROACH PT FROM -9, 12;
+    // THIS SEEMS TO BE WORKING FINE
+    // chassis.moveToPose(-9, 12, 135, 2500, {.lead = 0.7, .minSpeed = 80});
+    // chassis.moveToPose(-9, 12, 135, 2500, {.minSpeed = 80});
+    // IF NOT RELEASING MOGO USE A PT SHIFTED RIGHT 2 UP 2! (-7, 14)
+    // chassis.moveToPose(-7, 14, 135, 2500, {.minSpeed = 80});
+    // waitd;
 
-//     // // toggle hang to touch ladder bc zipties are not reliable 
-//     // hang.toggle();
-// };
+    // // toggle hang to touch ladder bc zipties are not reliable 
+    // hang.toggle();
+};
 
 // // FROM SEP 5 COMMIT -> WORKS (kinda) WITHOUT MOGO OVERSHOOT AND 
 // // MOVE FORWARD THEN TURN FOR MOGO!
@@ -953,124 +978,124 @@ void solo_awp() {
 
 
 
-// void blue_right_side() {    
-//     std::cout << "Running BLUE right side auton" << std::endl;
+void blue_right_side() {    
+    std::cout << "Running BLUE right side auton" << std::endl;
 
-//     // starts at the SECOND-TO-LEFT tile from the top-right, at the TOP-LEFT corner, facing left
-//     chassis.setPose(55.25, 40, 270);
+    // starts at the SECOND-TO-LEFT tile from the top-right, at the TOP-LEFT corner, facing left
+    chassis.setPose(55.25, 40, 270);
 
-//     // moves a bit forward, so it will be in the correct position
-//     // to turn to correct angle towards the mogo
-//     chassis.moveToPoint(47, 40, TO);
+    // moves a bit forward, so it will be in the correct position
+    // to turn to correct angle towards the mogo
+    chassis.moveToPoint(47, 40, TO);
 
-//     // 24.25, 22.5 INITIAL PT
-//     // 23.5, 23.5 ACTUAL pos of mogo...
-//     // 23, 24.5 "2 deg" off-pt RIGHT (rel to robot START POS)
-//     // 25, 22.5 "3 deg" HORIZONTALLY offset absolutely from mogo (but LEFT rel to robot start POS)
+    // 24.25, 22.5 INITIAL PT
+    // 23.5, 23.5 ACTUAL pos of mogo...
+    // 23, 24.5 "2 deg" off-pt RIGHT (rel to robot START POS)
+    // 25, 22.5 "3 deg" HORIZONTALLY offset absolutely from mogo (but LEFT rel to robot start POS)
 
-//     /** NEW SOLUTION TO ACCOUNT FOR FACT THAT THE ROBOT ATTACHES TO MOGO
-//       * AT INCORRECT ANGLE IF IT GOES STRAIGHT FOR THE MOGO */
+    /** NEW SOLUTION TO ACCOUNT FOR FACT THAT THE ROBOT ATTACHES TO MOGO
+      * AT INCORRECT ANGLE IF IT GOES STRAIGHT FOR THE MOGO */
 
-//     // 25, 22.5 -> moved down and left (diagonally southeast) REL TO PATH JERRYIO
-//     // 
+    // 25, 22.5 -> moved down and left (diagonally southeast) REL TO PATH JERRYIO
+    // 
 
-//     /** 2nd solution: GO FAST AND CLAMP BFORE MOGO CAN REBOUND FORWARD, SO LESS BEND! */
-//     // -> bc otherwise LOT OF LEEWAY; it bounces back
-//     // SWINGS towards mogo
-//     // chassis.swingToPoint(24.25, 22.5, DriveSide::LEFT, 750);
-//     // waitd;
-//     // 235 deg is for point 
-//     // chassis.swingToHeading(235, DriveSide::LEFT, 750);
+    /** 2nd solution: GO FAST AND CLAMP BFORE MOGO CAN REBOUND FORWARD, SO LESS BEND! */
+    // -> bc otherwise LOT OF LEEWAY; it bounces back
+    // SWINGS towards mogo
+    // chassis.swingToPoint(24.25, 22.5, DriveSide::LEFT, 750);
+    // waitd;
+    // 235 deg is for point 
+    // chassis.swingToHeading(235, DriveSide::LEFT, 750);
     
-//     chassis.swingToPoint(21.25, 20.5, DriveSide::LEFT, 750);
+    chassis.swingToPoint(21.25, 20.5, DriveSide::LEFT, 750);
 
-//     // moves towards that slightly off angle point, so that the robot
-//     // hits the mogo correctly
-//     // overshoots faster!
-//     chassis.moveToPoint(21.25, 20.5, 750, {.minSpeed = 90});
-//     // waits until robot AT mogo (NOT waiting for full path!)
-//     chassis.waitUntil(23.5);
-//     // captures mogo
-//     mogo.toggle();
-//     // waits for rest of motion to finish
-//     waitd;
-//     // wait for mogo mech to fully retract
-//     pros::delay(500); 
-//     /**
-//       * OLD MOGO GETTING SOLUTION */
-//     // // goes aggressively towards mogo (OVERSHOOTS A BIT TO FORCE MOGO INTO CORRECT ORIENTATION)
-//     // // TODO: MIGHT NEED TO MOVE A BIT FARTHER!
-//     // // maxSpeed 80 -> 60
-//     // chassis.moveToPoint(24.25, 22.5, 1000, {.maxSpeed = 60});
-//     // waits for LESS time than the motion takes to complete (so that the mogo can toggle WHILE the 
-//     // bot is moving!)
+    // moves towards that slightly off angle point, so that the robot
+    // hits the mogo correctly
+    // overshoots faster!
+    chassis.moveToPoint(21.25, 20.5, 750, {.minSpeed = 90});
+    // waits until robot AT mogo (NOT waiting for full path!)
+    chassis.waitUntil(23.5);
+    // captures mogo
+    mogo.toggle();
+    // waits for rest of motion to finish
+    waitd;
+    // wait for mogo mech to fully retract
+    pros::delay(500); 
+    /**
+      * OLD MOGO GETTING SOLUTION */
+    // // goes aggressively towards mogo (OVERSHOOTS A BIT TO FORCE MOGO INTO CORRECT ORIENTATION)
+    // // TODO: MIGHT NEED TO MOVE A BIT FARTHER!
+    // // maxSpeed 80 -> 60
+    // chassis.moveToPoint(24.25, 22.5, 1000, {.maxSpeed = 60});
+    // waits for LESS time than the motion takes to complete (so that the mogo can toggle WHILE the 
+    // bot is moving!)
 
-//     // starts intake
-//     intake.intake();
-//     // waits for preload ring to go in
-//     pros::delay(750);
+    // starts intake
+    intake.intake();
+    // waits for preload ring to go in
+    pros::delay(750);
 
-//     // moves into FIRST SET OF RINGS, aims to intake just one ring
-//     // for some reason the bot is crossing the auton line on this, so we're going
-//     // to move the target point a BIT away from the auton line
-//     // used to be 5.6 > 7.6 > 9.6 > 11.6
-//     // 11.6 + 1.2 for crazy funnel (too far) -> 12
-//     chassis.moveToPose(12, 52, 180, 2000, {.forwards = false, .lead = 0.55, .minSpeed = 72, .earlyExitRange = 10});
-//     // chassis.moveToPose(5.6, 52, 180, 2000, {.forwards = false, .minSpeed = 72, .earlyExitRange = 10});
-//     waitd;
-//     // 5.75, 33.3
-//     // chassis.moveToPose(5.6, 35.5, 315, 1000, {.forwards = false, .minSpeed = 72, .earlyExitRange = 15});
-//     // waitd;
+    // moves into FIRST SET OF RINGS, aims to intake just one ring
+    // for some reason the bot is crossing the auton line on this, so we're going
+    // to move the target point a BIT away from the auton line
+    // used to be 5.6 > 7.6 > 9.6 > 11.6
+    // 11.6 + 1.2 for crazy funnel (too far) -> 12
+    chassis.moveToPose(12, 52, 180, 2000, {.forwards = false, .lead = 0.55, .minSpeed = 72, .earlyExitRange = 10});
+    // chassis.moveToPose(5.6, 52, 180, 2000, {.forwards = false, .minSpeed = 72, .earlyExitRange = 10});
+    waitd;
+    // 5.75, 33.3
+    // chassis.moveToPose(5.6, 35.5, 315, 1000, {.forwards = false, .minSpeed = 72, .earlyExitRange = 15});
+    // waitd;
 
-//     // moves FURTHER, to get the second ring in the set -> THIS ONE IS MOST INACCURATE; moving SLOWLY
-//     // OVERSHOOTS BY A LOT TO MAKE SURE RING GOTTEN!
-//     chassis.moveToPoint(12, 61, 1000, {.forwards = false, .minSpeed = 40});
-//     waitd;
-//     // wait a bit more for the second ring to be intaked, in case the moveToPoint function already finished before 1000ms timeout
-//     pros::delay(1000);
+    // moves FURTHER, to get the second ring in the set -> THIS ONE IS MOST INACCURATE; moving SLOWLY
+    // OVERSHOOTS BY A LOT TO MAKE SURE RING GOTTEN!
+    chassis.moveToPoint(12, 61, 1000, {.forwards = false, .minSpeed = 40});
+    waitd;
+    // wait a bit more for the second ring to be intaked, in case the moveToPoint function already finished before 1000ms timeout
+    pros::delay(1000);
 
-//     // we do NOT want the blue rings to get in; outtake just in case the red ring does a funny
-//     intake.outtake();
+    // we do NOT want the blue rings to get in; outtake just in case the red ring does a funny
+    intake.outtake();
 
-//     // moves all the way back from the ring, in prep to turn to third ring
-//     // AGAIN, UNDERSHOOTING FOR SOME REASON
-//     // chassis.moveToPose(13, 30, 315, 1250);
+    // moves all the way back from the ring, in prep to turn to third ring
+    // AGAIN, UNDERSHOOTING FOR SOME REASON
+    // chassis.moveToPose(13, 30, 315, 1250);
 
-//     chassis.moveToPoint(13, 30, 1000);
-//     waitd;
+    chassis.moveToPoint(13, 30, 1000);
+    waitd;
 
-//     // // // TURN RIGHT MORE
-//     // turns towards fourth ring
-//     // 19, 51
-//     chassis.turnToPoint(23.5, 47.75, 1000, {.forwards = false});
-//     waitd;
+    // // // TURN RIGHT MORE
+    // turns towards fourth ring
+    // 19, 51
+    chassis.turnToPoint(23.5, 47.75, 1000, {.forwards = false});
+    waitd;
 
-//     // resume intaking (to get fourth ring!)
-//     intake.intake();
-//     // move towards fourth ring and intake it
-//     // 18, 50
-//     chassis.moveToPoint(23.5, 47.75, 1250, {.forwards = false, .maxSpeed = 60});
-//     waitd;
-//     // wait a bit to intake the ring, and then move in preparation to touch the ladder
-//     pros::delay(1250);
-//     // turns on outtake so blue ring doesn't get intaked on accident
-//     intake.outtake();
+    // resume intaking (to get fourth ring!)
+    intake.intake();
+    // move towards fourth ring and intake it
+    // 18, 50
+    chassis.moveToPoint(23.5, 47.75, 1250, {.forwards = false, .maxSpeed = 60});
+    waitd;
+    // wait a bit to intake the ring, and then move in preparation to touch the ladder
+    pros::delay(1250);
+    // turns on outtake so blue ring doesn't get intaked on accident
+    intake.outtake();
 
-//     // turns MOGO away from ladder
-//     chassis.turnToPoint(9, 12, 750, {.forwards = false});
-//     // releases mogo
-//     // mogo.toggle();
-//     // waits a bit for mogo mech to fully open
-//     pros::delay(500);
+    // turns MOGO away from ladder
+    chassis.turnToPoint(9, 12, 750, {.forwards = false});
+    // releases mogo
+    // mogo.toggle();
+    // waits a bit for mogo mech to fully open
+    pros::delay(500);
 
-//     // STOPS intake incase rings get stuck
-//     intake.brake();
-//     // // MOVES and turns so it will be facing towards ladder yes yes
-//     // // GO HALF AN INCH FARTHER
-//     // // 9, 12
-//     // chassis.moveToPose(8, 11, 225, 2500, {.lead = 0.7, .minSpeed = 80});
-//     // waitd;
+    // STOPS intake incase rings get stuck
+    intake.brake();
+    // // MOVES and turns so it will be facing towards ladder yes yes
+    // // GO HALF AN INCH FARTHER
+    // // 9, 12
+    // chassis.moveToPose(8, 11, 225, 2500, {.lead = 0.7, .minSpeed = 80});
+    // waitd;
 
-//     // // toggle hang to touch ladder bc zipties are not reliable 
-//     // hang.toggle();
-// };
+    // // toggle hang to touch ladder bc zipties are not reliable 
+    // hang.toggle();
+};
