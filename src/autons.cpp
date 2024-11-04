@@ -1,5 +1,6 @@
 #include "intake.hpp"
 #include "lemlib/chassis/chassis.hpp"
+#include "lemlib/pose.hpp"
 #include "main.h"
 #include "mogo.hpp"
 #include "pros/imu.h"
@@ -20,7 +21,7 @@ void turnAndMoveToPoint(float x, float y, int turnTO, int mvTO, bool fwd = true,
     };
 }
 
-void red_left_final() {
+void red_negative() {
     chassis.setPose(-58.6, 47, 90);
 
     turnAndMoveToPoint(-24, 22, 500, 1500, true, true);
@@ -56,7 +57,12 @@ void red_left_final() {
     pros::delay(250);
 
     chassis.moveToPoint(-40, 40, TO);
+}
+
+void red_negative_5_ring() {
+    red_negative();
     waitd;
+
     pros::delay(25);
     chassis.turnToHeading(135, TO);
     waitd;
@@ -84,7 +90,44 @@ void red_left_final() {
     waitd;
 }
 
-void blue_right_final() {
+void red_negative_sawp() {
+    red_negative();
+
+    intake.brake();
+    waitd;
+
+    chassis.turnToPoint(-54.211, 11.648, 650);
+    waitd;
+    chassis.moveToPose(-54.211, 11.648, 180, TO);
+    waitd;
+
+    chassis.moveToPoint(-54.211, -5, 750, {.maxSpeed=75});
+    waitd;
+
+    mogo.toggle();
+
+    chassis.moveToPoint(-54.211, 0, 250);
+    waitd;
+
+    chassis.turnToHeading(270, 650);
+    waitd;
+
+    lemlib::Pose pos = chassis.getPose();
+    int a = 10;
+    chassis.moveToPoint(pos.x-a, pos.y, TO, {.maxSpeed=85});
+    waitd;
+
+    intake.intake();
+
+    pros::delay(750);
+
+    intake.brake();
+
+    chassis.moveToPoint(-54.471, pos.y, TO, {.maxSpeed=50});
+    waitd;
+}
+
+void blue_positive() {
     chassis.setPose(58.6, 47, -90);
 
     turnAndMoveToPoint(24, 22, 500, 1500, true, true);
@@ -121,6 +164,11 @@ void blue_right_final() {
 
     chassis.moveToPoint(40, 40, TO);
     waitd;
+}
+
+void blue_negative_5_ring() {
+    blue_negative();
+
     pros::delay(25);
     chassis.turnToHeading(-135, TO);
     waitd;
@@ -148,7 +196,42 @@ void blue_right_final() {
     waitd;
 }
 
+void blue_negative_sawp() {
+    blue_negative();
 
+    intake.brake();
+    waitd;
+
+    chassis.turnToPoint(54.211, 11.648, 650);
+    waitd;
+    chassis.moveToPose(54.211, 11.648, -180, TO);
+    waitd;
+
+    chassis.moveToPoint(54.211, -5, 750, {.maxSpeed=75});
+    waitd;
+
+    mogo.toggle();
+
+    chassis.moveToPoint(54.211, 0, 250);
+    waitd;
+
+    chassis.turnToHeading(270, 650);
+    waitd;
+
+    lemlib::Pose pos = chassis.getPose();
+    int a = 10;
+    chassis.moveToPoint(pos.x+a, pos.y, TO, {.maxSpeed=85});
+    waitd;
+
+    intake.intake();
+
+    pros::delay(750);
+
+    intake.brake();
+
+    chassis.moveToPoint(54.471, pos.y, TO, {.maxSpeed=50});
+    waitd;
+}
 
 void red_left_shortened_no_ladder() {
     // ASSUME PUSHING HAS ALR HAPPENED!

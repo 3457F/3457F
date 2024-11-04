@@ -12,4 +12,11 @@ void red_left_side();
 // void red_left_side_solo_awp();
 void blue_right_side();
 
-void red_left_final();
+void red_negative(); 
+void blue_negative();
+
+void red_negative_5_ring();
+void red_negative_sawp();
+
+void blue_negative_5_ring();
+void blue_negative_sawp();
