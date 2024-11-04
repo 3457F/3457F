@@ -25,11 +25,13 @@ void Intake::outtake() {
 void Intake::update_sort() {
     if (color) {
         if (color_sensor.get_rgb().blue > 150) { // blue
+            pros::delay(100);
             brake();
             pros::delay(100);
         }
     } else {
         if (color_sensor.get_rgb().red > 150) { // red
+            pros::delay(100);
             brake();
             pros::delay(100);
         }

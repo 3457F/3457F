@@ -377,7 +377,7 @@ void opcontrol() {
 		// replace with tank() if u really don't like tank that much
 		arcade();
 
-		// intake.update_sort();
+		intake.update_sort();
 
 		// delay to save system resources
 		pros::delay(20);

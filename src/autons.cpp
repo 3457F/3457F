@@ -127,7 +127,7 @@ void red_negative_sawp() {
     waitd;
 }
 
-void blue_positive() {
+void blue_negative() {
     chassis.setPose(58.6, 47, -90);
 
     turnAndMoveToPoint(24, 22, 500, 1500, true, true);
