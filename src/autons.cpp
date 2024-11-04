@@ -20,6 +20,72 @@ void turnAndMoveToPoint(float x, float y, int turnTO, int mvTO, bool fwd = true,
     };
 }
 
+void red_left_final() {
+    chassis.setPose(-58.6, 47, 90);
+
+    turnAndMoveToPoint(-24, 22, 500, 1500, true, true);
+    chassis.waitUntil(29.5);
+    mogo.toggle();
+    waitd;
+
+    intake.intake();
+
+    pros::delay(50);
+
+    chassis.turnToPoint(-13.75, 33.800, 500, {.forwards=false});
+    waitd;
+    chassis.moveToPoint(-13.75, 33.800, TO, {.forwards=false, .maxSpeed=95});
+    waitd;
+
+    pros::delay(500);
+
+    chassis.moveToPoint(-23.5, 22, TO);
+    waitd;
+    turnAndMoveToPoint(-23.5, 43, 500, TO, false);
+    waitd;
+
+    pros::delay(500);    
+    intake.brake();
+
+    chassis.turnToPoint(-12.505, 48.891, 500, {.forwards=false});
+    waitd;
+    intake.intake();
+    chassis.moveToPoint(-12.505, 48.891, TO, {.forwards=false});
+    waitd;
+
+    pros::delay(250);
+
+    chassis.moveToPoint(-40, 40, TO);
+    waitd;
+    pros::delay(25);
+    chassis.turnToHeading(135, TO);
+    waitd;
+
+    chassis.moveToPose(-70, 70, 135, 1350, {.forwards=false, .maxSpeed=70});
+    pros::delay(50);
+    intake.brake();
+    chassis.waitUntil(7.5);
+    intake.outtake();
+    waitd;
+
+    pros::delay(250);
+
+    intake.intake();
+
+    pros::delay(500);
+
+    chassis.turnToHeading(90, TO);
+    waitd;
+
+    chassis.moveToPoint(-65, 57.5, TO, {.forwards=false});
+    waitd;
+
+    chassis.moveToPoint(-33.968, 23.456, TO);
+    waitd;
+
+    // -58.623, 57.974
+}
+
 void red_left_shortened_no_ladder() {
     // ASSUME PUSHING HAS ALR HAPPENED!
     chassis.setPose(-58.6, 47, 90);
