@@ -194,11 +194,11 @@ Doinker doinker = Doinker('B');
 // Hang hang = Hang('D')
 
 rd::Selector selector({
-	{.name="RED LEFT SOLO AWP", .action=&red_solo_awp_new_bot}
-	, {.name="RED LEFT (2 ring)", .action=&red_left_shortened_no_ladder}
-	, {.name="RED RIGHT (3 ring)", .action=&red_right_side}
-    , {.name="BLUE LEFT (3 ring)", .action=&blue_left_side}
-	, {.name = "BLUE RIGHT (4 ring)", .action=&blue_right_side}
+	{.name="RED LEFT SOLO AWP", .action=&red_cross_sawp}
+	, {.name="RED NEGATIVE (5 ring)", .action=&red_negative_5_ring}
+	// , {.name="RED POSITIVE (3 ring)", .action=&red_right_side}
+    // , {.name="BLUE POSITIVE (3 ring)", .action=&blue_left_side}
+	, {.name = "BLUE NEGATIVE (5 ring)", .action=&blue_negative_5_ring}
 });
 
 // Create robodash console
@@ -262,7 +262,7 @@ void autonomous() {
 	chassis.setBrakeMode(pros::motor_brake_mode_e::E_MOTOR_BRAKE_HOLD);
 		
 	// Run the selected autonomous function - UNCOMMENT ONCE DONE TESTING AUTONS
-	red_negative_5_ring();
+	red_negative_sawp();
 	// red_negative_sawp();
 
 	// red_left_shortened_no_ladder();
