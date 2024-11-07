@@ -24,39 +24,37 @@ void turnAndMoveToPoint(float x, float y, int turnTO, int mvTO, bool fwd = true,
 void red_negative() {
     chassis.setPose(-58.6, 47, 90);
 
-    turnAndMoveToPoint(-24, 22, 500, 1500, true, true);
+    turnAndMoveToPoint(-24.5, 21.25, 500, 1500, true, true);
     chassis.waitUntil(29.5);
     mogo.toggle();
     waitd;
 
     intake.intake();
 
-    pros::delay(50);
-
-    chassis.turnToPoint(-13.75, 33.800, 500, {.forwards=false});
+    chassis.turnToPoint(-12, 34.75, 600, {.forwards=false});
     waitd;
-    chassis.moveToPoint(-13.75, 33.800, TO, {.forwards=false, .maxSpeed=95});
+    chassis.moveToPoint(-12, 34.75, 750, {.forwards=false, .maxSpeed=75});
     waitd;
 
-    pros::delay(500);
+    pros::delay(350);
 
-    chassis.moveToPoint(-23.5, 22, TO);
+    chassis.moveToPoint(-22.65, 22, TO);
     waitd;
-    turnAndMoveToPoint(-23.5, 43, 500, TO, false);
+    turnAndMoveToPoint(-22.65, 44, 650, TO, false);
     waitd;
 
-    pros::delay(500);    
+    pros::delay(400);    
     intake.brake();
 
-    chassis.turnToPoint(-12.505, 48.891, 500, {.forwards=false});
+    chassis.turnToPoint(-11.55, 49.25, 500, {.forwards=false});
     waitd;
     intake.intake();
-    chassis.moveToPoint(-12.505, 48.891, TO, {.forwards=false});
+    chassis.moveToPoint(-11.55, 49.25, 800, {.forwards=false});
     waitd;
 
     pros::delay(250);
 
-    chassis.moveToPoint(-40, 40, TO);
+    chassis.moveToPoint(-40, 49.25, TO);
 }
 
 void red_negative_5_ring() {
@@ -93,27 +91,29 @@ void red_negative_5_ring() {
 void red_negative_sawp() {
     red_negative();
 
+    chassis.waitUntil(15);
     intake.brake();
     waitd;
 
-    chassis.turnToPoint(-54.211, 11.648, 650);
-    waitd;
-    chassis.moveToPose(-54.211, 11.648, 180, TO);
-    waitd;
+    chassis.setPose(-40, 49.25, chassis.getPose().theta);
 
-    chassis.moveToPoint(-54.211, -5, 750, {.maxSpeed=75});
+    chassis.turnToPoint(-50.25, 11.648, 650);
     waitd;
+    chassis.moveToPose(-50.25, -30, 180, 2650, {.minSpeed=75});
 
+    chassis.waitUntil(30);
     mogo.toggle();
-
-    chassis.moveToPoint(-54.211, 0, 250);
     waitd;
 
-    chassis.turnToHeading(270, 650);
+    double offset = -11.5;
+    chassis.moveToPoint(-50, offset, 1000, {.forwards=false});
     waitd;
 
     lemlib::Pose pos = chassis.getPose();
-    int a = 10;
+    double a = 1;
+    chassis.turnToPoint(-10000000000, pos.y, 650);
+    waitd;
+    pos = chassis.getPose();
     chassis.moveToPoint(pos.x-a, pos.y, TO, {.maxSpeed=85});
     waitd;
 
@@ -123,47 +123,45 @@ void red_negative_sawp() {
 
     intake.brake();
 
-    chassis.moveToPoint(-54.471, pos.y, TO, {.maxSpeed=50});
-    waitd;
+    // chassis.moveToPoint(-54.471, pos.y, TO, {.maxSpeed=50});
+    // waitd;
 }
 
 void blue_negative() {
     chassis.setPose(58.6, 47, -90);
 
-    turnAndMoveToPoint(24, 22, 500, 1500, true, true);
+    turnAndMoveToPoint(24.5, 21.25, 500, 1500, true, true);
     chassis.waitUntil(29.5);
     mogo.toggle();
     waitd;
 
     intake.intake();
 
-    pros::delay(50);
-
-    chassis.turnToPoint(13.75, 33.800, 500, {.forwards=false});
+    chassis.turnToPoint(16, 36, 600, {.forwards=false});
     waitd;
-    chassis.moveToPoint(13.75, 33.800, TO, {.forwards=false, .maxSpeed=95});
+    chassis.moveToPoint(16, 36, 750, {.forwards=false, .maxSpeed=65});
     waitd;
 
     pros::delay(500);
 
-    chassis.moveToPoint(23.5, 22, TO);
+    chassis.moveToPoint(34, 20, TO);
     waitd;
-    turnAndMoveToPoint(23.5, 43, 500, TO, false);
-    waitd;
-
-    pros::delay(500);    
-    intake.brake();
-
-    chassis.turnToPoint(12.505, 48.891, 500, {.forwards=false});
-    waitd;
-    intake.intake();
-    chassis.moveToPoint(12.505, 48.891, TO, {.forwards=false});
+    turnAndMoveToPoint(34, 30, 500, TO, false);
     waitd;
 
-    pros::delay(250);
+    // pros::delay(500);    
+    // intake.brake();
 
-    chassis.moveToPoint(40, 40, TO);
-    waitd;
+    // chassis.turnToPoint(11.55, 49.25, 500, {.forwards=false});
+    // waitd;
+    // intake.intake();
+    // chassis.moveToPoint(11.55, 49.25, TO, {.forwards=false});
+    // waitd;
+
+    // pros::delay(250);
+
+    // chassis.moveToPoint(40, 49.25, TO);
+    // waitd;
 }
 
 void blue_negative_5_ring() {

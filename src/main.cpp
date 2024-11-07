@@ -122,7 +122,7 @@ lemlib::ControllerSettings lateral_controller(8, // proportional gain (kP)
 );
 
 // angular PID controller
-lemlib::ControllerSettings angular_controller(2.5, // proportional gain (kP)
+lemlib::ControllerSettings angular_controller(3.25, // proportional gain (kP)
                                               0, // integral gain (kI)
                                               26, // derivative gain (kD)
                                               3, // anti windup
@@ -262,7 +262,7 @@ void autonomous() {
 	chassis.setBrakeMode(pros::motor_brake_mode_e::E_MOTOR_BRAKE_HOLD);
 		
 	// Run the selected autonomous function - UNCOMMENT ONCE DONE TESTING AUTONS
-	red_negative_sawp();
+	blue_negative();
 	// red_negative_sawp();
 
 	// red_left_shortened_no_ladder();
