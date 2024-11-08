@@ -11,11 +11,11 @@
 #define TO 1200 // default timeout for when im lazy to specify
 #define waitd chassis.waitUntilDone()
 
-void turnAndMoveToPoint(float x, float y, int turnTO, int mvTO, bool fwd = true, bool async = false) {
+void turnAndMoveToPoint(float x, float y, int turnTO, int mvTO, bool fwd = true, bool async = false, float mvMaxSpeed = 127.0) {
     chassis.turnToPoint(x, y, turnTO, { .forwards = fwd });
     waitd;
 
-    chassis.moveToPoint(x, y, mvTO, { .forwards = fwd });
+    chassis.moveToPoint(x, y, mvTO, { .forwards = fwd, .maxSpeed = mvMaxSpeed });
     if (!async) {
         waitd;
     };
@@ -125,6 +125,47 @@ void red_negative_sawp() {
 
     // chassis.moveToPoint(-54.471, pos.y, TO, {.maxSpeed=50});
     // waitd;
+}
+
+// TWO RING, TWO STAKE AUTON
+void red_positive() {
+    // starts just above the blue ring at the bottom right corner, the mogo mechanism aligned with the front of the tile
+    chassis.setPose(-55, -36.5, 90);
+
+    // turns and moves towards first mogo, clamping it
+    turnAndMoveToPoint(-24, -22, 500, 1000, true, true);
+    chassis.waitUntil(22.5);
+    mogo.toggle();
+    waitd;
+
+    // intakes preload ring
+    intake.intake();
+    pros::delay(1000);
+
+    // lets go of first mogo
+    mogo.toggle();
+    pros::delay(500);
+
+    // turns and moves towards first ring on field (second ring overall); gets it into intake and HOLDS it
+    turnAndMoveToPoint(-32, -41.25, 1750, 2000, false, false, 80.0);
+    pros::delay(300);
+    intake.brake();
+
+    // turns and moves towards second mogo on field, clamping it
+    turnAndMoveToPoint(-13, -46.25, 500, 3000, true, true, 70.0);
+    chassis.waitUntil(15.5);
+    mogo.toggle();
+    waitd;
+
+    // continues intaking ring currently in intake, with the intent of scoring it
+    intake.intake();
+
+    // starts moving backwards IMMEDIATELY, to minimize contact with the robot on the blue alliance that's running blue positive autons
+    chassis.moveToPoint(-23, -46.25, 1000, {.forwards = false});
+    waitd;
+
+    // waits a bit longer to ensure the ring gets scored
+    pros::delay(500);
 }
 
 void blue_negative() {

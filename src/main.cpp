@@ -262,7 +262,8 @@ void autonomous() {
 	chassis.setBrakeMode(pros::motor_brake_mode_e::E_MOTOR_BRAKE_HOLD);
 		
 	// Run the selected autonomous function - UNCOMMENT ONCE DONE TESTING AUTONS
-	blue_negative();
+	// blue_negative();
+	red_positive();
 	// red_negative_sawp();
 
 	// red_left_shortened_no_ladder();
