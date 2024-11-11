@@ -27,3 +27,5 @@ struct SetInfo {
     std::int32_t curr_angle;
     float* target;
 };
+
+bool within(double num, double expected_val, double range);

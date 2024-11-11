@@ -262,11 +262,9 @@ void autonomous() {
 	chassis.setBrakeMode(pros::motor_brake_mode_e::E_MOTOR_BRAKE_HOLD);
 		
 	// Run the selected autonomous function - UNCOMMENT ONCE DONE TESTING AUTONS
-	// blue_negative();
-	red_positive();
-	// red_negative_sawp();
+	blue_negative();
 
-	// red_left_shortened_no_ladder();
+	// selector.run_auton();
 };
 
 /**
@@ -342,19 +340,7 @@ void opcontrol() {
 		/**
 		 * INTAKE:
 		 */
-		if (R1_pressed == R2_pressed) {
-			// if both controls are pressed or depressed, brake (stop) the intake
-
-			intake.brake();
-		} else if (R1_pressed) {
-			// intaking
-
-			intake.intake();
-		} else if (R2_pressed) {
-			// outtaking
-
-			intake.outtake();
-		}
+		intake.update_sort(R1_pressed, R2_pressed);
 
 		// /**
 		//  * INTAKE LIFT: 
@@ -378,7 +364,9 @@ void opcontrol() {
 		// replace with tank() if u really don't like tank that much
 		arcade();
 
-		intake.update_sort();
+		arm.debug();
+
+		// intake.update_sort();
 
 		// delay to save system resources
 		pros::delay(20);

@@ -9,6 +9,8 @@
 
 class Intake {
     public:
+        const int RED_HUE = 10;
+
         pros::MotorGroup intake_motors;
 
         pros::adi::Port intake_piston;
@@ -16,6 +18,10 @@ class Intake {
         pros::motor_brake_mode_e_t intake_brake_mode;
 
         pros::Optical color_sensor;
+
+        int state;
+
+        pros::Task* color_sort_task;
 
         bool color;
 
@@ -31,11 +37,11 @@ class Intake {
 
         void outtake();
 
-        void update_sort();
-
         void brake();
 
         void lift(bool set);
 
         void toggle();
+
+        void update_sort(bool R1_pressed, bool R2_pressed);
 };

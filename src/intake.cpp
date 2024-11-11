@@ -1,5 +1,6 @@
 #include <cstdint>
 #include "intake.hpp"
+#include "util.hpp"
 
 Intake::Intake(
     std::initializer_list<std::int8_t> intake_motor_ports
@@ -12,6 +13,9 @@ Intake::Intake(
     color = type;
 
     intake_motors.set_brake_mode_all(brake_mode);
+
+    state = 0;
+    color_sort_task = nullptr;
 }
 
 void Intake::intake() {
@@ -20,22 +24,6 @@ void Intake::intake() {
 
 void Intake::outtake() {
     intake_motors.move(127);
-}
-
-void Intake::update_sort() {
-    if (color) {
-        if (color_sensor.get_rgb().blue > 200) { // blue
-            pros::delay(100);
-            brake();
-            pros::delay(100);
-        }
-    } else {
-        if (color_sensor.get_rgb().red > 200) { // red
-            pros::delay(100);
-            brake();
-            pros::delay(100);
-        }
-    }
 }
 
 void Intake::brake() {
@@ -48,4 +36,51 @@ void Intake::lift(bool set) {
 
 void Intake::toggle() {
     intake_piston.set_value(!intake_piston.get_value());
+}
+
+// meant to be run as a task
+void throws_ring(void* intakeVoid) {
+    Intake* intake = (Intake*)(intakeVoid);
+
+    intake->intake();
+    // TODO: tune delay
+    // 69 -> 50
+    pros::delay(50);
+
+    intake->brake();
+    // TODO: tune delay
+    pros::delay(50);
+    
+    // returns back to normal driver control
+    intake->state = 0;
+}
+
+void Intake::update_sort(bool R1_pressed, bool R2_pressed) {
+    // keeps color sensor white LED on, so it can more accurately detect color
+    color_sensor.set_led_pwm(100);
+
+    // if in free driver control mode
+    if (state == 0) {
+        // checks if we're dealing with a ring we don't want -- for testing it's red
+        if (within(color_sensor.get_hue(), RED_HUE, 10)) {
+            // throw the red ring!
+            state = 1;
+            color_sort_task = new pros::Task(&throws_ring, this);
+        
+        // otherwise run normal driver control version of intake!
+        } else {
+            if (R1_pressed == R2_pressed) {
+                brake();
+            } else if (R1_pressed) {
+                intake();
+            } else if (R2_pressed) {
+                outtake();
+            }
+        }
+    
+    // if running the color sort task
+    } else if (state == 1) {
+        // don't disturb it! wait until color sorting is done
+        return;
+    }
 }

@@ -22,15 +22,19 @@ void turnAndMoveToPoint(float x, float y, int turnTO, int mvTO, bool fwd = true,
 }
 
 void red_negative() {
+    // starts at the center of the intersection of the top two tiles, the mogo mech facing directly rightward
     chassis.setPose(-58.6, 47, 90);
 
+    // turns and moves towards the first mogo, clamping it
     turnAndMoveToPoint(-24.5, 21.25, 500, 1500, true, true);
     chassis.waitUntil(29.5);
     mogo.toggle();
     waitd;
 
+    // intakes the preload ring
     intake.intake();
 
+    // immediately starts moving 
     chassis.turnToPoint(-12, 34.75, 600, {.forwards=false});
     waitd;
     chassis.moveToPoint(-12, 34.75, 750, {.forwards=false, .maxSpeed=75});
@@ -169,7 +173,7 @@ void red_positive() {
 }
 
 void blue_negative() {
-    chassis.setPose(58.6, 47, -90);
+    chassis.setPose(58.6, 47, 270);
 
     turnAndMoveToPoint(24.5, 21.25, 500, 1500, true, true);
     chassis.waitUntil(29.5);
@@ -178,17 +182,20 @@ void blue_negative() {
 
     intake.intake();
 
-    chassis.turnToPoint(16, 36, 600, {.forwards=false});
-    waitd;
-    chassis.moveToPoint(16, 36, 750, {.forwards=false, .maxSpeed=65});
-    waitd;
+    // chassis.turnToPoint(12, 34.75, 600, {.forwards=false});
+    // waitd;
+    // chassis.moveToPoint(16, 36, 750, {.forwards=false, .maxSpeed=65});
+    // waitd;
+
+    turnAndMoveToPoint(16, 38, 600, 750, false, false, 65);
+
 
     pros::delay(500);
 
-    chassis.moveToPoint(34, 20, TO);
-    waitd;
-    turnAndMoveToPoint(34, 30, 500, TO, false);
-    waitd;
+    // chassis.moveToPoint(34, 20, TO);
+    // waitd;
+    // turnAndMoveToPoint(34, 30, 500, TO, false);
+    // waitd;
 
     // pros::delay(500);    
     // intake.brake();

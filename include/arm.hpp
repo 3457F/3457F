@@ -28,19 +28,13 @@ class Arm {
         // -> score pos 195.0
 
 
-        static constexpr double START_POS = 0.0; // 0.0 -> 360.0
-        // static constexpr double START_POS = 30.0 * 100; // 330.0
-        // static constexpr double LOADIN_POS = -50.0 * 100; // 310.0
-        // static constexpr double LOADIN_POS = 310.0 * 100;
-        // 50.0 -> 38.0 -> 45.0 -> 50.0
-        static constexpr double LOADIN_POS = 48.0 * 100;
+        // static constexpr double START_POS = 330.0 * 100; // 0.0 -> 360.0
+        static constexpr double START_POS = 0.0 * 100; // "330" -> 0
+        static constexpr double LOADIN_POS = 17.0 * 100; // "313" -> 343
+        static constexpr double SCORE_POS = 138.0 * 100; // "192" -> 222
 
-        // aarav wanted to adjust +7*
-        // basically score pos at this point lmao
-        // 135.0 -> 150.0 -> 155.0 -> 157.0 -> 175.0 -> 165.0
-        static constexpr double VERT_POS = 165.0 * 100;
         
-        static constexpr double SCORE_POS = 195.0 * 100; // -135.0
+
 
         pros::Motor arm_motor;
 
@@ -56,7 +50,6 @@ class Arm {
 
         float target;
 
-        // -1: not reset
         // 0: START_POS
         // 1: LOADIN_POS
         // 2: SCORE_POS
@@ -71,6 +64,8 @@ class Arm {
 
             , Intake* intake
         );
+
+        void debug();
 
         void set_pos(float target_val);
 
