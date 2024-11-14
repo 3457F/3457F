@@ -32,25 +32,25 @@ struct LoadInInfo;
 // }
 
 // calculates error when max_val = both max_val and 0!
-float calc_error(float curr_val, float expected_val, float max_val) {
+float calc_error(float curr_val, float expected_val) {
     float error = expected_val - curr_val;
 
     // 0   25 EV   250 CV  360
     // 0   25 CV   250 EV  360
 
     // go the negative way (AROUND the loop)
-    if (std::abs(error) > (max_val / 2)) {
-        error = max_val - std::abs(error);
+    // if (std::abs(error) > (max_val / 2)) {
+    //     error = max_val - std::abs(error);
 
-        if (curr_val > expected_val) {
-            // +
-            error = std::abs(error);
-        } else if (curr_val < expected_val) {
-            error = error * -1;
-        }
+    //     if (curr_val > expected_val) {
+    //         // +
+    //         error = std::abs(error);
+    //     } else if (curr_val < expected_val) {
+    //         error = error * -1;
+    //     }
     
-    // just go the normal way! (THROUGH the domain)
-    }
+    // // just go the normal way! (THROUGH the domain)
+    // }
 
     return error;
 }
@@ -60,20 +60,20 @@ void update(void* fetchInfoVoid) {
     FetchInfo* fetchInfo = static_cast<FetchInfo*>(fetchInfoVoid);
 
     while (true) {
-        std::int32_t curr_angle = fetchInfo->encoder->get_angle();
+        std::int32_t curr_angle = fetchInfo->encoder->get_position();
 
         // float error = static_cast<float>(*fetchInfo->target - curr_angle);
 
         float error = calc_error(
             static_cast<float>(*fetchInfo->target)
             , static_cast<float>(curr_angle)
-            , (360 * 100)
+            // , (360 * 100)
         );
 
         SetInfo setInfo = {
             fetchInfo->pid
             , error
-            , fetchInfo->encoder->get_angle()
+            , fetchInfo->encoder->get_position()
             , fetchInfo->target
         };
 
@@ -82,9 +82,10 @@ void update(void* fetchInfoVoid) {
 
         // only if the error is suuper significant, move the motor
         // if (std::abs(error) > (10 * 100) && std::abs(error) < (350 * 100)) { // amongus
-        if (std::abs(error) > (10 * 100)) {
-            fetchInfo->arm->arm_motor.move_voltage(pid_unit);
-        }
+        // if (std::abs(error) > (10 * 100)) {
+        std::cout << pid_unit << std::endl;
+        fetchInfo->arm->arm_motor.move_voltage(-pid_unit);
+        // }
 
         pros::delay(20);
     }
@@ -113,7 +114,7 @@ Arm::Arm(
     // resets built-up integral and derivative
     pid.reset();
 
-    this->set_pos(START_POS);
+    // this->set_pos(START_POS);
     state = 0;
 
     FetchInfo* fetchInfo = new FetchInfo {
@@ -123,21 +124,21 @@ Arm::Arm(
         , &this->encoder
     };
 
-    // pros::Task arm_task(update, static_cast<void*>(fetchInfo));
+    pros::Task arm_task(update, static_cast<void*>(fetchInfo));
 }
 
 void Arm::debug() {
     float error_deg = (
         calc_error(
-            this->encoder.get_angle()
+            this->encoder.get_position()
             , this->target
-            , 360 * 100
+            // , 360 * 100
         ) / 100
     );
 
     std::cout 
         << "curr_angle (*): "
-        << (this->encoder.get_angle() / 100)
+        << (this->encoder.get_position() / 100)
         << " | target (*): "
         << (this->target / 100)
         << " | error (*): "
@@ -158,7 +159,7 @@ void Arm::set_pos(float target_val) {
 // }
 
 void Arm::score_setup() {
-    // START
+    // START 0
     if (state == 0) {
         state = 1;
 
@@ -166,12 +167,20 @@ void Arm::score_setup() {
         this->set_pos(LOADIN_POS);
     }
     
-    // LOADIN
+    // LOADIN 1
     else if (state == 1) {
         state = 2;
 
-        std::cout << "VERT_POS" << std::endl;
+        std::cout << "SCORE_POS" << std::endl;
         this->set_pos(SCORE_POS);
+    }
+
+    // SCORE_POS 2
+    else if (state == 2) {
+        state = 1;
+
+        std::cout << "LOADIN_POS" << std::endl;
+        this->set_pos(LOADIN_POS);
     }
 }
 
@@ -186,7 +195,6 @@ void Arm::score() {
 void Arm::load_in() {
     state = 1;
 
-    // pros::Task loadin_unstuck_task(loadin_unstuck, loadInInfo);
     this->set_pos(LOADIN_POS);
 }
 

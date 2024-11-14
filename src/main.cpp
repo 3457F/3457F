@@ -182,7 +182,7 @@ Intake intake = Intake(
 MogoMech mogo = MogoMech('A');
 
 Arm arm = Arm(
-	6
+	9
 	, pros::E_MOTOR_BRAKE_HOLD
 	, -4
 	, &intake
@@ -364,7 +364,7 @@ void opcontrol() {
 		// replace with tank() if u really don't like tank that much
 		arcade();
 
-		arm.debug();
+		// arm.debug();
 
 		// intake.update_sort();
 
