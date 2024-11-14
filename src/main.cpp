@@ -262,7 +262,7 @@ void autonomous() {
 	chassis.setBrakeMode(pros::motor_brake_mode_e::E_MOTOR_BRAKE_HOLD);
 		
 	// Run the selected autonomous function - UNCOMMENT ONCE DONE TESTING AUTONS
-	blue_negative();
+	test_auton();
 
 	// selector.run_auton();
 };
@@ -368,9 +368,14 @@ void opcontrol() {
 
 		// intake.update_sort();
 
+		lemlib::Pose a = chassis.getPose();
+
+		std::cout << "x: " << a.x << " | "
+				  << "y: " << a.y << " | "
+				  << "theta: " << a.theta
+				  << std::endl;
+
 		// delay to save system resources
 		pros::delay(20);
 	}
 }
-
-

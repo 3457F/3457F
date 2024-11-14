@@ -11,11 +11,19 @@
 #define TO 1200 // default timeout for when im lazy to specify
 #define waitd chassis.waitUntilDone()
 
-void turnAndMoveToPoint(float x, float y, int turnTO, int mvTO, bool fwd = true, bool async = false, float mvMaxSpeed = 127.0) {
+void turnAndMoveToPoint(float x, float y, int turnTO, int mvTO, bool fwd = true, bool async = false, float mvMaxSpeed = 127.0, bool move_to_pose = false) {
     chassis.turnToPoint(x, y, turnTO, { .forwards = fwd });
     waitd;
 
-    chassis.moveToPoint(x, y, mvTO, { .forwards = fwd, .maxSpeed = mvMaxSpeed });
+    if (move_to_pose) {
+        lemlib::Pose pose = chassis.getPose();
+
+        chassis.moveToPose(x, y, pose.theta, mvTO, { .forwards = fwd });
+    } else {
+        chassis.moveToPoint(x, y, mvTO, { .forwards = fwd, .maxSpeed = mvMaxSpeed });
+    }
+
+
     if (!async) {
         waitd;
     };
@@ -131,7 +139,7 @@ void red_negative_sawp() {
     // waitd;
 }
 
-// TWO RING, TWO STAKE AUTON
+// TWO (theo THREE) RING, TWO STAKE AUTON -> does awp!!!
 void red_positive() {
     // starts just above the blue ring at the bottom right corner, the mogo mechanism aligned with the front of the tile
     chassis.setPose(-55, -36.5, 90);
@@ -151,12 +159,19 @@ void red_positive() {
     pros::delay(500);
 
     // turns and moves towards first ring on field (second ring overall); gets it into intake and HOLDS it
-    turnAndMoveToPoint(-32, -41.25, 1750, 2000, false, false, 80.0);
-    pros::delay(300);
+    // -32 -> -36, turns at the end...? -> wrong turn but right movement...? no it turns as it goes
+    // 1750 wayy too much turnTO so made it 1250
+    // try maxSpeed 60 instead of 70
+    // -32, -41.25
+    turnAndMoveToPoint(-32, -41.25, 650, 1500, false, false, 100);
+    // pros::delay(300);
+    pros::delay(250);
     intake.brake();
 
+    // TOO FAR when tuning on wed: x -13 -> -16
     // turns and moves towards second mogo on field, clamping it
-    turnAndMoveToPoint(-13, -46.25, 500, 3000, true, true, 70.0);
+    // y too high: -46.25 -> -48.25
+    turnAndMoveToPoint(-16, -47.25, 500, 3000, true, true, 70.0);
     chassis.waitUntil(15.5);
     mogo.toggle();
     waitd;
@@ -164,12 +179,28 @@ void red_positive() {
     // continues intaking ring currently in intake, with the intent of scoring it
     intake.intake();
 
-    // starts moving backwards IMMEDIATELY, to minimize contact with the robot on the blue alliance that's running blue positive autons
-    chassis.moveToPoint(-23, -46.25, 1000, {.forwards = false});
+    // // -23 -> -30
+    // // starts moving backwards IMMEDIATELY, to minimize contact with the robot on the blue alliance that's running blue positive autons
+    // chassis.moveToPoint(-30, -47.25, 1000, {.forwards = false});
+    // waitd;
+
+    pros::delay(500);
+
+    // goes towards diagonal corner of tile diagonally in front of field corner
+    // TODO: TUNE
+    chassis.moveToPoint(-47, -47, 1000, {.forwards = false});
+    waitd;
+    
+    chassis.turnToPoint(-66, -66, 750, { .forwards = false });
     waitd;
 
-    // waits a bit longer to ensure the ring gets scored
-    pros::delay(500);
+    // // moves slowly so ring can be gotten!
+    // turnAndMoveToPoint(-66, -66, 500, 1000, false, false, 70.0);
+
+    // // waits for a bit longer to ensure ring gotten
+    // pros::delay(1000);
+
+    // intake.brake();
 }
 
 void blue_negative() {
@@ -408,4 +439,28 @@ void red_cross_sawp() {
     std::chrono::duration<double> elapsed = end - start;
 
     std::cout << "Time elapsed: " << elapsed.count() << "seconds." << std::endl;
+}
+
+void test_auton_task(void* chassisVoid) {
+    lemlib::Chassis* chassis = static_cast<lemlib::Chassis*>(chassisVoid);
+
+    while (true) {
+        lemlib::Pose pos = chassis->getPose();
+
+        std::cout << "x: " << pos.x
+				  << "y: " << pos.y
+				  << "theta: " << pos.theta
+				  << std::endl;
+
+        pros::delay(20);
+    } 
+}
+
+void test_auton() {
+    pros::Task task(&test_auton_task, &chassis);
+
+    chassis.setPose(-48, -24, 90);
+
+    chassis.moveToPoint(-24, -24, 1000);
+    waitd;
 }

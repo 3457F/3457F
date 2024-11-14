@@ -31,9 +31,11 @@ class Arm {
         // static constexpr double START_POS = 330.0 * 100; // 0.0 -> 360.0
         static constexpr double START_POS = 0.0 * 100; // "330" -> 0
         // 17 (barely went) -> 40 (barely went) -> 90 (overshot) -> 70 -> 60 (hung over) -> 55 (SLIGHTLY HIGH) -> 53
-        static constexpr double LOADIN_POS = 53.0 * 100; // "313" -> 343
+        // 53 is a bit too high so went 50
+        static constexpr double LOADIN_POS = 50.0 * 100; // "313" -> 343
         // 138 (basically vertical) -> 148 (better but not enough) -> 158 -> 168
-        static constexpr double SCORE_POS = 168.0 * 100; // "192" -> 222
+        // 168 -> 166
+        static constexpr double SCORE_POS = 166.0 * 100; // "192" -> 222
 
         
 
