@@ -110,11 +110,12 @@ Arm::Arm(
 
     // arm_motor.set_brake_mode(arm_brake_mode);
     // resets to 0
-    encoder.reset_position();
+    // encoder.reset_position();
     // resets built-up integral and derivative
     pid.reset();
 
-    // this->set_pos(START_POS);
+    std::cout << "INIT_POS (INITIALIZATION)";
+    this->set_pos(INIT_POS);
     state = 0;
 
     FetchInfo* fetchInfo = new FetchInfo {
@@ -158,53 +159,50 @@ void Arm::set_pos(float target_val) {
 //     arm_motor.move_absolute(pos, 100);
 // }
 
-void Arm::score_setup() {
-    // START 0
-    if (state == 0) {
+void Arm::score_cycle() {
+    // whether at START_POS or SCORE_POS, return to LOADIN_POS
+    if (state == 0 || state == 2) {
         state = 1;
 
         std::cout << "LOADIN_POS" << std::endl;
         this->set_pos(LOADIN_POS);
     }
     
-    // LOADIN 1
+    // when at LOADIN_POS, go to SCORE_POS
     else if (state == 1) {
         state = 2;
 
         std::cout << "SCORE_POS" << std::endl;
         this->set_pos(SCORE_POS);
     }
-
-    // SCORE_POS 2
-    else if (state == 2) {
-        state = 1;
-
-        std::cout << "LOADIN_POS" << std::endl;
-        this->set_pos(LOADIN_POS);
-    }
 }
 
-// to score
-void Arm::score() {
-    std::cout << "SCORE_POS" << std::endl;
-    this->set_pos(SCORE_POS);
-}
-
-
-// BACK TO LOADIN
-void Arm::load_in() {
-    state = 1;
-
-    this->set_pos(LOADIN_POS);
-}
-
-// BACK TO INIT
-void Arm::init_pos() {
-    state = 0;
-
-    std::cout << "START_POS (FULL reset)" << std::endl;
+void Arm::start_pos() {
+    std::cout << "START_POS" << std::endl;
     this->set_pos(START_POS);
 }
+
+// // to score
+// void Arm::score() {
+//     std::cout << "SCORE_POS" << std::endl;
+//     this->set_pos(SCORE_POS);
+// }
+
+
+// // BACK TO LOADIN
+// void Arm::load_in() {
+//     state = 1;
+
+//     this->set_pos(LOADIN_POS);
+// }
+
+// // BACK TO INIT
+// void Arm::init_pos() {
+//     state = 0;
+
+//     std::cout << "START_POS (FULL reset)" << std::endl;
+//     this->set_pos(INIT_POS);
+// }
 
 void Arm::arm_up() {
     // counter-clockwise is up

@@ -158,20 +158,16 @@ void red_positive() {
     mogo.toggle();
     pros::delay(500);
 
-    // turns and moves towards first ring on field (second ring overall); gets it into intake and HOLDS it
-    // -32 -> -36, turns at the end...? -> wrong turn but right movement...? no it turns as it goes
-    // 1750 wayy too much turnTO so made it 1250
-    // try maxSpeed 60 instead of 70
-    // -32, -41.25
-    turnAndMoveToPoint(-32, -41.25, 650, 1500, false, false, 100);
-    // pros::delay(300);
+    // go to first ring on field; load into intake
+    // -41.25 -> -40.25 so that it doesn't go TOO far and then is mis-aligned with mogo
+    turnAndMoveToPoint(-32, -40.25, 650, 1500, false, false, 100);
     pros::delay(250);
     intake.brake();
 
-    // TOO FAR when tuning on wed: x -13 -> -16
-    // turns and moves towards second mogo on field, clamping it
-    // y too high: -46.25 -> -48.25
-    turnAndMoveToPoint(-16, -47.25, 500, 3000, true, true, 70.0);
+    // go to second mogo on field
+    // MOVES A BIT FURTHER: x -16 -> -15
+    // y-angle cooked : -47.25 too low, -46.25 too high, -46.5...?
+    turnAndMoveToPoint(-14, -46.5, 500, 3000, true, true, 70.0);
     chassis.waitUntil(15.5);
     mogo.toggle();
     waitd;
@@ -187,12 +183,16 @@ void red_positive() {
     pros::delay(500);
 
     // goes towards diagonal corner of tile diagonally in front of field corner
-    // TODO: TUNE
-    chassis.moveToPoint(-47, -47, 1000, {.forwards = false});
+    // -47 -47 too little -> x -51
+    chassis.moveToPoint(-51, -47, 1000, {.forwards = false});
     waitd;
     
-    chassis.turnToPoint(-66, -66, 750, { .forwards = false });
-    waitd;
+    // WAYY OFF (x -66 - 24 = -90)
+    // -75 -> -80
+    // chassis.turnToPoint(-85, -71, 1000, { .forwards = false });
+    // waitd;
+
+    turnAndMoveToPoint(-85, -71, 1000, 2000, false);
 
     // // moves slowly so ring can be gotten!
     // turnAndMoveToPoint(-66, -66, 500, 1000, false, false, 70.0);
@@ -201,6 +201,28 @@ void red_positive() {
     // pros::delay(1000);
 
     // intake.brake();
+}
+
+void red_positive_approach_mogo_side() {
+    chassis.setPose(-55, -36.5, 90);
+
+    turnAndMoveToPoint(-24, -22, 1000, 1000, true, true);
+    // 29.5 -> 26.5 -> 24.5
+    chassis.waitUntil(24.5);
+    mogo.toggle();
+    waitd;
+
+    intake.intake();
+    pros::delay(750);
+    mogo.toggle();
+
+    // -31.5 -> 35.5 so aligned w mogo
+    turnAndMoveToPoint(-18, -35.5, 1000, 750);
+
+    // -43.25 -> -45.25
+    turnAndMoveToPoint(-2.75, -45.25, 750, 1000);
+    chassis.waitUntil(29.5);
+    mogo.toggle();
 }
 
 void blue_negative() {
