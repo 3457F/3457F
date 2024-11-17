@@ -11,7 +11,16 @@
 #define TO 1200 // default timeout for when im lazy to specify
 #define waitd chassis.waitUntilDone()
 
-void turnAndMoveToPoint(float x, float y, int turnTO, int mvTO, bool fwd = true, bool async = false, float mvMaxSpeed = 127.0, bool move_to_pose = false) {
+void turnAndMoveToPoint(
+    float x
+    , float y
+    , int turnTO
+    , int mvTO
+    , bool fwd = true
+    , bool async = false
+    , float mvMaxSpeed = 127.0
+    , bool move_to_pose = false
+) {
     chassis.turnToPoint(x, y, turnTO, { .forwards = fwd });
     waitd;
 
