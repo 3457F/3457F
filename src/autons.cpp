@@ -10,6 +10,43 @@
 
 #define TO 1200 // default timeout for when im lazy to specify
 #define waitd chassis.waitUntilDone()
+#define MAX_SPEED 127.0
+
+// struct tamtpParams {
+//     int turnTO = TO;
+//     int moveTO = TO;
+
+//     bool fwd = true;
+
+//     bool async = false;
+
+//     float mvMaxSpeed = MAX_SPEED;
+
+//     /** runs `chassis.moveToPose()` instead of `chassis.moveToPoint()`
+//     after turning to the point. it was more of a test on my side to see
+//     why the robot kept turning right before it reached  */
+//     bool move_to_pose = false; 
+// };
+
+// void turnAndMoveToPoint(
+//     float x
+//     , float y
+//     , tamtpParams params = {}
+// ) {
+//     chassis.turnToPoint(
+//         x
+//         , y
+//         , params.turnTO
+//         , { .forwards = params.fwd }
+//     );
+//     waitd;
+
+//     if (params.move_to_pose) {
+//         lemlib::Pose pose = chassis.getPose();
+        
+//         chassis.moveToPose(x, y, )
+//     }
+// }
 
 void turnAndMoveToPoint(
     float x
@@ -150,16 +187,16 @@ void red_negative_sawp() {
 
 // TWO (theo THREE) RING, TWO STAKE AUTON -> does awp!!!
 void red_positive() {
-    // starts just above the blue ring at the bottom right corner, the mogo mechanism aligned with the front of the tile
+    // starting position
     chassis.setPose(-55, -36.5, 90);
 
     // turns and moves towards first mogo, clamping it
     turnAndMoveToPoint(-24, -22, 500, 1000, true, true);
-    chassis.waitUntil(22.5);
+    chassis.waitUntil(24.5);
     mogo.toggle();
     waitd;
 
-    // intakes preload ring
+    // intakes preload ring (first ring overall)
     intake.intake();
     pros::delay(1000);
 
@@ -167,49 +204,34 @@ void red_positive() {
     mogo.toggle();
     pros::delay(500);
 
-    // go to first ring on field; load into intake
-    // -41.25 -> -40.25 so that it doesn't go TOO far and then is mis-aligned with mogo
-    turnAndMoveToPoint(-32, -40.25, 650, 1500, false, false, 100);
+    // TODO: sometimes ring flat out doesn't get inside
+    // goes to + gets first ring on field (second ring overall)
+    turnAndMoveToPoint(-31, -40.25, 650, 1500, false, false, 100);
     pros::delay(250);
     intake.brake();
 
-    // go to second mogo on field
-    // MOVES A BIT FURTHER: x -16 -> -15
-    // y-angle cooked : -47.25 too low, -46.25 too high, -46.5...?
+    // go to + clamps second mogo on field
     turnAndMoveToPoint(-14, -46.5, 500, 3000, true, true, 70.0);
     chassis.waitUntil(15.5);
     mogo.toggle();
     waitd;
 
-    // continues intaking ring currently in intake, with the intent of scoring it
+    // scores second ring
     intake.intake();
-
-    // // -23 -> -30
-    // // starts moving backwards IMMEDIATELY, to minimize contact with the robot on the blue alliance that's running blue positive autons
-    // chassis.moveToPoint(-30, -47.25, 1000, {.forwards = false});
-    // waitd;
-
     pros::delay(500);
 
-    // goes towards diagonal corner of tile diagonally in front of field corner
-    // -47 -47 too little -> x -51
-    chassis.moveToPoint(-51, -47, 1000, {.forwards = false});
-    waitd;
-    
-    // WAYY OFF (x -66 - 24 = -90)
-    // -75 -> -80
-    // chassis.turnToPoint(-85, -71, 1000, { .forwards = false });
-    // waitd;
+    // TODO: testing rn
 
-    turnAndMoveToPoint(-85, -71, 1000, 2000, false);
+    // goes to corner of tile in front of corner
+    turnAndMoveToPoint(-56, -52, 500, 1000, false);
 
-    // // moves slowly so ring can be gotten!
-    // turnAndMoveToPoint(-66, -66, 500, 1000, false, false, 70.0);
+    // moves slowly to corner
+    turnAndMoveToPoint(-95, -71, 1000, 1000, false, false, 60.0);
 
-    // // waits for a bit longer to ensure ring gotten
-    // pros::delay(1000);
-
-    // intake.brake();
+    // suddenly swings to reposition ring relative to intake
+    chassis.swingToPoint(-95, -52, DriveSide::RIGHT, 500, {.forwards = false});
+    // quickly turn right back, to "jam" ring into intake
+    chassis.turnToPoint(-95, -71, 500, {.forwards = false});
 }
 
 void red_positive_approach_mogo_side() {
@@ -339,6 +361,47 @@ void blue_negative_sawp() {
 
     chassis.moveToPoint(54.471, pos.y, TO, {.maxSpeed=50});
     waitd;
+}
+
+void blue_positive() {
+    // start
+    chassis.setPose(55, -36.5, 270);
+
+    // goes towards first mogo on field + clamps
+    turnAndMoveToPoint(24, -22, 500, 1000, true, true);
+    chassis.waitUntil(22.5);
+    mogo.toggle();
+    waitd;
+
+    // intakes preload ring
+    intake.intake();
+    pros::delay(1000);
+
+    // lets go of first mogo
+    mogo.toggle();
+    pros::delay(500);
+
+    // goes to first ring on field
+    turnAndMoveToPoint(32, -40.25, 650, 1500);
+    // waits just long enough for ring to get "loaded into" intake
+    pros::delay(250); // -> USE COLOR SENSOR FOR THIS!
+    intake.brake();
+
+    // goes to second mogo on field + clamps
+    turnAndMoveToPoint(14, -46.5, 500, 3000, true, true);
+    chassis.waitUntil(15.5);
+    mogo.toggle();
+    waitd;
+
+    // finishes intaking ring in intake
+    intake.intake();
+    pros::delay(500);
+
+    // goes to a point in preparation to turn towards corner
+    chassis.moveToPoint(51, -47, 1000, {.forwards = false});
+
+    // NEED TO TEST
+    turnAndMoveToPoint(85, -71, 1000, 2000, false);
 }
 
 void red_left_shortened_no_ladder() {

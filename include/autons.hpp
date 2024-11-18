@@ -16,6 +16,8 @@ void red_positive_approach_mogo_side();
 void blue_negative_5_ring();
 void blue_negative_sawp();
 
+void blue_positive();
+
 void red_cross_sawp();
 
 void test_auton();

@@ -9,6 +9,7 @@
 
 #include "main.h"
 #include "arm.hpp"
+#include "intake.hpp"
 #include "lemlib/chassis/trackingWheel.hpp"
 #include "pros/abstract_motor.hpp"
 #include "pros/misc.h"
@@ -204,6 +205,25 @@ rd::Selector selector({
 // Create robodash console
 rd::Console console;
 
+// // meant to be run as a task
+// void throws_ring(void* intakeVoid) {
+//     Intake* intake = (Intake*)(intakeVoid);
+
+//     intake->intake();
+//     // TODO: tune delay
+//     // 69 -> 50
+//     pros::delay(50);
+
+//     intake->brake();
+//     // TODO: tune delay
+//     pros::delay(50);
+    
+//     // returns back to normal driver control
+//     intake->state = 0;
+// }
+
+// pros::Task color_sort(&update_sort_auton, &intake);
+
 /**
  * Runs initialization code. This occurs as soon as the program is started.
  *
@@ -214,6 +234,8 @@ void initialize() {
 	// pros::lcd::initialize();
 
 	chassis.calibrate();
+
+	intake.color = intake.BLUE_HUE;
 
 	// pros::Task arm_update([]() {return *arm.update};
 
@@ -245,6 +267,10 @@ void disabled() {}
 void competition_initialize() {
 	// Focus auton selector on screen
 	// selector.focus();
+
+	// color_sort.resume();
+
+	// color_sort = new pros::Task(&update_sort_auton, &intake);
 };
 
 /**
@@ -260,7 +286,7 @@ void competition_initialize() {
  */
 void autonomous() {
 	chassis.setBrakeMode(pros::motor_brake_mode_e::E_MOTOR_BRAKE_HOLD);
-		
+	
 	// Run the selected autonomous function - UNCOMMENT ONCE DONE TESTING AUTONS
 	red_positive();
 
@@ -281,6 +307,9 @@ void autonomous() {
  * task, not resume it from where it left off.
  */
 void opcontrol() {
+	// color_sort.suspend();
+	// color_sort = nullptr;
+
 	// brake mode back to coast!
 	chassis.setBrakeMode(pros::motor_brake_mode_e::E_MOTOR_BRAKE_COAST);
 
