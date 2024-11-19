@@ -191,8 +191,8 @@ void red_positive() {
     chassis.setPose(-55, -36.5, 90);
 
     // turns and moves towards first mogo, clamping it
-    turnAndMoveToPoint(-24, -22, 500, 1000, true, true);
-    chassis.waitUntil(24.5);
+    turnAndMoveToPoint(-24, -22, 500, 2000, true, true, 60.0);
+    chassis.waitUntil(24.0);
     mogo.toggle();
     waitd;
 
@@ -206,12 +206,12 @@ void red_positive() {
 
     // TODO: sometimes ring flat out doesn't get inside
     // goes to + gets first ring on field (second ring overall)
-    turnAndMoveToPoint(-31, -40.25, 650, 1500, false, false, 100);
+    turnAndMoveToPoint(-31.5, -40.25, 650, 2000, false, false, 60.0);
     pros::delay(250);
     intake.brake();
 
     // go to + clamps second mogo on field
-    turnAndMoveToPoint(-14, -46.5, 500, 3000, true, true, 70.0);
+    turnAndMoveToPoint(-13.75, -46.5, 500, 3000, true, true, 60.0);
     chassis.waitUntil(15.5);
     mogo.toggle();
     waitd;
@@ -229,9 +229,9 @@ void red_positive() {
     turnAndMoveToPoint(-95, -71, 1000, 1000, false, false, 60.0);
 
     // suddenly swings to reposition ring relative to intake
-    chassis.swingToPoint(-95, -52, DriveSide::RIGHT, 500, {.forwards = false});
+    chassis.swingToPoint(-132, -71, DriveSide::RIGHT, 500, {.forwards = false, .direction = lemlib::AngularDirection::CW_CLOCKWISE});
     // quickly turn right back, to "jam" ring into intake
-    chassis.turnToPoint(-95, -71, 500, {.forwards = false});
+    chassis.swingToPoint(-111, -90, DriveSide::LEFT, 500, {.forwards = false, .direction = lemlib::AngularDirection::CCW_COUNTERCLOCKWISE});
 }
 
 void red_positive_approach_mogo_side() {

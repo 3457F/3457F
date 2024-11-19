@@ -398,8 +398,6 @@ void opcontrol() {
 
 		// arm.debug();
 
-		// intake.update_sort();
-
 		lemlib::Pose a = chassis.getPose();
 
 		std::cout << "x: " << a.x << " | "

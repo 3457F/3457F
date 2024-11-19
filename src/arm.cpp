@@ -108,7 +108,7 @@ Arm::Arm(
 {
     brake_mode = arm_brake_mode;
 
-    // arm_motor.set_brake_mode(arm_brake_mode);
+    arm_motor.set_brake_mode(arm_brake_mode);
     // resets to 0
     // encoder.reset_position();
     // resets built-up integral and derivative
