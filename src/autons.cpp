@@ -138,7 +138,7 @@ void red_positive() {
 
     // turns and moves towards first mogo, clamping it
     turnAndMoveToPoint(-24, -22, 500, 1000, true, true);
-    chassis.waitUntil(22.5);
+    chassis.waitUntil(19.5);
     mogo.toggle();
     waitd;
 
@@ -154,9 +154,13 @@ void red_positive() {
     turnAndMoveToPoint(-32, -41.25, 1750, 2000, false, false, 80.0);
     pros::delay(300);
     intake.brake();
-
+    waitd;
     // turns and moves towards second mogo on field, clamping it
-    turnAndMoveToPoint(-13, -46.25, 500, 3000, true, true, 70.0);
+    // turnAndMoveToPoint(-13, -46.25, 500, 3000, true, true, 70.0);
+    chassis.turnToHeading(90,500);
+    waitd;
+    chassis.moveToPoint(-13, -46, 500, {.maxSpeed = 80});
+    waitd;
     chassis.waitUntil(15.5);
     mogo.toggle();
     waitd;
@@ -165,9 +169,15 @@ void red_positive() {
     intake.intake();
 
     // starts moving backwards IMMEDIATELY, to minimize contact with the robot on the blue alliance that's running blue positive autons
-    chassis.moveToPoint(-23, -46.25, 1000, {.forwards = false});
+    // chassis.moveToPoint(-50, -46.25, 1000, {.forwards = false});
+    // waitd;
+    turnAndMoveToPoint(-63, -63.25, 500, 3000, false, false, 70.0);
     waitd;
-
+    chassis.turnToHeading(90, 500);
+    waitd;
+    pros::delay(500);
+    chassis.moveToPoint(-42, -64, 1000);
+    waitd;
     // waits a bit longer to ensure the ring gets scored
     pros::delay(500);
 }
