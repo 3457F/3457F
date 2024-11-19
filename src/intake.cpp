@@ -76,9 +76,7 @@ void Intake::update_sort(bool R1_pressed, bool R2_pressed) {
             } else if (R2_pressed) {
                 outtake();
             }
-        }
-    
-    // if running the color sort task
+        }    // if running the color sort task
     } else if (state == 1) {
         // don't disturb it! wait until color sorting is done
         return;

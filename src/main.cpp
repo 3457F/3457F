@@ -336,7 +336,7 @@ void opcontrol() {
 		if (Y_new_press) {
 			doinker.toggle();
 		}
-
+	
 		/**
 		 * INTAKE:
 		 */
