@@ -191,13 +191,8 @@ void red_positive() {
     chassis.setPose(-55, -36.5, 90);
 
     // turns and moves towards first mogo, clamping it
-<<<<<<< HEAD
-    turnAndMoveToPoint(-24, -22, 500, 1000, true, true);
-    chassis.waitUntil(19.5);
-=======
     turnAndMoveToPoint(-24, -22, 500, 2500, true, true, 67.5);
     chassis.waitUntil(24);
->>>>>>> 265e2fa36b591d2242bfed98a12c58b1022a7415
     mogo.toggle();
     waitd;
 
@@ -213,22 +208,10 @@ void red_positive() {
     // goes to + gets first ring on field (second ring overall)
     turnAndMoveToPoint(-31.4, -40, 650, TO, false, false, 115.0);
     pros::delay(250);
-    // intake.brake();
+    intake.brake();
 
     // go to + clamps second mogo on field
     turnAndMoveToPoint(-15.5, -46.5, 500, 2250, true, true, 70);
-    pros::delay(10);
-    intake.brake();
-<<<<<<< HEAD
-    waitd;
-    // turns and moves towards second mogo on field, clamping it
-    // turnAndMoveToPoint(-13, -46.25, 500, 3000, true, true, 70.0);
-    chassis.turnToHeading(90,500);
-    waitd;
-    chassis.moveToPoint(-13, -46, 500, {.maxSpeed = 80});
-    waitd;
-=======
->>>>>>> 265e2fa36b591d2242bfed98a12c58b1022a7415
     chassis.waitUntil(15.5);
     mogo.toggle();
     waitd;
@@ -237,20 +220,6 @@ void red_positive() {
     intake.intake();
     pros::delay(500);
 
-<<<<<<< HEAD
-    // starts moving backwards IMMEDIATELY, to minimize contact with the robot on the blue alliance that's running blue positive autons
-    // chassis.moveToPoint(-50, -46.25, 1000, {.forwards = false});
-    // waitd;
-    turnAndMoveToPoint(-63, -63.25, 500, 3000, false, false, 70.0);
-    waitd;
-    chassis.turnToHeading(90, 500);
-    waitd;
-    pros::delay(500);
-    chassis.moveToPoint(-42, -64, 1000);
-    waitd;
-    // waits a bit longer to ensure the ring gets scored
-    pros::delay(500);
-=======
     // TODO: testing rn
 
     // goes to corner of tile in front of corner
@@ -294,7 +263,6 @@ void red_positive_approach_mogo_side() {
     turnAndMoveToPoint(-2.75, -45.25, 750, 1000);
     chassis.waitUntil(29.5);
     mogo.toggle();
->>>>>>> 265e2fa36b591d2242bfed98a12c58b1022a7415
 }
 
 void blue_negative() {
