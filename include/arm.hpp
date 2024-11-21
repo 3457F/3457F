@@ -28,10 +28,10 @@ class Arm {
         // -> score pos 195.0
 
 
-        // static constexpr double START_POS = 330.0 * 100; // 0.0 -> 360.0
-        static constexpr double START_POS = 0.0 * 100; // "330" -> 0
-        static constexpr double LOADIN_POS = 17.0 * 100; // "313" -> 343
-        static constexpr double SCORE_POS = 138.0 * 100; // "192" -> 222
+        static constexpr double INIT_POS = 0.0 * 100;
+        static constexpr double START_POS = 25.0 * 100;
+        static constexpr double LOADIN_POS = 50.0 * 100;
+        static constexpr double SCORE_POS = 166.0 * 100;
 
         
 
@@ -69,13 +69,15 @@ class Arm {
 
         void set_pos(float target_val);
 
-        void score_setup();
+        void score_cycle();
 
-        void score();
+        void start_pos();
 
-        void load_in();
+        // void score();
 
-        void init_pos();
+        // void load_in();
+
+        // void init_pos();
 
         // void move(int pos);
 

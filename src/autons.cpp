@@ -10,12 +10,66 @@
 
 #define TO 1200 // default timeout for when im lazy to specify
 #define waitd chassis.waitUntilDone()
+#define MAX_SPEED 127.0
 
-void turnAndMoveToPoint(float x, float y, int turnTO, int mvTO, bool fwd = true, bool async = false, float mvMaxSpeed = 127.0) {
+// struct tamtpParams {
+//     int turnTO = TO;
+//     int moveTO = TO;
+
+//     bool fwd = true;
+
+//     bool async = false;
+
+//     float mvMaxSpeed = MAX_SPEED;
+
+//     /** runs `chassis.moveToPose()` instead of `chassis.moveToPoint()`
+//     after turning to the point. it was more of a test on my side to see
+//     why the robot kept turning right before it reached  */
+//     bool move_to_pose = false; 
+// };
+
+// void turnAndMoveToPoint(
+//     float x
+//     , float y
+//     , tamtpParams params = {}
+// ) {
+//     chassis.turnToPoint(
+//         x
+//         , y
+//         , params.turnTO
+//         , { .forwards = params.fwd }
+//     );
+//     waitd;
+
+//     if (params.move_to_pose) {
+//         lemlib::Pose pose = chassis.getPose();
+        
+//         chassis.moveToPose(x, y, )
+//     }
+// }
+
+void turnAndMoveToPoint(
+    float x
+    , float y
+    , int turnTO
+    , int mvTO
+    , bool fwd = true
+    , bool async = false
+    , float mvMaxSpeed = 127.0
+    , bool move_to_pose = false
+) {
     chassis.turnToPoint(x, y, turnTO, { .forwards = fwd });
     waitd;
 
-    chassis.moveToPoint(x, y, mvTO, { .forwards = fwd, .maxSpeed = mvMaxSpeed });
+    if (move_to_pose) {
+        lemlib::Pose pose = chassis.getPose();
+
+        chassis.moveToPose(x, y, pose.theta, mvTO, { .forwards = fwd });
+    } else {
+        chassis.moveToPoint(x, y, mvTO, { .forwards = fwd, .maxSpeed = mvMaxSpeed });
+    }
+
+
     if (!async) {
         waitd;
     };
@@ -131,29 +185,41 @@ void red_negative_sawp() {
     // waitd;
 }
 
-// TWO RING, TWO STAKE AUTON
+// TWO (theo THREE) RING, TWO STAKE AUTON -> does awp!!!
 void red_positive() {
-    // starts just above the blue ring at the bottom right corner, the mogo mechanism aligned with the front of the tile
+    // starting position
     chassis.setPose(-55, -36.5, 90);
 
     // turns and moves towards first mogo, clamping it
+<<<<<<< HEAD
     turnAndMoveToPoint(-24, -22, 500, 1000, true, true);
     chassis.waitUntil(19.5);
+=======
+    turnAndMoveToPoint(-24, -22, 500, 2500, true, true, 67.5);
+    chassis.waitUntil(24);
+>>>>>>> 265e2fa36b591d2242bfed98a12c58b1022a7415
     mogo.toggle();
     waitd;
 
-    // intakes preload ring
+    // intakes preload ring (first ring overall)
     intake.intake();
-    pros::delay(1000);
+    pros::delay(800);
 
     // lets go of first mogo
     mogo.toggle();
-    pros::delay(500);
+    pros::delay(250);
 
-    // turns and moves towards first ring on field (second ring overall); gets it into intake and HOLDS it
-    turnAndMoveToPoint(-32, -41.25, 1750, 2000, false, false, 80.0);
-    pros::delay(300);
+    // TODO: sometimes ring flat out doesn't get inside
+    // goes to + gets first ring on field (second ring overall)
+    turnAndMoveToPoint(-31.4, -40, 650, TO, false, false, 115.0);
+    pros::delay(250);
+    // intake.brake();
+
+    // go to + clamps second mogo on field
+    turnAndMoveToPoint(-15.5, -46.5, 500, 2250, true, true, 70);
+    pros::delay(10);
     intake.brake();
+<<<<<<< HEAD
     waitd;
     // turns and moves towards second mogo on field, clamping it
     // turnAndMoveToPoint(-13, -46.25, 500, 3000, true, true, 70.0);
@@ -161,13 +227,17 @@ void red_positive() {
     waitd;
     chassis.moveToPoint(-13, -46, 500, {.maxSpeed = 80});
     waitd;
+=======
+>>>>>>> 265e2fa36b591d2242bfed98a12c58b1022a7415
     chassis.waitUntil(15.5);
     mogo.toggle();
     waitd;
 
-    // continues intaking ring currently in intake, with the intent of scoring it
+    // scores second ring
     intake.intake();
+    pros::delay(500);
 
+<<<<<<< HEAD
     // starts moving backwards IMMEDIATELY, to minimize contact with the robot on the blue alliance that's running blue positive autons
     // chassis.moveToPoint(-50, -46.25, 1000, {.forwards = false});
     // waitd;
@@ -180,6 +250,51 @@ void red_positive() {
     waitd;
     // waits a bit longer to ensure the ring gets scored
     pros::delay(500);
+=======
+    // TODO: testing rn
+
+    // goes to corner of tile in front of corner
+    turnAndMoveToPoint(-56, -52, 500, 1000, false);
+
+    // moves slowly to corner
+    turnAndMoveToPoint(-95, -71, 1000, 1000, false, false, 75.0);
+
+    pros::delay(100);
+    // suddenly swings to reposition ring relative to intake
+    chassis.swingToPoint(-132, -50, DriveSide::RIGHT, 500, {.forwards = false, .direction = lemlib::AngularDirection::CW_CLOCKWISE});
+    waitd;
+    pros::delay(150);
+    // quickly turn right back, to "jam" ring into intake
+    // chassis.swingToPoint(-111, -90, DriveSide::LEFT, 500, {.forwards = false, .direction = lemlib::AngularDirection::CCW_COUNTERCLOCKWISE});
+
+
+    // arm.set_pos(arm.LOADIN_POS);
+    chassis.moveToPoint(-37.246, -13.228, 2500, {.forwards=false});
+    waitd;
+    arm.set_pos(arm.LOADIN_POS);
+}
+
+void red_positive_approach_mogo_side() {
+    chassis.setPose(-55, -36.5, 90);
+
+    turnAndMoveToPoint(-24, -22, 1000, 1000, true, true);
+    // 29.5 -> 26.5 -> 24.5
+    chassis.waitUntil(24.5);
+    mogo.toggle();
+    waitd;
+
+    intake.intake();
+    pros::delay(750);
+    mogo.toggle();
+
+    // -31.5 -> 35.5 so aligned w mogo
+    turnAndMoveToPoint(-18, -35.5, 1000, 750);
+
+    // -43.25 -> -45.25
+    turnAndMoveToPoint(-2.75, -45.25, 750, 1000);
+    chassis.waitUntil(29.5);
+    mogo.toggle();
+>>>>>>> 265e2fa36b591d2242bfed98a12c58b1022a7415
 }
 
 void blue_negative() {
@@ -287,6 +402,65 @@ void blue_negative_sawp() {
 
     chassis.moveToPoint(54.471, pos.y, TO, {.maxSpeed=50});
     waitd;
+}
+
+void blue_positive() {
+    // starting position
+    chassis.setPose(55, -36.5, -90);
+
+    // turns and moves towards first mogo, clamping it
+    turnAndMoveToPoint(24, -23.5, 500, 2500, true, true, 70);
+    chassis.waitUntil(25.2);
+    mogo.toggle();
+    waitd;
+
+    // intakes preload ring (first ring overall)
+    intake.intake();
+    pros::delay(800);
+
+    // lets go of first mogo
+    mogo.toggle();
+    pros::delay(150);
+
+    // TODO: sometimes ring flat out doesn't get inside
+    // goes to + gets first ring on field (second ring overall)
+    turnAndMoveToPoint(26.5, -42.5, 750, TO, false, false);
+    pros::delay(200);
+    intake.brake();
+    pros::delay(50);
+    // intake.brake();
+
+    // go to + clamps second mogo on field
+    turnAndMoveToPoint(0, -49.5, 500, 2250, true, true, 70);
+    chassis.waitUntil(16);
+    mogo.toggle();
+    waitd;
+
+    // scores second ring
+    intake.intake();
+    pros::delay(500);
+
+    // TODO: testing rn
+
+    // goes to corner of tile in front of corner
+    turnAndMoveToPoint(44, -57, 500, 1000, false);
+
+    // moves slowly to corner
+    turnAndMoveToPoint(81, -77.5, 1000, 2500, false, false, 75.0);
+
+    pros::delay(100);
+    // suddenly swings to reposition ring relative to intake
+    chassis.swingToPoint(132, -50, DriveSide::RIGHT, 500, {.forwards = false, .direction = lemlib::AngularDirection::CW_CLOCKWISE});
+    waitd;
+    pros::delay(150);
+    // quickly turn right back, to "jam" ring into intake
+    // chassis.swingToPoint(-111, -90, DriveSide::LEFT, 500, {.forwards = false, .direction = lemlib::AngularDirection::CCW_COUNTERCLOCKWISE});
+
+
+    // arm.set_pos(arm.LOADIN_POS);
+    chassis.moveToPoint(17.5, -15, 2500, {.forwards=false});
+    waitd;
+    arm.set_pos(arm.LOADIN_POS);
 }
 
 void red_left_shortened_no_ladder() {
@@ -418,4 +592,28 @@ void red_cross_sawp() {
     std::chrono::duration<double> elapsed = end - start;
 
     std::cout << "Time elapsed: " << elapsed.count() << "seconds." << std::endl;
+}
+
+void test_auton_task(void* chassisVoid) {
+    lemlib::Chassis* chassis = static_cast<lemlib::Chassis*>(chassisVoid);
+
+    while (true) {
+        lemlib::Pose pos = chassis->getPose();
+
+        std::cout << "x: " << pos.x
+				  << "y: " << pos.y
+				  << "theta: " << pos.theta
+				  << std::endl;
+
+        pros::delay(20);
+    } 
+}
+
+void test_auton() {
+    pros::Task task(&test_auton_task, &chassis);
+
+    chassis.setPose(-48, -24, 90);
+
+    chassis.moveToPoint(-24, -24, 1000);
+    waitd;
 }
