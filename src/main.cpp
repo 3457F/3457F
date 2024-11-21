@@ -288,7 +288,7 @@ void autonomous() {
 	chassis.setBrakeMode(pros::motor_brake_mode_e::E_MOTOR_BRAKE_HOLD);
 	
 	// Run the selected autonomous function - UNCOMMENT ONCE DONE TESTING AUTONS
-	red_positive();
+	blue_positive();
 
 	// selector.run_auton();
 };
@@ -315,6 +315,8 @@ void opcontrol() {
 
 	// bc hang open at end of some autons, just do this so yeah
 	// hang.toggle();
+
+	arm.set_pos(arm.INIT_POS);
 
 	while (true) {
 		/**
