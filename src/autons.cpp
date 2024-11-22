@@ -266,43 +266,57 @@ void red_positive_approach_mogo_side() {
 }
 
 void blue_negative() {
-    chassis.setPose(58.6, 47, 270);
+    // starts at the center of the intersection of the top two tiles, the mogo mech facing directly rightward
+    chassis.setPose(58.6, 47, -90);
 
-    turnAndMoveToPoint(24.5, 21.25, 500, 1500, true, true);
-    chassis.waitUntil(29.5);
+    // turns and moves towards the first mogo, clamping it
+    turnAndMoveToPoint(21, 17, 500, 1500, true, true, 80);
+    chassis.waitUntil(28.5);
     mogo.toggle();
     waitd;
 
+    // intakes the preload ring
+
+    // immediately starts moving 
+    chassis.turnToPoint(17.5, 34, 600, {.forwards=false});
+    waitd;
     intake.intake();
+    chassis.moveToPoint(17.5, 34, 750, {.forwards=false, .maxSpeed=80});
+    waitd;
 
-    // chassis.turnToPoint(12, 34.75, 600, {.forwards=false});
-    // waitd;
-    // chassis.moveToPoint(16, 36, 750, {.forwards=false, .maxSpeed=65});
-    // waitd;
+    // pros::delay(100000);
 
-    turnAndMoveToPoint(16, 38, 600, 750, false, false, 65);
+    pros::delay(350);
 
+    chassis.moveToPoint(30, 27, TO);
+    waitd;
+    turnAndMoveToPoint(36, 44, 650, TO, false, false,75);
+    waitd;
+
+    pros::delay(400);    
+    intake.brake();
+
+    chassis.turnToPoint(28.75, 51.5, 750, {.forwards=false});
+    waitd;
+    intake.intake();
+    chassis.moveToPoint(28.75, 51.5, 800, {.forwards=false});
+    waitd;
 
     pros::delay(500);
 
-    // chassis.moveToPoint(34, 20, TO);
-    // waitd;
-    // turnAndMoveToPoint(34, 30, 500, TO, false);
-    // waitd;
+    chassis.moveToPoint(40, 49.25, TO);
+}
 
-    // pros::delay(500);    
-    // intake.brake();
+void blue_negative_safe() {
+    blue_negative();
+    waitd;
 
-    // chassis.turnToPoint(11.55, 49.25, 500, {.forwards=false});
-    // waitd;
-    // intake.intake();
-    // chassis.moveToPoint(11.55, 49.25, TO, {.forwards=false});
-    // waitd;
-
-    // pros::delay(250);
-
-    // chassis.moveToPoint(40, 49.25, TO);
-    // waitd;
+    chassis.turnToPoint(27, 10, TO);
+    waitd;
+    chassis.moveToPoint(27, 10, TO, {.maxSpeed=127});
+    waitd;
+    arm.set_pos(arm.LOADIN_POS);
+    intake.brake();
 }
 
 void blue_negative_5_ring() {
@@ -312,21 +326,17 @@ void blue_negative_5_ring() {
     chassis.turnToHeading(-135, TO);
     waitd;
 
-    chassis.moveToPose(70, 70, -135, 1350, {.forwards=false, .maxSpeed=70});
-    pros::delay(50);
-    intake.brake();
-    chassis.waitUntil(7.5);
-    intake.outtake();
+    chassis.moveToPose(90, 70, -135, 1350, {.forwards=false, .maxSpeed=80});
     waitd;
-
-    pros::delay(250);
-
+    chassis.moveToPoint(110, 85, TO, {.forwards=false, .maxSpeed=95});
     intake.intake();
+    waitd;
+    chassis.swingToHeading(-90, DriveSide::LEFT, TO);
+    waitd;
+    chassis.swingToHeading(45, DriveSide::LEFT, 800);
+    waitd;
 
     pros::delay(500);
-
-    chassis.turnToHeading(-90, TO);
-    waitd;
 
     chassis.moveToPoint(65, 57.5, TO, {.forwards=false});
     waitd;
@@ -411,7 +421,7 @@ void blue_positive() {
     // TODO: testing rn
 
     // goes to corner of tile in front of corner
-    turnAndMoveToPoint(44, -57, 500, 1000, false);
+    turnAndMoveToPoint(44, -58, 500, 1000, false);
 
     // moves slowly to corner
     turnAndMoveToPoint(81, -77.5, 1000, 2500, false, false, 75.0);
@@ -426,7 +436,7 @@ void blue_positive() {
 
 
     // arm.set_pos(arm.LOADIN_POS);
-    chassis.moveToPoint(17.5, -15, 2500, {.forwards=false});
+    chassis.moveToPoint(16, -26.75, 2500, {.forwards=false});
     waitd;
     arm.set_pos(arm.LOADIN_POS);
 }
