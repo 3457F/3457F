@@ -35,8 +35,7 @@ struct LoadInInfo;
 float calc_error(float curr_val, float expected_val) {
     float error = expected_val - curr_val;
 
-    // 0   25 EV   250 CV  360
-    // 0   25 CV   250 EV  360
+    // failed cooking
 
     // go the negative way (AROUND the loop)
     // if (std::abs(error) > (max_val / 2)) {
@@ -80,13 +79,8 @@ void update(void* fetchInfoVoid) {
         // float pid_unit = update_info(&setInfo);
         float pid_unit = fetchInfo->pid->update(error);
 
-        // only if the error is suuper significant, move the motor
-        // if (std::abs(error) > (10 * 100) && std::abs(error) < (350 * 100)) { // amongus
-        // if (std::abs(error) > (10 * 100)) {
-        std::cout << pid_unit << std::endl;
         fetchInfo->arm->arm_motor.move_voltage(-pid_unit);
-        // }
-
+        
         pros::delay(20);
     }
 };
@@ -178,6 +172,8 @@ void Arm::score_cycle() {
 }
 
 void Arm::start_pos() {
+    state = 0;
+
     std::cout << "START_POS" << std::endl;
     this->set_pos(START_POS);
 }

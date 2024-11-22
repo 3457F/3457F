@@ -12,10 +12,17 @@ void update_sort_auton(void* intakeVoid);
 
 class Intake {
     public:
-        const int RED_HUE = 10;
+        // 132 -> 145 steady state
+        double STARTING_HUE;
+
+        const double RED_HUE = 30.0;
+        // int RED_HUE_MAX;
+        // int RED_HUE_MIN;
 
         // within 220 and 230 -> blue
-        const int BLUE_HUE = 235;
+        const double BLUE_HUE = 225.0;
+        // int BLUE_HUE_MAX;
+        // int BLUE_HUE_MIN;
 
         pros::MotorGroup intake_motors;
 
@@ -57,5 +64,6 @@ class Intake {
 
         void toggle();
 
+        void hues_debug();
         void update_sort(bool R1_pressed, bool R2_pressed);
 };

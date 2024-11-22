@@ -235,6 +235,7 @@ void initialize() {
 
 	chassis.calibrate();
 
+	// alliance color is BLUE
 	intake.color = intake.BLUE_HUE;
 
 	// pros::Task arm_update([]() {return *arm.update};
@@ -319,6 +320,9 @@ void opcontrol() {
 
 	arm.set_pos(arm.INIT_POS);
 
+	// starting hue tuned based on whatever venue we're at
+	intake.STARTING_HUE = intake.color_sensor.get_hue();
+
 	while (true) {
 		/**
 		* CONTROL FETCHING:
@@ -401,12 +405,14 @@ void opcontrol() {
 
 		// arm.debug();
 
-		lemlib::Pose a = chassis.getPose();
+		// lemlib::Pose a = chassis.getPose();
 
-		std::cout << "x: " << a.x << " | "
-				  << "y: " << a.y << " | "
-				  << "theta: " << a.theta
-				  << std::endl;
+		// std::cout << "x: " << a.x << " | "
+		// 		  << "y: " << a.y << " | "
+		// 		  << "theta: " << a.theta
+		// 		  << std::endl;
+		// std::cout << "color: " << intake.color_sensor.get_hue() << std::endl;
+		intake.hues_debug();
 
 		// delay to save system resources
 		pros::delay(20);
