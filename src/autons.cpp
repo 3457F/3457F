@@ -206,12 +206,14 @@ void red_positive() {
 
     // TODO: sometimes ring flat out doesn't get inside
     // goes to + gets first ring on field (second ring overall)
-    turnAndMoveToPoint(-31.4, -40, 650, TO, false, false, 115.0);
+    // COMP CHANGE: -31.4 -> -32.4
+    turnAndMoveToPoint(-32.4, -40, 650, TO, false, false, 115.0);
     pros::delay(250);
     intake.brake();
 
+    // COMP CHANGE: added more turn timeout (500 -> 1000)
     // go to + clamps second mogo on field
-    turnAndMoveToPoint(-15.5, -46.5, 500, 2250, true, true, 70);
+    turnAndMoveToPoint(-15.5, -46.5, 1000, 2250, true, true, 70);
     chassis.waitUntil(15.5);
     mogo.toggle();
     waitd;
