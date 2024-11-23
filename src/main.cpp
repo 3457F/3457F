@@ -200,6 +200,10 @@ rd::Selector selector({
 	// , {.name="RED POSITIVE (3 ring)", .action=&red_right_side}
     // , {.name="BLUE POSITIVE (3 ring)", .action=&blue_left_side}
 	, {.name = "BLUE NEGATIVE (5 ring)", .action=&blue_negative_5_ring}
+	, {.name = "BLUE SAWP", .action=&blue_positive}
+	,{.name = "RED SAWP", .action=&red_positive}
+	, 
+	
 });
 
 // Create robodash console
@@ -289,10 +293,10 @@ void autonomous() {
 	chassis.setBrakeMode(pros::motor_brake_mode_e::E_MOTOR_BRAKE_HOLD);
 	
 	// Run the selected autonomous function - UNCOMMENT ONCE DONE TESTING AUTONS
-	blue_positive();
+	// blue_positive();
 
 
-	// selector.run_auton();
+	selector.run_auton();
 };
 
 /**
