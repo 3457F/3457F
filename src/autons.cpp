@@ -746,11 +746,12 @@ void blue_positive() {
     );
 
     // turns and moves towards first mogo, clamping it
+    // CHNG: 2500 -> 2000
     turnAndMoveToPoint(
         24
         , -23.5
         , 500
-        , 2500
+        , 2000
         , true
         , true
         , 70
@@ -761,7 +762,7 @@ void blue_positive() {
 
     // intakes preload ring (first ring overall)
     intake.intake();
-    pros::delay(800);
+    pros::delay(1500);
 
     // lets go of first mogo
     mogo.toggle();
@@ -778,7 +779,7 @@ void blue_positive() {
         , false
         , 115.0
     );
-    pros::delay(200);
+    // pros::delay(200);
     intake.brake();
     pros::delay(50);
 
@@ -847,6 +848,66 @@ void blue_positive() {
     chassis.cancelAllMotions();
     
     arm.set_pos(arm.LOADIN_POS);
+}
+
+void blue_positive_normal_points() {
+    // starting position
+    chassis.setPose(
+        55
+        , -36.5
+        , -90
+    );
+
+    // turns and moves towards first mogo, clamping it
+    turnAndMoveToPoint(
+        24
+        , -23.5
+        , 500
+        , 2500
+        , true
+        , true
+        , 70
+    );
+    chassis.waitUntil(25.2);
+    mogo.toggle();
+    waitd;
+
+    // intakes preload ring (first ring overall)
+    intake.intake();
+    pros::delay(800);
+
+    // lets go of first mogo
+    mogo.toggle();
+    pros::delay(150);
+
+    // TODO: sometimes ring flat out doesn't get inside
+    // goes to + gets first ring on field (second ring overall)
+    turnAndMoveToPoint(
+        24
+        , -62
+        , 750
+        , TO
+        , false
+        , false
+        , 115.0
+    );
+    pros::delay(200);
+    intake.brake();
+    pros::delay(50);
+    
+    // because bot inevitably overshoots, want to curve back to the mogo!
+    chassis.moveToPose(
+        0
+        , -47
+        , 270
+        , 1000
+        , {
+            .minSpeed = 100.0
+        }
+    );
+    chassis.waitUntil(40.0);
+    mogo.toggle();
+    waitd;
 }
 
 // red negative -> red positive, NEW BOT!
@@ -998,7 +1059,7 @@ void test_auton() {
     );
 }
 
-// void prog_skills() {
+void prog_skills() {
 //     // policy of OVERSHOOTING on all rings!
 
 //     std::cout << "Running PROG skills" << std::endl;
@@ -1111,4 +1172,4 @@ void test_auton() {
 //     // waitd;
 //     // // waits for ring to be intaked
 //     // pros::delay(1500);
-// }
+}

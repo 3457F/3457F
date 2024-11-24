@@ -18,6 +18,8 @@
 #include "pros/rotation.hpp"
 #include "pros/rtos.hpp"
 #include "robodash/api.h"
+#include "stormlib/api.hpp"
+#include "stormlib/selector.hpp"
 
 /**
  * CONFIG VARS:
@@ -194,15 +196,22 @@ Doinker doinker = Doinker('B');
 
 // Hang hang = Hang('D')
 
-rd::Selector selector({
-	{.name="RED LEFT SOLO AWP", .action=&red_cross_sawp}
-	, {.name="RED NEGATIVE (5 ring)", .action=&red_negative_5_ring}
-	// , {.name="RED POSITIVE (3 ring)", .action=&red_right_side}
-    // , {.name="BLUE POSITIVE (3 ring)", .action=&blue_left_side}
-	, {.name = "BLUE NEGATIVE (5 ring)", .action=&blue_negative_5_ring}
-	, {.name = "BLUE SAWP", .action=&blue_positive}
-	,{.name = "RED SAWP", .action=&red_positive}
-});
+// rd::Selector selector({
+// 	{.name="RED LEFT SOLO AWP", .action=&red_cross_sawp}
+// 	, {.name="RED NEGATIVE (5 ring)", .action=&red_negative_5_ring}
+// 	// , {.name="RED POSITIVE (3 ring)", .action=&red_right_side}
+//     // , {.name="BLUE POSITIVE (3 ring)", .action=&blue_left_side}
+// 	, {.name = "BLUE NEGATIVE (5 ring)", .action=&blue_negative_5_ring}
+// 	, {.name = "BLUE SAWP", .action=&blue_positive}
+// 	,{.name = "RED SAWP", .action=&red_positive}
+// });
+stormlib::selector selector(
+	stormlib::selector::E_SKILLS_1,
+	"Normal",
+	"SAWP",
+	"No Ladder",
+	"5 ring"
+);
 
 // Create robodash console
 rd::Console console;
@@ -233,17 +242,12 @@ rd::Console console;
  * to keep execution time for this mode under a few seconds.
  */
 void initialize() {
-	// pros::lcd::initialize();
-
 	chassis.calibrate();
 
 	// alliance color is BLUE
 	intake.color = intake.BLUE_HUE;
 
-	// pros::Task arm_update([]() {return *arm.update};
-
-	// pros::lcd::register_btn0_cb(left_btn_cb);
-	// pros::lcd::register_btn2_cb(right_btn_cb);
+	selector.initialize();
 
 // 	pros::Task screenTask(
 // 		screenTaskFunc			// function that is the task
@@ -293,8 +297,45 @@ void autonomous() {
 	// Run the selected autonomous function - UNCOMMENT ONCE DONE TESTING AUTONS
 	// blue_positive();
 
+	std::cout << selector.getAuton() << std::endl;
 
-	selector.run_auton();
+	/* stormlib */
+
+	// default: skills
+	if (selector.getAuton() == stormlib::selector::E_SKILLS_1) {
+		prog_skills();
+	
+	// red negative
+	} else if (selector.getAuton() == stormlib::selector::E_RED_LEFT_1) {
+		red_negative();
+	} else if (selector.getAuton() == stormlib::selector::E_RED_LEFT_2) {
+		red_cross_sawp();
+	} else if (selector.getAuton() == stormlib::selector::E_RED_LEFT_3) {
+		red_negative_5_ring();
+	
+	// red positive
+	} else if (selector.getAuton() == stormlib::selector::E_RED_RIGHT_1) {
+		red_positive();
+	
+	// blue negative
+	} else if (selector.getAuton() == stormlib::selector::E_BLUE_RIGHT_1) {
+		blue_negative();
+	} else if (selector.getAuton() == stormlib::selector::E_BLUE_RIGHT_2) {
+		blue_negative_sawp();
+	} else if (selector.getAuton() == stormlib::selector::E_BLUE_RIGHT_3) {
+		blue_negative_safe();
+	} else if (selector.getAuton() == stormlib::selector::E_BLUE_RIGHT_4) {
+		blue_negative_5_ring();
+
+	// blue positive
+	} else if (selector.getAuton() == stormlib::selector::E_BLUE_LEFT_1) {
+		blue_positive();
+	} else if (selector.getAuton() == stormlib::selector::E_BLUE_LEFT_4) {
+		blue_positive_normal_points();
+	}
+
+	/* robodash */
+	// selector.run_auton();
 };
 
 /**
