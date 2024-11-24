@@ -22,3 +22,5 @@ void blue_positive();
 void red_cross_sawp();
 
 void test_auton();
+
+void prog_skills();

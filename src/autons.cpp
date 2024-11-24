@@ -243,6 +243,9 @@ void red_positive() {
     chassis.moveToPoint(-37.246, -13.228, 2500, {.forwards=false});
     waitd;
     arm.set_pos(arm.LOADIN_POS);
+
+    // stops intake in case the blue ring finds its way in
+    intake.brake();
 }
 
 void red_positive_approach_mogo_side() {
@@ -404,7 +407,7 @@ void blue_positive() {
 
     // TODO: sometimes ring flat out doesn't get inside
     // goes to + gets first ring on field (second ring overall)
-    turnAndMoveToPoint(26.5, -42.5, 750, TO, false, false);
+    turnAndMoveToPoint(26.5, -42.5, 750, TO, false, false, 115.0);
     pros::delay(200);
     intake.brake();
     pros::delay(50);
@@ -438,8 +441,13 @@ void blue_positive() {
 
 
     // arm.set_pos(arm.LOADIN_POS);
+    // overshot ; 16, -26.75
+    // chassis.moveToPoint(20, -30, 2500, {.forwards=false});
     chassis.moveToPoint(16, -26.75, 2500, {.forwards=false});
-    waitd;
+    chassis.waitUntil(80);
+    chassis.cancelAllMotions();
+    // chassis.turnToPoint()
+    // chassis.moveToPoint(16, -26.75, 1000, {.forwards=false});
     arm.set_pos(arm.LOADIN_POS);
 }
 
@@ -592,8 +600,124 @@ void test_auton_task(void* chassisVoid) {
 void test_auton() {
     pros::Task task(&test_auton_task, &chassis);
 
-    chassis.setPose(-48, -24, 90);
+    chassis.setPose(0, 0, 90);
 
-    chassis.moveToPoint(-24, -24, 1000);
-    waitd;
+    turnAndMoveToPoint(24, 24, 1000, 1000);
+
+    turnAndMoveToPoint(-24, 24, 1000, 1000);
 }
+
+// void prog_skills() {
+//     // policy of OVERSHOOTING on all rings!
+
+//     std::cout << "Running PROG skills" << std::endl;
+
+//     // mogo mech facing FIELD, at top left corner of mid-left tile (rel to driver station ig)
+//     // old pt -62 -9
+//     // -59, -17 -> adjustment for new starting pos
+//     // -56.6, -19.1 -> adjustment to account for spec angle
+//     // -59, -15.65 -> test 1 (angles all off)
+//     chassis.setPose(-55.75, -7.25, 90);
+
+//     // open mogo mech
+//     mogo.toggle();
+//     // wait a TINY second for it to open
+//     pros::delay(500);
+
+//     // moves forward
+//     chassis.moveToPoint(-47, -7.25, 750);
+//     waitd;
+
+//     // // turns towards first mogo
+//     // chassis.turnToPoint(-47, -24, 750);
+//     // waitd;
+//     // // MOVES towards first mogo
+//     // chassis.moveToPoint(-47, -24, 1000);
+//     // waitd;
+//     turnAndMoveToPoint(-47, -24, 750, 1000);
+
+//     // captures mogo; waits 500ms for it to settle
+//     mogo.toggle();
+//     pros::delay(500);
+
+//     // intakes preload ring and waits
+//     intake.intake();
+//     pros::delay(1500);
+//     intake.brake();
+
+//     // turns & moves towards first ring on field, running intake as you go
+//     // chassis.turnToPoint(-19.5, -23.5, 1000, { .forwards = false, .direction = AngularDirection::CW_CLOCKWISE });
+//     // waitd;
+//     // intake.intake();
+//     // chassis.moveToPoint(-19.5, -23.5, 1000, { .forwards = false });
+//     // waitd;
+//     turnAndMoveToPoint(-19.5, -23.5, 1000, 1000, false);
+//     // waits for ring to be intaked
+//     pros::delay(1500);
+
+//     // turns & moves towards second ring on field, STILL running intake!
+//     // chassis.turnToPoint(-24.25, -50.5, 1000, { .forwards = false, .direction = AngularDirection::CW_CLOCKWISE});
+//     // waitd;
+//     // chassis.moveToPoint(-24.25, -50.5, 1000, { .forwards = false });
+//     // waitd;
+//     turnAndMoveToPoint(-24.25, -50.5, 1000, 1000, false);
+//     // waits for ring to be intaked
+//     pros::delay(1500);
+
+//     // turns & moves towards third ring on field, STILL running intake!
+//     // chassis.turnToPoint(-52.35, -46.25, 1000, { .forwards = false, .direction = AngularDirection::CW_CLOCKWISE});
+//     // waitd;
+//     // chassis.moveToPoint(-52.35, -46.25, 1000, { .forwards = false });
+//     // waitd;
+//     turnAndMoveToPoint(-52.35, -46.25, 1000, 1000, false);
+//     // waits for ring to be intaked
+//     pros::delay(1500);
+
+//     // turns & moves towards fourth ring on field, STILL running intake!
+//     // chassis.turnToPoint(-62.35, -48.4, 1000, { .forwards = false, .direction = AngularDirection::CCW_COUNTERCLOCKWISE});
+//     // waitd;
+//     // chassis.moveToPoint(-62.35, -48.4, 1000, { .forwards = false });
+//     // waitd;
+//     turnAndMoveToPoint(-62.35, -48.4, 1000, 1000, false);
+//     // waits for ring to be intaked
+//     pros::delay(1500);
+
+//     // turns & moves towards fifth ring on field, STILL running intake!
+//     chassis.turnToPoint(-44.5, -61.35, 1000, { .forwards = false, .direction = AngularDirection::CCW_COUNTERCLOCKWISE});
+//     waitd;
+//     chassis.moveToPoint(-44.5, -61.35, 1000, { .forwards = false });
+//     waitd;
+//     // waits for ring to be intaked
+//     pros::delay(1500);
+
+//     // mogo filled; puts in corner!
+//     chassis.turnToPoint(-66.6, -66.6, 750, { .direction = AngularDirection::CCW_COUNTERCLOCKWISE });
+//     waitd;
+//     // opens mogo mech so now we're PUSHING mogo, and then pushes it to corner; OVERSHOOTS SO THAT MOGO IS GUARANTEED TO GO IN!
+//     mogo.toggle();
+//     // waits for mogo mech to open
+//     pros::delay(500);
+//     // moves to corner
+//     chassis.turnToPoint(-66.6, -66.6, 1000);
+//     waitd;
+
+//     // returns to previous point
+//     chassis.moveToPoint(-44.5, -61.35, 1000, { .forwards = false });
+//     waitd;
+//     // turns & moves to point in front of second mogo
+//     chassis.turnToPoint(-47, 4, 1000, { .direction = AngularDirection::CW_CLOCKWISE });
+//     waitd;
+//     chassis.moveToPoint(-47, 4, 1000);
+
+    
+
+    
+
+//     // // turns AND moves towards the second ring on field WHILE intaking
+//     // chassis.turnToPoint(-19.5, -47.5, 750, { .forwards = false, .direction = AngularDirection::CW_CLOCKWISE });
+//     // waitd;
+//     // chassis.moveToPoint(-19.5, -47.5, 750, { .forwards = false });
+//     // waitd;
+//     // // waits for ring to be intaked
+//     // pros::delay(1500);
+// }
