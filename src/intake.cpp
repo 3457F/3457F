@@ -106,6 +106,11 @@ void throws_ring(void* intakeVoid) {
     intake->intake();
     // TODO: tune delay
     pros::delay(25);
+    
+    intake->outtake();
+    //this is so that right before the ring gets towards the top and (falls down and scorces on the mogo :( ) it can outtake (which will fling the ring, and also doesn't need to be tuned as much in terms of delays)
+
+    pros::delay(10);
 
     intake->brake();
     // TODO: tune delay
