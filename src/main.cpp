@@ -202,7 +202,6 @@ rd::Selector selector({
 	, {.name = "BLUE NEGATIVE (5 ring)", .action=&blue_negative_5_ring}
 	, {.name = "BLUE SAWP", .action=&blue_positive}
 	,{.name = "RED SAWP", .action=&red_positive}
-	
 });
 
 // Create robodash console
