@@ -1173,3 +1173,16 @@ void prog_skills() {
 //     // // waits for ring to be intaked
 //     // pros::delay(1500);
 }
+
+void red_neg_awp (){
+    chassis.setPose(59.2,16.224,0);
+    // chassis.moveToPose(59.2, -13.8, 0, 3000, {.maxSpeed = 80});
+    chassis.moveToPoint(59.2, -13.8, 3000,{.forwards = false });
+    waitd;
+    chassis.moveToPose(70.93, 0, 90, 3000, {.forwards = true});
+    waitd;
+    pros::delay(2000);
+    intake.intake();
+    
+}
+

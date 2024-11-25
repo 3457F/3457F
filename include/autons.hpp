@@ -25,3 +25,6 @@ void red_cross_sawp();
 void test_auton();
 
 void prog_skills();
+
+void red_neg_awp();
+

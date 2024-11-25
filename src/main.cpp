@@ -247,7 +247,7 @@ void initialize() {
 	// alliance color is BLUE
 	intake.color = intake.BLUE_HUE;
 
-	selector.initialize();
+	// selector.initialize();
 
 // 	pros::Task screenTask(
 // 		screenTaskFunc			// function that is the task
@@ -296,43 +296,43 @@ void autonomous() {
 	
 	// Run the selected autonomous function - UNCOMMENT ONCE DONE TESTING AUTONS
 	// blue_positive();
-
-	std::cout << selector.getAuton() << std::endl;
+	red_neg_awp();
+	// std::cout << selector.getAuton() << std::endl;
 
 	/* stormlib */
 
 	// default: skills
-	if (selector.getAuton() == stormlib::selector::E_SKILLS_1) {
-		prog_skills();
+	// if (selector.getAuton() == stormlib::selector::E_SKILLS_1) {
+	// 	prog_skills();
 	
-	// red negative
-	} else if (selector.getAuton() == stormlib::selector::E_RED_LEFT_1) {
-		red_negative();
-	} else if (selector.getAuton() == stormlib::selector::E_RED_LEFT_2) {
-		red_cross_sawp();
-	} else if (selector.getAuton() == stormlib::selector::E_RED_LEFT_3) {
-		red_negative_5_ring();
+	// // red negative
+	// } else if (selector.getAuton() == stormlib::selector::E_RED_LEFT_1) {
+	// 	red_negative();
+	// } else if (selector.getAuton() == stormlib::selector::E_RED_LEFT_2) {
+	// 	red_cross_sawp();
+	// } else if (selector.getAuton() == stormlib::selector::E_RED_LEFT_3) {
+	// 	red_negative_5_ring();
 	
-	// red positive
-	} else if (selector.getAuton() == stormlib::selector::E_RED_RIGHT_1) {
-		red_positive();
+	// // red positive
+	// } else if (selector.getAuton() == stormlib::selector::E_RED_RIGHT_1) {
+	// 	red_positive();
 	
-	// blue negative
-	} else if (selector.getAuton() == stormlib::selector::E_BLUE_RIGHT_1) {
-		blue_negative();
-	} else if (selector.getAuton() == stormlib::selector::E_BLUE_RIGHT_2) {
-		blue_negative_sawp();
-	} else if (selector.getAuton() == stormlib::selector::E_BLUE_RIGHT_3) {
-		blue_negative_safe();
-	} else if (selector.getAuton() == stormlib::selector::E_BLUE_RIGHT_4) {
-		blue_negative_5_ring();
+	// // blue negative
+	// } else if (selector.getAuton() == stormlib::selector::E_BLUE_RIGHT_1) {
+	// 	blue_negative();
+	// } else if (selector.getAuton() == stormlib::selector::E_BLUE_RIGHT_2) {
+	// 	blue_negative_sawp();
+	// } else if (selector.getAuton() == stormlib::selector::E_BLUE_RIGHT_3) {
+	// 	blue_negative_safe();
+	// } else if (selector.getAuton() == stormlib::selector::E_BLUE_RIGHT_4) {
+	// 	blue_negative_5_ring();
 
-	// blue positive
-	} else if (selector.getAuton() == stormlib::selector::E_BLUE_LEFT_1) {
-		blue_positive();
-	} else if (selector.getAuton() == stormlib::selector::E_BLUE_LEFT_4) {
-		blue_positive_normal_points();
-	}
+	// // blue positive
+	// } else if (selector.getAuton() == stormlib::selector::E_BLUE_LEFT_1) {
+	// 	blue_positive();
+	// } else if (selector.getAuton() == stormlib::selector::E_BLUE_LEFT_4) {
+	// 	blue_positive_normal_points();
+	// }
 
 	/* robodash */
 	// selector.run_auton();
