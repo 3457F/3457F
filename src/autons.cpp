@@ -1175,30 +1175,14 @@ void prog_skills() {
 }
 
 void red_neg_awp_redo() {
-    // chassis.setPose(59.2,16.224,0);
-    // // chassis.moveToPose(59.2, -13.8, 0, 3000, {.maxSpeed = 80});
-    // chassis.moveToPoint(59.2, -13.8, 3000,{.forwards = false, .maxSpeed = 80 });
-    // waitd;
-    // chassis.moveToPose(67.85, -0.25, 90, 3000, {.forwards = true, .maxSpeed = 50});
-    // waitd;
-    // intake.intake();
-    // pros::delay(400);
-    // intake.outtake();
-    // chassis.turnToPoint(23.645,-23.288, 500);
-    // waitd;
-    // chassis.moveToPose(23.645, -23.288, 236, 3000, {.forwards=false, .maxSpeed = 90});
-    // waitd;
-    // mogo.toggle(); 
-
     // starts at top-right; inside of corner
     chassis.setPose(-54.779, 15.9, 0);
-    // -56.1625, 3.04748, 44.4175
 
+    // starts outtaking so it pushes the blue ring away
     intake.outtake();
-    // turnAndMoveToPoint(-61.157, 6.817, 500, 1000, false, false, 127.0, true);
-    // turnAndMoveToPoint(-56.1625, 3.04748, 750, 1000, false);
+
+    // TODO: point TOO FAR UP
     turnAndMoveToPoint(-61.157, 6.817, 500, 1000, false);
     pros::delay(500);
-
     arm.set_pos(arm.SCORE_POS);
 }

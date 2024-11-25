@@ -448,23 +448,7 @@ void opcontrol() {
 		// replace with tank() if u really don't like tank that much
 		arcade();
 
-		// arm.debug();
-
-		// lemlib::Pose a = chassis.getPose();
-
-		// std::cout << "x: " << a.x << " | "
-		// 		  << "y: " << a.y << " | "
-		// 		  << "theta: " << a.theta
-		// 		  << std::endl;
-		// std::cout << "color: " << intake.color_sensor.get_hue() << std::endl;
-		// intake.hues_debug();
-
 		lemlib::Pose pos = chassis.getPose();
-
-        std::cout << "x: " << pos.x
-				  << " | y: " << pos.y
-				  << " | theta: " << pos.theta
-				  << std::endl;
 
 		// delay to save system resources
 		pros::delay(20);

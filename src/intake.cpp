@@ -62,19 +62,19 @@ void Intake::hues_debug() {
 
 // meant to be run as a task, or every 20ms!
 void Intake::update_sort(bool R1_pressed, bool R2_pressed) {
-    // // keeps color sensor white LED on, so it can more accurately detect color
-    // color_sensor.set_led_pwm(100);
+    // keeps color sensor white LED on, so it can more accurately detect color
+    color_sensor.set_led_pwm(100);
 
-    // // if in free driver control mode
-    // if (state == 0) {
-    //     // checks if we're dealing with a ring we don't want -- for testing it's red
-    //     if (within(color_sensor.get_hue(), color, 10)) {
-    //         // throw the red ring!
-    //         state = 1;
-    //         color_sort_task = new pros::Task(&throws_ring, this);
+    // if in free driver control mode
+    if (state == 0) {
+        // checks if we're dealing with a ring we don't want -- for testing it's red
+        if (within(color_sensor.get_hue(), color, 10)) {
+            // throw the red ring!
+            state = 1;
+            color_sort_task = new pros::Task(&throws_ring, this);
         
-    //     // otherwise run normal driver control version of intake!
-    //     } else {
+        // otherwise run normal driver control version of intake!
+        } else {
             if (R1_pressed == R2_pressed) {
                 brake();
             } else if (R1_pressed) {
@@ -82,11 +82,11 @@ void Intake::update_sort(bool R1_pressed, bool R2_pressed) {
             } else if (R2_pressed) {
                 outtake();
             }
-    //     }    // if running the color sort task
-    // } else if (state == 1) {
-    //     // don't disturb it! wait until color sorting is done
-    //     return;
-    // }
+        }    // if running the color sort task
+    } else if (state == 1) {
+        // don't disturb it! wait until color sorting is done
+        return;
+    }
 }
 
 // meant to be run as a task
