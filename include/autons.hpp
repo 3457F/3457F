@@ -7,6 +7,7 @@ void red_left_shortened_no_ladder();
 void red_negative(); 
 void red_negative_5_ring();
 void red_negative_sawp();
+void red_neg_awp_redo();
 
 void blue_negative();
 
@@ -22,9 +23,7 @@ void blue_positive_normal_points();
 
 void red_cross_sawp();
 
+void test_auton_task();
 void test_auton();
 
 void prog_skills();
-
-void red_neg_awp();
-

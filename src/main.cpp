@@ -296,7 +296,7 @@ void autonomous() {
 	
 	// Run the selected autonomous function - UNCOMMENT ONCE DONE TESTING AUTONS
 	// blue_positive();
-	red_neg_awp();
+	red_neg_awp_redo();
 	// std::cout << selector.getAuton() << std::endl;
 
 	/* stormlib */
@@ -354,6 +354,8 @@ void autonomous() {
 void opcontrol() {
 	// color_sort.suspend();
 	// color_sort = nullptr;
+
+	chassis.setPose(-54.779, 15.9, 0);
 
 	// brake mode back to coast!
 	chassis.setBrakeMode(pros::motor_brake_mode_e::E_MOTOR_BRAKE_COAST);
@@ -455,7 +457,14 @@ void opcontrol() {
 		// 		  << "theta: " << a.theta
 		// 		  << std::endl;
 		// std::cout << "color: " << intake.color_sensor.get_hue() << std::endl;
-		intake.hues_debug();
+		// intake.hues_debug();
+
+		lemlib::Pose pos = chassis.getPose();
+
+        std::cout << "x: " << pos.x
+				  << " | y: " << pos.y
+				  << " | theta: " << pos.theta
+				  << std::endl;
 
 		// delay to save system resources
 		pros::delay(20);
