@@ -233,7 +233,7 @@ rd::Console console;
 //     intake->state = 0;
 // }
 
-// pros::Task color_sort(&update_sort_auton, &intake);
+pros::Task color_sort(&update_sort_auton, &intake);
 
 /**
  * Runs initialization code. This occurs as soon as the program is started.
@@ -275,9 +275,9 @@ void competition_initialize() {
 	// Focus auton selector on screen
 	// selector.focus();
 
-	// color_sort.resume();
+	color_sort.resume();
 
-	// color_sort = new pros::Task(&update_sort_auton, &intake);
+	color_sort = new pros::Task(&update_sort_auton, &intake);
 };
 
 /**
@@ -352,8 +352,8 @@ void autonomous() {
  * task, not resume it from where it left off.
  */
 void opcontrol() {
-	// color_sort.suspend();
-	// color_sort = nullptr;
+	color_sort.suspend();
+	color_sort = nullptr;
 
 	chassis.setPose(-54.779, 15.9, 0);
 
@@ -451,6 +451,6 @@ void opcontrol() {
 		lemlib::Pose pos = chassis.getPose();
 
 		// delay to save system resources
-		pros::delay(20);
+		pros::delay(10);
 	}
 }
