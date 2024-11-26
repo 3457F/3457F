@@ -71,16 +71,16 @@ void throws_ring(void* intakeVoid) {
 
     Intake* intake = (Intake*)(intakeVoid);
 
-    pros::delay(18);
+    pros::delay(28);
     intake->brake();
     
-    pros::delay(15q00);
+    pros::delay(1500);
     
     // returns back to normal driver control
     intake->state = 0;
 }
 
-// meant to be run as a task, or every 20ms!
+// meant to be run as a task, or every 10ms!
 void Intake::update_sort(bool R1_pressed, bool R2_pressed) {
     // // keeps color sensor white LED on, so it can more accurately detect color
     color_sensor.set_led_pwm(100);
@@ -89,6 +89,8 @@ void Intake::update_sort(bool R1_pressed, bool R2_pressed) {
     if (state == 0) {
         // checks if we're dealing with a ring we don't want -- for testing it's red
         if (within(color_sensor.get_hue(), color, 10)) {
+            std::cout << "detected opposite color ring!" << std::endl;
+            // timeout not working bc NOT DETECTING (and sometimes just brakes in the middle for some reason)
             // throw the red ring!
             state = 1;
             color_sort_task = new pros::Task(&throws_ring, this);
@@ -122,8 +124,6 @@ void update_sort_auton(void* intakeVoid) {
 
         // keeps color sensor white LED on, so it can more accurately detect color
         intake->color_sensor.set_led_pwm(100);
-
-        std::cout << "state: " << intake->state << " | ";
 
         // if in free driver control mode
         if (intake->state == 0) {
