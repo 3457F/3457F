@@ -8,7 +8,10 @@
 #include "pros/rtos.hpp"
 #include <chrono>
 
-#define TO 1200 // default timeout for when im lazy to specify
+// default timeout for when im lazy to specify
+#define TO 1200
+
+#define TUNING_TO 2000
 #define waitd chassis.waitUntilDone()
 #define MAX_SPEED 127.0
 
@@ -395,6 +398,11 @@ void red_negative_sawp() {
     intake.brake();
 }
 
+/**
+ * NOT a redo of the awp alg; slightly diff
+ * but IS a redo of red negative auton to account
+ * for the fixed IMU (now points won't be drift offset!)
+ */
 void red_neg_awp_redo() {
     // starts at top-right; inside of corner
     chassis.setPose(-54.779, 15.9, 0);
@@ -403,6 +411,7 @@ void red_neg_awp_redo() {
     intake.outtake();
 
     // TODO: point TOO FAR UP
+    // scores preload on alliance stake
     // turnAndMoveToPoint(-61.157, 6.817, 500, 1000, false);
     turnAndMoveToPoint(
         -61.157
@@ -417,10 +426,89 @@ void red_neg_awp_redo() {
     arm.set_pos(arm.SCORE_POS);
 
     // moves towards first mogo
-    chassis.follow(red_neg_first_mogo_txt, 15, 2000, true, true);
-    chassis.waitUntil(40);
+    // chassis.follow(red_neg_first_mogo_txt, 15, 2000, true, true);
+    // chassis.waitUntil(40);
+    // mogo.toggle();
+
+    // gets first mogo on field
+    // chassis.moveToPose(
+    //     -23.5
+    //     , 23.5
+    //     , 90
+    //     , 2000
+    // );
+    turnAndMoveToPoint(
+        -23.5
+        , 23.5
+        , {
+            .turnTO = 750
+            , .moveTO = 2000
+        }
+    );
+    chassis.waitUntil(40.0);
     mogo.toggle();
-    
+    waitd;
+
+    // moves towards second ring on field via curve,
+    // aligning with third ring on field and getting
+    // second ring
+    intake.intake();
+    chassis.moveToPose(
+        -7
+        , -42
+        , 0
+        , 2000
+        , {
+            .forwards = false
+        }
+    );
+    waitd;
+
+    // continues moving; gets third ring on field
+    chassis.moveToPose(
+        -7
+        , 60
+        , 0
+        , 2000
+        , {
+            .forwards = false
+        }
+    );
+    waitd;
+
+    // backs out w/ mogo side;
+    // CURVES back to original pos where mogo was
+    chassis.moveToPose(
+        -23.5
+        , 23.5
+        , 65
+        , 2000
+    );
+
+    // gets third ring on field
+    turnAndMoveToPoint(
+        -23.5
+        , 47
+        , {
+            .turnTO = 750
+            , .moveTO = 1000
+            , .forwards = false
+        }
+    );
+    pros::delay(350);
+
+    // brakes intake in case other rings get in
+    intake.brake();
+
+    // moves towards ladder w/ mogo side, where arm is!
+    // (w/ mogo still clamped)
+    chassis.moveToPose(
+        -11
+        , 13
+        , 135
+        , 2000
+    );
+    waitd;
 }
 
 
@@ -596,6 +684,21 @@ void red_positive() {
     // stops intake in case the blue ring finds its way in
     intake.brake();
 }
+
+
+
+
+
+/**
+ * ------------------------------------------------------------
+ * BLUE NEGATIVE
+ * ------------------------------------------------------------
+ */
+
+
+
+
+
 
 void blue_negative() {
     // starts at the center of the intersection of the top two tiles, the mogo mech facing directly rightward
@@ -878,6 +981,133 @@ void blue_negative_sawp() {
     );
     waitd;
 }
+
+/**
+ * NOT a redo of the awp alg; slightly diff
+ * but IS a redo of blue negative auton to account
+ * for the fixed IMU (now points won't be drift offset!)
+ */
+void blue_neg_awp_redo() {
+    // starts at top-right; inside of corner
+    chassis.setPose(-54.779, 15.9, 0);
+
+    // starts outtaking so it pushes the blue ring away
+    intake.outtake();
+
+    // TODO: point TOO FAR UP
+    // scores preload on alliance stake
+    // turnAndMoveToPoint(-61.157, 6.817, 500, 1000, false);
+    turnAndMoveToPoint(
+        -61.157
+        , 6.817
+        , {
+            .turnTO = 500
+            , .moveTO = 1000
+            , .forwards = false
+        }
+    );
+    pros::delay(500);
+    arm.set_pos(arm.SCORE_POS);
+
+    // moves towards first mogo
+    // chassis.follow(red_neg_first_mogo_txt, 15, 2000, true, true);
+    // chassis.waitUntil(40);
+    // mogo.toggle();
+
+    // gets first mogo on field
+    // chassis.moveToPose(
+    //     -23.5
+    //     , 23.5
+    //     , 90
+    //     , 2000
+    // );
+    turnAndMoveToPoint(
+        -23.5
+        , 23.5
+        , {
+            .turnTO = 750
+            , .moveTO = 2000
+        }
+    );
+    chassis.waitUntil(40.0);
+    mogo.toggle();
+    waitd;
+
+    // moves towards second ring on field via curve,
+    // aligning with third ring on field and getting
+    // second ring
+    intake.intake();
+    chassis.moveToPose(
+        -7
+        , -42
+        , 0
+        , 2000
+        , {
+            .forwards = false
+        }
+    );
+    waitd;
+
+    // continues moving; gets third ring on field
+    chassis.moveToPose(
+        -7
+        , 60
+        , 0
+        , 2000
+        , {
+            .forwards = false
+        }
+    );
+    waitd;
+
+    // backs out w/ mogo side;
+    // CURVES back to original pos where mogo was
+    chassis.moveToPose(
+        -23.5
+        , 23.5
+        , 65
+        , 2000
+    );
+
+    // gets third ring on field
+    turnAndMoveToPoint(
+        -23.5
+        , 47
+        , {
+            .turnTO = 750
+            , .moveTO = 1000
+            , .forwards = false
+        }
+    );
+    pros::delay(350);
+
+    // brakes intake in case other rings get in
+    intake.brake();
+
+    // moves towards ladder w/ mogo side, where arm is!
+    // (w/ mogo still clamped)
+    chassis.moveToPose(
+        -11
+        , 13
+        , 135
+        , 2000
+    );
+    waitd;
+}
+
+
+
+
+
+/**
+ * ------------------------------------------------------------
+ * BLUE NEGATIVE
+ * ------------------------------------------------------------
+ */
+
+
+
+
 
 void blue_positive() {
     // starting position
