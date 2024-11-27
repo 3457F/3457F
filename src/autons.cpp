@@ -412,7 +412,6 @@ void red_neg_awp_redo() {
 
     // TODO: point TOO FAR UP
     // scores preload on alliance stake
-    // turnAndMoveToPoint(-61.157, 6.817, 500, 1000, false);
     turnAndMoveToPoint(
         -61.157
         , 6.817
@@ -1279,15 +1278,6 @@ void blue_positive_normal_points() {
     );
 
     // turns and moves towards first mogo, clamping it
-    // turnAndMoveToPoint(
-    //     24
-    //     , -23.5
-    //     , 500
-    //     , 2500
-    //     , true
-    //     , true
-    //     , 70
-    // );
     turnAndMoveToPoint(
         24
         , -23.5
@@ -1312,15 +1302,6 @@ void blue_positive_normal_points() {
 
     // TODO: sometimes ring flat out doesn't get inside
     // goes to + gets first ring on field (second ring overall)
-    // turnAndMoveToPoint(
-    //     24
-    //     , -62
-    //     , 750
-    //     , TO
-    //     , false
-    //     , false
-    //     , 115.0
-    // );
     turnAndMoveToPoint(
         24
         , -62
