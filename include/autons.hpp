@@ -2,10 +2,10 @@
 
 // void prog_skills();
 
-void red_left_shortened_no_ladder();
-
 void red_negative(); 
+// continuation OF red_negative
 void red_negative_5_ring();
+// continuation OF red_negative
 void red_negative_sawp();
 void red_neg_awp_redo();
 
@@ -27,3 +27,4 @@ void test_auton_task();
 void test_auton();
 
 void prog_skills();
+

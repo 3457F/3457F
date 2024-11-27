@@ -12,91 +12,132 @@
 #define waitd chassis.waitUntilDone()
 #define MAX_SPEED 127.0
 
-// struct tamtpParams {
-//     int turnTO = TO;
-//     int moveTO = TO;
+// import pure pursuit files
+ASSET(red_neg_first_mogo_txt);
 
-//     bool fwd = true;
+struct tamtpParams {
+    int turnTO = TO;
+    int moveTO = TO;
 
-//     bool async = false;
+    /** remember, forwards is the mogo side! */
+    bool forwards = true;
 
-//     float mvMaxSpeed = MAX_SPEED;
+    /** if true, MAKE SURE to run `waitd;` after whatever call you make,
+    such as a `chassis.waitUntil()`, otherwise all the actions will
+    snowball on each other and the robot won't do much of anything ;-; */
+    bool async = false;
 
-//     /** runs `chassis.moveToPose()` instead of `chassis.moveToPoint()`
-//     after turning to the point. it was more of a test on my side to see
-//     why the robot kept turning right before it reached  */
-//     bool move_to_pose = false; 
-// };
+    float mvMaxSpeed = MAX_SPEED;
 
-// void turnAndMoveToPoint(
-//     float x
-//     , float y
-//     , tamtpParams params = {}
-// ) {
-//     chassis.turnToPoint(
-//         x
-//         , y
-//         , params.turnTO
-//         , { .forwards = params.fwd }
-//     );
-//     waitd;
-
-//     if (params.move_to_pose) {
-//         lemlib::Pose pose = chassis.getPose();
-        
-//         chassis.moveToPose(x, y, )
-//     }
-// }
+    /** runs `chassis.moveToPose()` instead of `chassis.moveToPoint()`
+    after turning to the point. it was more of a test on my side to see
+    why the robot kept turning arbitrarily right before it reached the point  */
+    bool move_to_pose = false; 
+};
 
 void turnAndMoveToPoint(
     float x
     , float y
-    , int turnTO
-    , int mvTO
-    , bool fwd = true
-    , bool async = false
-    , float mvMaxSpeed = 127.0
-    , bool move_to_pose = false
+    , tamtpParams params = {}
 ) {
     chassis.turnToPoint(
         x
         , y
-        , turnTO
-        , {
-            .forwards = fwd
-        }
+        , params.turnTO
+        , { .forwards = params.forwards }
     );
     waitd;
 
-    if (move_to_pose) {
+    if (params.move_to_pose) {
         lemlib::Pose pose = chassis.getPose();
-
+        
         chassis.moveToPose(
             x
             , y
             , pose.theta
-            , mvTO
+            , params.moveTO
             , {
-                .forwards = fwd
+                .forwards = params.forwards
+                , .maxSpeed = params.mvMaxSpeed
             }
         );
     } else {
         chassis.moveToPoint(
             x
             , y
-            , mvTO
+            , params.moveTO
             , {
-                .forwards = fwd
-                , .maxSpeed = mvMaxSpeed 
+                .forwards = params.forwards
+                , .maxSpeed = params.mvMaxSpeed
             }
         );
     }
-
-
-    if (!async) {
-        waitd;
-    };
 }
+
+// void turnAndMoveToPoint(
+//     float x
+//     , float y
+//     , int turnTO
+//     , int mvTO
+//     , bool fwd = true
+//     , bool async = false
+//     , float mvMaxSpeed = 127.0
+//     , bool move_to_pose = false
+// ) {
+//     chassis.turnToPoint(
+//         x
+//         , y
+//         , turnTO
+//         , {
+//             .forwards = fwd
+//         }
+//     );
+//     waitd;
+
+//     if (move_to_pose) {
+//         lemlib::Pose pose = chassis.getPose();
+
+//         chassis.moveToPose(
+//             x
+//             , y
+//             , pose.theta
+//             , mvTO
+//             , {
+//                 .forwards = fwd
+//             }
+//         );
+//     } else {
+//         chassis.moveToPoint(
+//             x
+//             , y
+//             , mvTO
+//             , {
+//                 .forwards = fwd
+//                 , .maxSpeed = mvMaxSpeed 
+//             }
+//         );
+//     }
+
+
+//     if (!async) {
+//         waitd;
+//     };
+// }
+
+
+
+
+
+
+/**
+ * ------------------------------------------------------------
+ * RED NEGATIVE
+ * ------------------------------------------------------------
+ */
+
+
+
+
 
 void red_negative() {
     // starts at the center of the intersection of the top two tiles, the mogo mech facing directly rightward
@@ -107,13 +148,22 @@ void red_negative() {
     );
 
     // turns and moves towards the first mogo, clamping it
+    // turnAndMoveToPoint(
+    //     -24.5
+    //     , 21.25
+    //     , 500
+    //     , 1500
+    //     , true
+    //     , true
+    // );
     turnAndMoveToPoint(
         -24.5
         , 21.25
-        , 500
-        , 1500
-        , true
-        , true
+        , {
+            .turnTO = 500
+            , .moveTO = 1500
+            , .async = true
+        }
     );
     chassis.waitUntil(29.5);
     mogo.toggle();
@@ -123,25 +173,35 @@ void red_negative() {
     intake.intake();
 
     // immediately starts moving 
-    chassis.turnToPoint(
+    // chassis.turnToPoint(
+    //     -12
+    //     , 34.75
+    //     , 600
+    //     , {
+    //         .forwards = false
+    //     }
+    // );
+    // waitd;
+    // chassis.moveToPoint(
+    //     -12
+    //     , 34.75
+    //     , 750
+    //     , {
+    //         .forwards = false
+    //         , .maxSpeed = 75
+    //     }
+    // );
+    // waitd;
+    turnAndMoveToPoint(
         -12
         , 34.75
-        , 600
         , {
-            .forwards = false
+            .turnTO = 600
+            , .moveTO = 750
+            , .forwards = false
+            , .mvMaxSpeed = 75
         }
     );
-    waitd;
-    chassis.moveToPoint(
-        -12
-        , 34.75
-        , 750
-        , {
-            .forwards = false
-            , .maxSpeed = 75
-        }
-    );
-    waitd;
 
     pros::delay(350);
 
@@ -151,34 +211,51 @@ void red_negative() {
         , TO
     );
     waitd;
+    // turnAndMoveToPoint(
+    //     -22.65
+    //     , 44
+    //     , 650
+    //     , TO
+    //     , false
+    // );
     turnAndMoveToPoint(
         -22.65
         , 44
-        , 650
-        , TO
-        , false
+        , {
+            .turnTO = 650
+            , .forwards = false
+        }
     );
     waitd;
 
     pros::delay(400);    
     intake.brake();
 
-    chassis.turnToPoint(
+    // chassis.turnToPoint(
+    //     -11.55
+    //     , 49.25
+    //     , 500
+    //     , {
+    //         .forwards = false
+    //     }
+    // );
+    // waitd;
+    // intake.intake();
+    // chassis.moveToPoint(
+    //     -11.55
+    //     , 49.25
+    //     , 800
+    //     , {
+    //         .forwards = false
+    //     }
+    // );
+    turnAndMoveToPoint(
         -11.55
         , 49.25
-        , 500
         , {
-            .forwards = false
-        }
-    );
-    waitd;
-    intake.intake();
-    chassis.moveToPoint(
-        -11.55
-        , 49.25
-        , 800
-        , {
-            .forwards = false
+            .turnTO = 500
+            , .moveTO = 800
+            , .forwards = false
         }
     );
     waitd;
@@ -191,7 +268,6 @@ void red_negative() {
         , TO
     );
 }
-
 void red_negative_5_ring() {
     red_negative();
     waitd;
@@ -319,6 +395,48 @@ void red_negative_sawp() {
     intake.brake();
 }
 
+void red_neg_awp_redo() {
+    // starts at top-right; inside of corner
+    chassis.setPose(-54.779, 15.9, 0);
+
+    // starts outtaking so it pushes the blue ring away
+    intake.outtake();
+
+    // TODO: point TOO FAR UP
+    // turnAndMoveToPoint(-61.157, 6.817, 500, 1000, false);
+    turnAndMoveToPoint(
+        -61.157
+        , 6.817
+        , {
+            .turnTO = 500
+            , .moveTO = 1000
+            , .forwards = false
+        }
+    );
+    pros::delay(500);
+    arm.set_pos(arm.SCORE_POS);
+
+    // moves towards first mogo
+    chassis.follow(red_neg_first_mogo_txt, 15, 2000, true, true);
+    chassis.waitUntil(40);
+    mogo.toggle();
+    
+}
+
+
+
+
+
+/**
+ * ------------------------------------------------------------
+ * RED POSITIVE
+ * ------------------------------------------------------------
+ */
+
+
+
+
+
 // THREE RING, TWO STAKE AUTON -> does awp!!!
 void red_positive() {
     // starting position
@@ -329,14 +447,24 @@ void red_positive() {
     );
 
     // turns and moves towards first mogo, clamping it
+    // turnAndMoveToPoint(
+    //     -24
+    //     , -22
+    //     , 500
+    //     , 2500
+    //     , true
+    //     , true
+    //     , 67.5
+    // );
     turnAndMoveToPoint(
         -24
         , -22
-        , 500
-        , 2500
-        , true
-        , true
-        , 67.5
+        , {
+            .turnTO = 500
+            , .moveTO = 2500
+            , .async = true
+            , .mvMaxSpeed = 67.5
+        }
     );
     chassis.waitUntil(24);
     mogo.toggle();
@@ -352,27 +480,45 @@ void red_positive() {
 
     // TODO: sometimes ring flat out doesn't get inside
     // goes to + gets first ring on field (second ring overall)
+    // turnAndMoveToPoint(
+    //     -32.4
+    //     , -40
+    //     , 650
+    //     , TO
+    //     , false
+    //     , false
+    //     , 115.0
+    // );
     turnAndMoveToPoint(
         -32.4
         , -40
-        , 650
-        , TO
-        , false
-        , false
-        , 115.0
+        , {
+            .turnTO = 650
+            , .forwards = false
+            , .mvMaxSpeed = 115.0
+        }
     );
     pros::delay(250);
     intake.brake();
 
     // go to + clamps second mogo on field
+    // turnAndMoveToPoint(
+    //     -15.5
+    //     , -46.5
+    //     , 1000
+    //     , 2250
+    //     , true
+    //     , true
+    //     , 70
+    // );
     turnAndMoveToPoint(
         -15.5
         , -46.5
-        , 1000
-        , 2250
-        , true
-        , true
-        , 70
+        , {
+            .turnTO = 1000
+            , .moveTO = 2250
+            , .forwards = true
+        }
     );
     chassis.waitUntil(15.5);
     mogo.toggle();
@@ -383,23 +529,42 @@ void red_positive() {
     pros::delay(500);
 
     // goes to corner of tile in front of corner
+    // turnAndMoveToPoint(
+    //     -56
+    //     , -52
+    //     , 500
+    //     , 1000
+    //     , false
+    // );
     turnAndMoveToPoint(
         -56
         , -52
-        , 500
-        , 1000
-        , false
+        , {
+            .turnTO = 500
+            , .moveTO = 1000
+            , .forwards = false
+        }
     );
 
     // moves slowly to corner
+    // turnAndMoveToPoint(
+    //     -95
+    //     , -71
+    //     , 1000
+    //     , 1000
+    //     , false
+    //     , false
+    //     , 75.0
+    // );
     turnAndMoveToPoint(
         -95
         , -71
-        , 1000
-        , 1000
-        , false
-        , false
-        , 75.0
+        , {
+            .turnTO = 1000
+            , .moveTO = 1000
+            , .forwards = false
+            , .mvMaxSpeed = 75.0
+        }
     );
 
     pros::delay(100);
@@ -432,46 +597,6 @@ void red_positive() {
     intake.brake();
 }
 
-void red_positive_approach_mogo_side() {
-    chassis.setPose(
-        -55
-        , -36.5
-        , 90
-    );
-
-    turnAndMoveToPoint(
-        -24
-        , -22
-        , 1000
-        , 1000
-        , true
-        , true
-    );
-    chassis.waitUntil(24.5);
-    mogo.toggle();
-    waitd;
-
-    intake.intake();
-    pros::delay(750);
-    mogo.toggle();
-
-    turnAndMoveToPoint(
-        -18
-        , -35.5
-        , 1000
-        , 750
-    );
-
-    turnAndMoveToPoint(
-        -2.75
-        , -45.25
-        , 750
-        , 1000
-    );
-    chassis.waitUntil(29.5);
-    mogo.toggle();
-}
-
 void blue_negative() {
     // starts at the center of the intersection of the top two tiles, the mogo mech facing directly rightward
     chassis.setPose(
@@ -481,14 +606,24 @@ void blue_negative() {
     );
 
     // turns and moves towards the first mogo, clamping it
+    // turnAndMoveToPoint(
+    //     21
+    //     , 17
+    //     , 500
+    //     , 1500
+    //     , true
+    //     , true
+    //     , 80
+    // );
     turnAndMoveToPoint(
         21
         , 17
-        , 500
-        , 1500
-        , true
-        , true
-        , 80
+        , {
+            .turnTO = 500
+            , .moveTO = 1500
+            , .async = true
+            , .mvMaxSpeed = 80
+        }
     );
     chassis.waitUntil(28.5);
     mogo.toggle();
@@ -526,14 +661,23 @@ void blue_negative() {
         , TO
     );
     waitd;
+    // turnAndMoveToPoint(
+    //     36
+    //     , 44
+    //     , 650
+    //     , TO
+    //     , false
+    //     , false
+    //     , 75
+    // );
     turnAndMoveToPoint(
         36
         , 44
-        , 650
-        , TO
-        , false
-        , false
-        , 75
+        , {
+            .turnTO = 650
+            , .forwards = false
+            , .mvMaxSpeed = 75
+        }
     );
     waitd;
 
@@ -591,8 +735,6 @@ void blue_negative_safe() {
     turnAndMoveToPoint(
         27
         , 10
-        , TO
-        , TO
     );
     arm.set_pos(arm.LOADIN_POS);
     intake.brake();
@@ -747,14 +889,24 @@ void blue_positive() {
 
     // turns and moves towards first mogo, clamping it
     // CHNG: 2500 -> 2000
+    // turnAndMoveToPoint(
+    //     24
+    //     , -23.5
+    //     , 500
+    //     , 2000
+    //     , true
+    //     , true
+    //     , 70
+    // );
     turnAndMoveToPoint(
         24
         , -23.5
-        , 500
-        , 2000
-        , true
-        , true
-        , 70
+        , {
+            .turnTO = 500
+            , .moveTO = 2000
+            , .async = true
+            , .mvMaxSpeed = 70
+        }
     );
     chassis.waitUntil(25.2);
     mogo.toggle();
@@ -770,28 +922,47 @@ void blue_positive() {
 
     // TODO: sometimes ring flat out doesn't get inside
     // goes to + gets first ring on field (second ring overall)
+    // turnAndMoveToPoint(
+    //     26.5
+    //     , -42.5
+    //     , 750
+    //     , TO
+    //     , false
+    //     , false
+    //     , 115.0
+    // );
     turnAndMoveToPoint(
         26.5
         , -42.5
-        , 750
-        , TO
-        , false
-        , false
-        , 115.0
+        , {
+            .turnTO = 750
+            , .forwards = false
+            , .mvMaxSpeed = 115.0
+        }
     );
     // pros::delay(200);
     intake.brake();
     pros::delay(50);
 
     // go to + clamps second mogo on field
+    // turnAndMoveToPoint(
+    //     0
+    //     , -49.5
+    //     , 500
+    //     , 2250
+    //     , true
+    //     , true
+    //     , 70
+    // );
     turnAndMoveToPoint(
         0
         , -49.5
-        , 500
-        , 2250
-        , true
-        , true
-        , 70
+        , {
+            .turnTO = 500
+            , .moveTO = 2250
+            , .async = true
+            , .mvMaxSpeed = 70
+        }
     );
     chassis.waitUntil(16);
     mogo.toggle();
@@ -801,23 +972,42 @@ void blue_positive() {
     intake.intake();
     pros::delay(500);
     // goes to corner of tile in front of corner
+    // turnAndMoveToPoint(
+    //     44
+    //     , -58
+    //     , 500
+    //     , 1000
+    //     , false
+    // );
     turnAndMoveToPoint(
         44
         , -58
-        , 500
-        , 1000
-        , false
+        , {
+            .turnTO = 500
+            , .moveTO = 1000
+            , .forwards = false
+        }
     );
 
     // moves slowly to corner
+    // turnAndMoveToPoint(
+    //     81
+    //     , -77.5
+    //     , 1000
+    //     , 2500
+    //     , false
+    //     , false
+    //     , 75.0
+    // );
     turnAndMoveToPoint(
         81
         , -77.5
-        , 1000
-        , 2500
-        , false
-        , false
-        , 75.0
+        , {
+            .turnTO = 1000
+            , .moveTO = 2500
+            , .forwards = false
+            , .mvMaxSpeed = 75.0
+        }
     );
 
     pros::delay(100);
@@ -859,14 +1049,24 @@ void blue_positive_normal_points() {
     );
 
     // turns and moves towards first mogo, clamping it
+    // turnAndMoveToPoint(
+    //     24
+    //     , -23.5
+    //     , 500
+    //     , 2500
+    //     , true
+    //     , true
+    //     , 70
+    // );
     turnAndMoveToPoint(
         24
         , -23.5
-        , 500
-        , 2500
-        , true
-        , true
-        , 70
+        , {
+            .turnTO = 500
+            , .moveTO = 2500
+            , .async = true
+            , .mvMaxSpeed = 70
+        }
     );
     chassis.waitUntil(25.2);
     mogo.toggle();
@@ -882,14 +1082,23 @@ void blue_positive_normal_points() {
 
     // TODO: sometimes ring flat out doesn't get inside
     // goes to + gets first ring on field (second ring overall)
+    // turnAndMoveToPoint(
+    //     24
+    //     , -62
+    //     , 750
+    //     , TO
+    //     , false
+    //     , false
+    //     , 115.0
+    // );
     turnAndMoveToPoint(
         24
         , -62
-        , 750
-        , TO
-        , false
-        , false
-        , 115.0
+        , {
+            .turnTO = 750
+            , .forwards = false
+            , .mvMaxSpeed = 115.0
+        }
     );
     pros::delay(200);
     intake.brake();
@@ -922,13 +1131,22 @@ void red_cross_sawp() {
     auto start = std::chrono::high_resolution_clock::now();
 
     // turns and moves towards mogo -> 42.6867
+    // turnAndMoveToPoint(
+    //     -24
+    //     , 22
+    //     , 1000
+    //     , 1500
+    //     , true
+    //     , true
+    // );
     turnAndMoveToPoint(
         -24
         , 22
-        , 1000
-        , 1500
-        , true
-        , true
+        , {
+            .turnTO = 1000
+            , .moveTO = 1500
+            , .async = true
+        }
     );
 
     // clamps pre-emptively
@@ -945,25 +1163,44 @@ void red_cross_sawp() {
 
     // comes back so can rotate 
     // TODO: verify this is correct...?
+    // turnAndMoveToPoint(
+    //     -24
+    //     , 48
+    //     , 1000
+    //     , 1000
+    //     , false
+    // );
     turnAndMoveToPoint(
         -24
         , 48
-        , 1000
-        , 1000
-        , false
+        , {
+            .turnTO = 1000
+            , .moveTO = 1000
+            , .forwards = false
+        }
     );
     waitd;
     pros::delay(1000);
 
     // drops mogo + goes for second one
     // TODO: might need to stop intake here, in case accidentally intakes blue ring..?
+    // turnAndMoveToPoint(
+    //     -45
+    //     , -9.5
+    //     , 1500
+    //     , 2000
+    //     , false
+    //     , true
+    // );
     turnAndMoveToPoint(
         -45
         , -9.5
-        , 1500
-        , 2000
-        , false
-        , true
+        , {
+            .turnTO = 1500
+            , .moveTO = 2000
+            , .forwards = false
+            , .async = true
+        }
     );
     // drops mogo midway so we don't have to care about it
     chassis.waitUntil(40);
@@ -972,13 +1209,22 @@ void red_cross_sawp() {
     // waits for rest of movement
     waitd;
     
+    // turnAndMoveToPoint(
+    //     -23.5
+    //     , -18.5
+    //     , 2000
+    //     , 2000
+    //     , true
+    //     , true
+    // );
     turnAndMoveToPoint(
         -23.5
         , -18.5
-        , 2000
-        , 2000
-        , true
-        , true
+        , {
+            .turnTO = 2000
+            , .moveTO = 2000
+            , .async = true
+        }
     );
     chassis.waitUntil(25);
     // "gets" new mogo + waits
@@ -988,12 +1234,21 @@ void red_cross_sawp() {
     waitd;
 
     // turns + moves towards third ring on field
+    // turnAndMoveToPoint(
+    //     -25.5
+    //     , -47.25
+    //     , 1000
+    //     , 1000
+    //     , false
+    // );
     turnAndMoveToPoint(
         -25.5
         , -47.25
-        , 1000
-        , 1000
-        , false
+        , {
+            .turnTO = 1000
+            , .moveTO = 1000
+            , .forwards = false
+        }
     );
     // waits for third ring to be intaked
     pros::delay(500);
@@ -1044,19 +1299,19 @@ void test_auton() {
         , 90
     );
 
-    turnAndMoveToPoint(
-        24
-        , 24
-        , 1000
-        , 1000
-    );
+    // turnAndMoveToPoint(
+    //     24
+    //     , 24
+    //     , 1000
+    //     , 1000
+    // );
 
-    turnAndMoveToPoint(
-        -24
-        , 24
-        , 1000
-        , 1000
-    );
+    // turnAndMoveToPoint(
+    //     -24
+    //     , 24
+    //     , 1000
+    //     , 1000
+    // );
 }
 
 void prog_skills() {
@@ -1172,17 +1427,4 @@ void prog_skills() {
 //     // waitd;
 //     // // waits for ring to be intaked
 //     // pros::delay(1500);
-}
-
-void red_neg_awp_redo() {
-    // starts at top-right; inside of corner
-    chassis.setPose(-54.779, 15.9, 0);
-
-    // starts outtaking so it pushes the blue ring away
-    intake.outtake();
-
-    // TODO: point TOO FAR UP
-    turnAndMoveToPoint(-61.157, 6.817, 500, 1000, false);
-    pros::delay(500);
-    arm.set_pos(arm.SCORE_POS);
 }
