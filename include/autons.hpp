@@ -2,6 +2,8 @@
 
 // void prog_skills();
 
+void print_robot_pos(void* chassisVoid);
+
 void red_negative(); 
 // continuation OF red_negative
 void red_negative_5_ring();

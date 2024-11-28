@@ -75,6 +75,10 @@ void turnAndMoveToPoint(
             }
         );
     }
+
+    if (!params.async) {
+        waitd;
+    }
 }
 
 // void turnAndMoveToPoint(
@@ -138,9 +142,23 @@ void turnAndMoveToPoint(
  * ------------------------------------------------------------
  */
 
+void print_robot_pos(void* chassisVoid) {
+    lemlib::Chassis* chassis
+        = static_cast<
+            lemlib::Chassis*
+        >(chassisVoid);
 
+    while (true) {
+        lemlib::Pose pos = chassis->getPose();
 
+        std::cout << "x: " << pos.x
+				  << " | y: " << pos.y
+				  << " | theta: " << pos.theta
+				  << std::endl;
 
+        pros::delay(20);
+    } 
+}
 
 void red_negative() {
     // starts at the center of the intersection of the top two tiles, the mogo mech facing directly rightward
@@ -404,110 +422,152 @@ void red_negative_sawp() {
  * for the fixed IMU (now points won't be drift offset!)
  */
 void red_neg_awp_redo() {
+    // arm.pid.kP
+
+    pros::Task task(
+        &print_robot_pos
+        , &chassis
+    );
+
     // starts at top-right; inside of corner
-    chassis.setPose(-54.779, 15.9, 0);
+    chassis.setPose(-54.75, 16, 0);
 
     // starts outtaking so it pushes the blue ring away
     intake.outtake();
 
     // TODO: point TOO FAR UP
     // scores preload on alliance stake
+    // -61.5, 5 -> correct pt but too far
     turnAndMoveToPoint(
-        -61.157
-        , 6.817
+        -61
+        , 5.5
         , {
-            .turnTO = 500
+            .turnTO = 1000
             , .moveTO = 1000
             , .forwards = false
         }
     );
     pros::delay(500);
-    arm.set_pos(arm.SCORE_POS);
+    arm.set_pos(arm.ALLIANCE_SCORE);
+    pros::delay(750);
+    // retracts, so as not to disturb ring when turning
+    // arm.set_pos(arm.START_POS);
+    // pros::delay(250);
 
-    // moves towards first mogo
-    // chassis.follow(red_neg_first_mogo_txt, 15, 2000, true, true);
-    // chassis.waitUntil(40);
-    // mogo.toggle();
-
-    // gets first mogo on field
-    // chassis.moveToPose(
-    //     -23.5
-    //     , 23.5
-    //     , 90
-    //     , 2000
-    // );
-    turnAndMoveToPoint(
-        -23.5
-        , 23.5
-        , {
-            .turnTO = 750
-            , .moveTO = 2000
-        }
+    // goes back to old point
+    chassis.moveToPose(
+        -54.75
+        , 16
+        , 30
+        , 1000
     );
-    chassis.waitUntil(40.0);
-    mogo.toggle();
-    waitd;
 
-    // moves towards second ring on field via curve,
-    // aligning with third ring on field and getting
-    // second ring
+    // starts retracting the arm
+    arm.set_pos(arm.START_POS);
+
+    // lifts intake in prep to grab first red ring on top
+    intake.lift(1);
+    // starts INTAKING, since we WANT to get the red ring
     intake.intake();
-    chassis.moveToPose(
-        -7
-        , -42
-        , 0
-        , 2000
-        , {
-            .forwards = false
-        }
-    );
-    waitd;
-
-    // continues moving; gets third ring on field
-    chassis.moveToPose(
-        -7
-        , 60
-        , 0
-        , 2000
-        , {
-            .forwards = false
-        }
-    );
-    waitd;
-
-    // backs out w/ mogo side;
-    // CURVES back to original pos where mogo was
-    chassis.moveToPose(
-        -23.5
-        , 23.5
-        , 65
-        , 2000
-    );
-
-    // gets third ring on field
+    // turns and moves towards first ring on field (on top of stack)
     turnAndMoveToPoint(
-        -23.5
-        , 47
+        -47
+        , 0
         , {
             .turnTO = 750
-            , .moveTO = 1000
+            , .moveTO = 1250
             , .forwards = false
         }
     );
-    pros::delay(350);
-
-    // brakes intake in case other rings get in
+    pros::delay(500);
+    // stops intake after a bit
+    // so that ring does not FULLY go thru intake
     intake.brake();
 
-    // moves towards ladder w/ mogo side, where arm is!
-    // (w/ mogo still clamped)
-    chassis.moveToPose(
-        -11
-        , 13
-        , 135
-        , 2000
-    );
-    waitd;
+    // // moves towards first mogo
+    // // chassis.follow(red_neg_first_mogo_txt, 15, 2000, true, true);
+    // // chassis.waitUntil(40);
+    // // mogo.toggle();
+
+    // // gets first mogo on field
+    // // chassis.moveToPose(
+    // //     -23.5
+    // //     , 23.5
+    // //     , 90
+    // //     , 2000
+    // // );
+    // turnAndMoveToPoint(
+    //     -23.5
+    //     , 23.5
+    //     , {
+    //         .turnTO = 750
+    //         , .moveTO = 2000
+    //     }
+    // );
+    // chassis.waitUntil(40.0);
+    // mogo.toggle();
+    // waitd;
+
+    // // moves towards second ring on field via curve,
+    // // aligning with third ring on field and getting
+    // // second ring
+    // intake.intake();
+    // chassis.moveToPose(
+    //     -7
+    //     , -42
+    //     , 0
+    //     , 2000
+    //     , {
+    //         .forwards = false
+    //     }
+    // );
+    // waitd;
+
+    // // continues moving; gets third ring on field
+    // chassis.moveToPose(
+    //     -7
+    //     , 60
+    //     , 0
+    //     , 2000
+    //     , {
+    //         .forwards = false
+    //     }
+    // );
+    // waitd;
+
+    // // backs out w/ mogo side;
+    // // CURVES back to original pos where mogo was
+    // chassis.moveToPose(
+    //     -23.5
+    //     , 23.5
+    //     , 65
+    //     , 2000
+    // );
+
+    // // gets third ring on field
+    // turnAndMoveToPoint(
+    //     -23.5
+    //     , 47
+    //     , {
+    //         .turnTO = 750
+    //         , .moveTO = 1000
+    //         , .forwards = false
+    //     }
+    // );
+    // pros::delay(350);
+
+    // // brakes intake in case other rings get in
+    // intake.brake();
+
+    // // moves towards ladder w/ mogo side, where arm is!
+    // // (w/ mogo still clamped)
+    // chassis.moveToPose(
+    //     -11
+    //     , 13
+    //     , 135
+    //     , 2000
+    // );
+    // waitd;
 }
 
 
@@ -1480,27 +1540,9 @@ void red_cross_sawp() {
               << "seconds." << std::endl;
 }
 
-void test_auton_task(void* chassisVoid) {
-    lemlib::Chassis* chassis
-        = static_cast<
-            lemlib::Chassis*
-        >(chassisVoid);
-
-    while (true) {
-        lemlib::Pose pos = chassis->getPose();
-
-        std::cout << "x: " << pos.x
-				  << "y: " << pos.y
-				  << "theta: " << pos.theta
-				  << std::endl;
-
-        pros::delay(20);
-    } 
-}
-
 void test_auton() {
     pros::Task task(
-        &test_auton_task
+        &print_robot_pos
         , &chassis
     );
 

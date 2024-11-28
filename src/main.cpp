@@ -136,7 +136,10 @@ lemlib::ControllerSettings angular_controller(3.25, // proportional gain (kP)
                                               0 // maximum acceleration (slew)
 );
 
-lemlib::TrackingWheel horizontal_track(&horizontal, lemlib::Omniwheel::NEW_2, -3);
+// lemlib::TrackingWheel horizontal_track(&horizontal, lemlib::Omniwheel::NEW_2, -3);
+// chnged to positive because tracking wheel is on mogo mech side
+// which is on front of robot!
+lemlib::TrackingWheel horizontal_track(&horizontal, lemlib::Omniwheel::NEW_2, 2.5);
 
 lemlib::OdomSensors sensors(nullptr, // vertical tracking wheel 1, set to null
                             nullptr, // vertical tracking wheel 2, set to nullptr as we are using IMEs
@@ -144,6 +147,12 @@ lemlib::OdomSensors sensors(nullptr, // vertical tracking wheel 1, set to null
                             nullptr, // horizontal tracking wheel 2, set to nullptr as we don't have a second one
                             &imu // inertial sensor
 );
+// lemlib::OdomSensors sensors(nullptr, // vertical tracking wheel 1, set to null
+//                             nullptr, // vertical tracking wheel 2, set to nullptr as we are using IMEs
+//                         	nullptr, // horizontal tracking wheel 1
+//                             nullptr, // horizontal tracking wheel 2, set to nullptr as we don't have a second one
+//                             &imu // inertial sensor
+// );
 
 lemlib::Chassis chassis(drivetrain, // drivetrain settings
                         lateral_controller, // lateral PID settings
