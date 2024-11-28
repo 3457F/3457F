@@ -2,8 +2,10 @@
 
 #include "arm.hpp"
 #include "lemlib/pid.hpp"
+#include "main.h"
+#include "pros/abstract_motor.hpp"
+#include "pros/motors.h"
 #include "util.hpp"
-
 // // meant to be run as a task
 // float update_info(void* setInfoVoid) {
 //     SetInfo* setInfo = static_cast<SetInfo*>(setInfoVoid);
@@ -158,7 +160,7 @@ void Arm::score_cycle() {
     // whether at START_POS or SCORE_POS, return to LOADIN_POS
     if (state == 0 || state == 2) {
         state = 1;
-
+        intake->intake_motors.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
         std::cout << "LOADIN_POS" << std::endl;
         this->set_pos(LOADIN_POS);
     }
@@ -166,7 +168,7 @@ void Arm::score_cycle() {
     // when at LOADIN_POS, go to SCORE_POS
     else if (state == 1) {
         state = 2;
-
+        intake->intake_motors.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
         std::cout << "SCORE_POS" << std::endl;
         this->set_pos(SCORE_POS);
     }
@@ -174,7 +176,7 @@ void Arm::score_cycle() {
 
 void Arm::start_pos() {
     state = 0;
-
+    intake->intake_motors.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
     std::cout << "START_POS" << std::endl;
     this->set_pos(START_POS);
 }

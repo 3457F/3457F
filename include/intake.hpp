@@ -58,6 +58,7 @@ class Intake {
         void outtake_auton();
 
         void brake();
+
         void brake_auton();
 
         void lift(bool set);
