@@ -71,7 +71,7 @@ void throws_ring(void* intakeVoid) {
 
     Intake* intake = (Intake*)(intakeVoid);
 
-    pros::delay(28);
+    pros::delay(50);
     intake->brake();
     
     pros::delay(1500);
