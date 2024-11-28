@@ -5,6 +5,7 @@
 #include "main.h"
 #include "pros/abstract_motor.hpp"
 #include "pros/motors.h"
+#include "pros/rtos.hpp"
 #include "util.hpp"
 // // meant to be run as a task
 // float update_info(void* setInfoVoid) {
@@ -171,6 +172,8 @@ void Arm::score_cycle() {
         intake->intake_motors.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
         std::cout << "SCORE_POS" << std::endl;
         this->set_pos(SCORE_POS);
+        pros::delay(1000);
+        intake->intake_motors.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
     }
 }
 
