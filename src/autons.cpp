@@ -482,6 +482,7 @@ void red_neg_awp_redo() {
     // mogo.toggle();
     // waitd;
 
+
     //grab mogo code (new)
     //moves back to have a better angle to the mogo
     chassis.moveToPose( -54.75 , 16 , 30, 1000);
@@ -492,9 +493,10 @@ void red_neg_awp_redo() {
     chassis.waitUntil(6);
     intake.brake();
     //this wait until is for the mogo mech clamp
-    chassis.waitUntil(29.8);
+    chassis.waitUntil(27.8);
     mogo.toggle();
     waitd;
+
 
     //turns to the middle ring
     chassis.turnToHeading(180, 8000);
