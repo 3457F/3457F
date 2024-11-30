@@ -470,50 +470,48 @@ void red_neg_awp_redo() {
     // starts INTAKING, since we WANT to get the red ring
     intake.intake();
     // turns and moves towards first ring on field (on top of stack)
-    turnAndMoveToPoint(
-        -49.212
-        , -1.908
-        , {
-            .turnTO = 750
-            , .moveTO = 1250
-            , .forwards = false
-        }
-    );
-
+    turnAndMoveToPoint(-49.212, -1.908, {.turnTO = 750 , .moveTO = 1250, .forwards = false});
     intake.lift(false);
     pros::delay(400);
 
-    //grab mogo code
+    //grab mogo code (old)
     // chassis.moveToPose(-29.035, 23.595, 49  , 2000, {.maxSpeed = 127});
     // chassis.waitUntil(3.4);
     // intake.brake();
     // chassis.waitUntil(33);
     // mogo.toggle();
     // waitd;
-    chassis.moveToPose(
-        -54.75
-        , 16
-        , 30
-        , 1000
-    );
+
+    //grab mogo code (new)
+    //moves back to have a better angle to the mogo
+    chassis.moveToPose( -54.75 , 16 , 30, 1000);
     waitd;
+    //goes to the mogoo (doesn't work as of nov 29)
     turnAndMoveToPoint(-36.061, 23.097, {.turnTO = true, .mvMaxSpeed = 90});
+    //this wait until is for the ring in the intake
     chassis.waitUntil(6);
     intake.brake();
+    //this wait until is for the mogo mech clamp
     chassis.waitUntil(29.8);
     mogo.toggle();
     waitd;
 
+    //turns to the middle ring
     chassis.turnToHeading(180, 8000);
     waitd;
     intake.intake();
+    //goes to the middle ring
     chassis.moveToPoint(-24.812, 51.482, 1000, {.forwards = false});
     waitd;
+
+    //turns to the top ring
     chassis.turnToHeading(270, 800);
     waitd;  
+    //goes to the top ring
     chassis.moveToPose(-5.223, 51.482, 270, 1200, {.forwards = false, .horizontalDrift = 2,.lead =0,  .maxSpeed = 90});
     waitd;
 
+    //comes back and goes to ladder (not done tuning still nov 29)
     chassis.moveToPoint(-14.381, 51.482, 900, {.forwards = false});
     waitd;
     chassis.moveToPose(-12.138, 11, 130, 1200, {.forwards = false, .maxSpeed = 127});
