@@ -471,23 +471,59 @@ void red_neg_awp_redo() {
     intake.intake();
     // turns and moves towards first ring on field (on top of stack)
     turnAndMoveToPoint(
-        -47
-        , 0
+        -49.212
+        , -1.908
         , {
             .turnTO = 750
             , .moveTO = 1250
             , .forwards = false
         }
     );
-    pros::delay(500);
-    // stops intake after a bit
-    // so that ring does not FULLY go thru intake
+
+    intake.lift(false);
+    pros::delay(400);
+
+    //grab mogo code
+    // chassis.moveToPose(-29.035, 23.595, 49  , 2000, {.maxSpeed = 127});
+    // chassis.waitUntil(3.4);
+    // intake.brake();
+    // chassis.waitUntil(33);
+    // mogo.toggle();
+    // waitd;
+    chassis.moveToPose(
+        -54.75
+        , 16
+        , 30
+        , 1000
+    );
+    waitd;
+    turnAndMoveToPoint(-36.061, 23.097, {.turnTO = true, .mvMaxSpeed = 90});
+    chassis.waitUntil(6);
     intake.brake();
+    chassis.waitUntil(29.8);
+    mogo.toggle();
+    waitd;
+
+    chassis.turnToHeading(180, 8000);
+    waitd;
+    intake.intake();
+    chassis.moveToPoint(-24.812, 51.482, 1000, {.forwards = false});
+    waitd;
+    chassis.turnToHeading(270, 800);
+    waitd;  
+    chassis.moveToPose(-5.223, 51.482, 270, 1200, {.forwards = false, .horizontalDrift = 2,.lead =0,  .maxSpeed = 90});
+    waitd;
+
+    chassis.moveToPoint(-14.381, 51.482, 900, {.forwards = false});
+    waitd;
+    chassis.moveToPose(-12.138, 11, 130, 1200, {.forwards = false, .maxSpeed = 127});
+
+
 
     // // moves towards first mogo
-    // // chassis.follow(red_neg_first_mogo_txt, 15, 2000, true, true);
-    // // chassis.waitUntil(40);
-    // // mogo.toggle();
+    // chassis.follow(red_neg_first_mogo_txt, 15, 2000, true, true);
+    // waitd;
+    // mogo.toggle();
 
     // // gets first mogo on field
     // // chassis.moveToPose(
