@@ -438,15 +438,9 @@ void red_neg_awp_redo() {
     // TODO: point TOO FAR UP
     // scores preload on alliance stake
     // -61.5, 5 -> correct pt but too far
-    turnAndMoveToPoint(
-        -61
-        , 5.5
-        , {
-            .turnTO = 1000
-            , .moveTO = 1000
-            , .forwards = false
-        }
-    );
+
+    //Nov 30 fixed this issues above
+    turnAndMoveToPoint(-61 , 5.5  , {.turnTO = 1000, .moveTO = 1000, .forwards = false });
     pros::delay(500);
     arm.set_pos(arm.ALLIANCE_SCORE);
     pros::delay(750);
@@ -456,11 +450,7 @@ void red_neg_awp_redo() {
 
     // goes back to old point
     chassis.moveToPose(
-        -54.75
-        , 16
-        , 30
-        , 1000
-    );
+        -54.75, 16 , 30 , 1000);
 
     // starts retracting the arm
     arm.set_pos(arm.START_POS);
@@ -474,7 +464,7 @@ void red_neg_awp_redo() {
     intake.lift(false);
     pros::delay(400);
 
-    //grab mogo code (old)
+//grab mogo code (old)
     // chassis.moveToPose(-29.035, 23.595, 49  , 2000, {.maxSpeed = 127});
     // chassis.waitUntil(3.4);
     // intake.brake();
@@ -482,128 +472,38 @@ void red_neg_awp_redo() {
     // mogo.toggle();
     // waitd;
 
-
-    //grab mogo code (new)
+    //grab mogo code (new) (Works as of nov 30)
     //moves back to have a better angle to the mogo
-    chassis.moveToPose( -54.75 , 16 , 30, 1000);
-    waitd;
-    //goes to the mogoo (doesn't work as of nov 29)
-    turnAndMoveToPoint(-36.061, 23.097, {.turnTO = true, .mvMaxSpeed = 90});
-    //this wait until is for the ring in the intake
-    chassis.waitUntil(6);
+    chassis.moveToPose( -52.759 , 8.715 , 30, 1000);
+
+    //Nov 30 have to tune the value since the ring keeps on flying or not pickin up ;-;
+    chassis.waitUntil(2.3);
     intake.brake();
-    //this wait until is for the mogo mech clamp
-    chassis.waitUntil(27.8);
+    waitd;
+
+    //moves to the mogo
+    chassis.moveToPose(-30.932, 20.603, 60, 1500, {.forwards = true, .maxSpeed = 90});
+    //wait until is pretty tuned (nov 30)
+    chassis.waitUntil(28);
     mogo.toggle();
     waitd;
 
+    //moves to the middle rings
+    chassis.moveToPose(-23.527, 57.616, 180, 2500, {.forwards = false, .horizontalDrift =2, .lead = 0,.maxSpeed=127});
 
-    //turns to the middle ring
-    chassis.turnToHeading(180, 8000);
-    waitd;
+    //this wait until is for the first ring that we picked up with the intake lift since when turning fast and intaking is like ;-;
+    chassis.waitUntil(9);
     intake.intake();
-    //goes to the middle ring
-    chassis.moveToPoint(-24.812, 51.482, 1000, {.forwards = false});
     waitd;
 
-    //turns to the top ring
-    chassis.turnToHeading(270, 800);
-    waitd;  
-    //goes to the top ring
-    chassis.moveToPose(-5.223, 51.482, 270, 1200, {.forwards = false, .horizontalDrift = 2,.lead =0,  .maxSpeed = 90});
-    waitd;
-
-    //comes back and goes to ladder (not done tuning still nov 29)
-    chassis.moveToPoint(-14.381, 51.482, 900, {.forwards = false});
-    waitd;
-    chassis.moveToPose(-12.138, 11, 130, 1200, {.forwards = false, .maxSpeed = 127});
+    //moves to the top rings! (works nov 30)
+    chassis.moveToPose(-9.3, 51.395, 280.3, 2500, {.forwards = false, .horizontalDrift =2, .lead = 0,.maxSpeed=127});
+     waitd;
+    
+    //moves to the ladder for wp 
+    chassis.moveToPose(-11.833, 12.418, 315, 3000, {.forwards = false, .horizontalDrift =2, .lead = 0,.maxSpeed=127});
 
 
-
-    // // moves towards first mogo
-    // chassis.follow(red_neg_first_mogo_txt, 15, 2000, true, true);
-    // waitd;
-    // mogo.toggle();
-
-    // // gets first mogo on field
-    // // chassis.moveToPose(
-    // //     -23.5
-    // //     , 23.5
-    // //     , 90
-    // //     , 2000
-    // // );
-    // turnAndMoveToPoint(
-    //     -23.5
-    //     , 23.5
-    //     , {
-    //         .turnTO = 750
-    //         , .moveTO = 2000
-    //     }
-    // );
-    // chassis.waitUntil(40.0);
-    // mogo.toggle();
-    // waitd;
-
-    // // moves towards second ring on field via curve,
-    // // aligning with third ring on field and getting
-    // // second ring
-    // intake.intake();
-    // chassis.moveToPose(
-    //     -7
-    //     , -42
-    //     , 0
-    //     , 2000
-    //     , {
-    //         .forwards = false
-    //     }
-    // );
-    // waitd;
-
-    // // continues moving; gets third ring on field
-    // chassis.moveToPose(
-    //     -7
-    //     , 60
-    //     , 0
-    //     , 2000
-    //     , {
-    //         .forwards = false
-    //     }
-    // );
-    // waitd;
-
-    // // backs out w/ mogo side;
-    // // CURVES back to original pos where mogo was
-    // chassis.moveToPose(
-    //     -23.5
-    //     , 23.5
-    //     , 65
-    //     , 2000
-    // );
-
-    // // gets third ring on field
-    // turnAndMoveToPoint(
-    //     -23.5
-    //     , 47
-    //     , {
-    //         .turnTO = 750
-    //         , .moveTO = 1000
-    //         , .forwards = false
-    //     }
-    // );
-    // pros::delay(350);
-
-    // // brakes intake in case other rings get in
-    // intake.brake();
-
-    // // moves towards ladder w/ mogo side, where arm is!
-    // // (w/ mogo still clamped)
-    // chassis.moveToPose(
-    //     -11
-    //     , 13
-    //     , 135
-    //     , 2000
-    // );
-    // waitd;
 }
 
 
