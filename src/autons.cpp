@@ -444,6 +444,7 @@ void red_neg_awp_redo() {
     pros::delay(500);
     arm.set_pos(arm.ALLIANCE_SCORE);
     pros::delay(750);
+    
     // retracts, so as not to disturb ring when turning
     // arm.set_pos(arm.START_POS);
     // pros::delay(250);
