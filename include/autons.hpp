@@ -10,6 +10,7 @@ void red_negative_5_ring();
 // continuation OF red_negative
 void red_negative_sawp();
 void red_neg_awp_redo();
+void red_neg_elims();
 
 void blue_negative();
 
