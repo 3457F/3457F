@@ -500,7 +500,7 @@ void red_neg_awp_redo() {
     arm.set_pos(arm.SCORE_POS);
 
      //moves to the ladder for wp 
-    chassis.moveToPose(-11.833, 12.418, 315, 3000, {.forwards = false, .horizontalDrift =2, .lead = 0,.maxSpeed=127});
+    chassis.moveToPose(-17.616, 20.185, 315, 3000, {.forwards = false, .horizontalDrift =2, .lead = 0,.maxSpeed=127});
     waitd;
 }
 
