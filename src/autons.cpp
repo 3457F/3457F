@@ -494,11 +494,14 @@ void red_neg_awp_redo() {
 
     //moves to the top rings! (works nov 30)
     chassis.moveToPose(-9.3, 51.395, 280.3, 2500, {.forwards = false, .horizontalDrift =2, .lead = 0,.maxSpeed=127});
-     waitd;
-    
-    //moves to the ladder for wp 
-    chassis.moveToPose(-11.833, 12.418, 315, 3000, {.forwards = false, .horizontalDrift =2, .lead = 0,.maxSpeed=127});
+    waitd;
 
+     //Getting the arm ready to score
+    arm.set_pos(arm.SCORE_POS);
+
+     //moves to the ladder for wp 
+    chassis.moveToPose(-11.833, 12.418, 315, 3000, {.forwards = false, .horizontalDrift =2, .lead = 0,.maxSpeed=127});
+    waitd;
 }
 
 void red_neg_elims(){
