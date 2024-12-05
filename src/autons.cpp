@@ -1101,6 +1101,15 @@ void blue_neg_awp_redo() {
     intake.intake();
     waitd;
 
+     chassis.moveToPose(25.585, 21.773, 138, 1500,{.forwards = false, .maxSpeed = 85, .minSpeed =60});
+
+     waitd;
+
+
+    //this needs work, fasster.
+     chassis.moveToPose(23.636, 47.303, 177, 1500, {.forwards = false});
+
+
     // untested sunny code
     
     // chassis.swingToPoint(22, 19.85, DriveSide::LEFT, 700);
