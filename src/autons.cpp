@@ -1088,13 +1088,25 @@ void blue_neg_awp_redo() {
     waitd;
 
 
-// move to pose 
+    // move to pose -- gets mogo 
     chassis.moveToPose(25.585, 21.773, 299, 1500,{.forwards = true, .maxSpeed = 85, .minSpeed =60});
-    chassis.waitUntil(30);
+    chassis.waitUntil(31);
     mogo.toggle();
+    waitd;
 
+    pros::delay(1050);
+
+    chassis.moveToPose(5.706, 42.431, 135, 1500, { .forwards = false });
+    pros::delay(500);
+    intake.intake();
+    waitd;
+
+    // untested sunny code
+    
     // chassis.swingToPoint(22, 19.85, DriveSide::LEFT, 700);
     // waitd;
+
+    
     // chassis.moveToPoint(22, 19.85, 1500, {.maxSpeed=85});
     // chassis.waitUntil(28.85);
     // mogo.toggle();
@@ -1113,6 +1125,8 @@ void blue_neg_awp_redo() {
     // waitd;
     // chassis.moveToPoint(23.745, 29.42, 800);
     // waitd;
+
+    // not sunny's code anymore
     
 
 
