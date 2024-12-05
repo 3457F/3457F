@@ -19,6 +19,7 @@ void red_positive_approach_mogo_side();
 
 void blue_negative_5_ring();
 void blue_negative_sawp();
+void blue_neg_awp_redo();
 void blue_negative_safe();
 
 void blue_positive();

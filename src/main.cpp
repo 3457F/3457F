@@ -305,7 +305,7 @@ void autonomous() {
 	
 	// Run the selected autonomous function - UNCOMMENT ONCE DONE TESTING AUTONS
 	// blue_positive();
-	red_neg_awp_redo();
+	blue_neg_awp_redo();
 	// std::cout << selector.getAuton() << std::endl;
 
 	/* stormlib */
