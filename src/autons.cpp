@@ -1085,27 +1085,39 @@ void blue_neg_awp_redo() {
     pros::delay(415);
     intake.brake();
 
-    chassis.swingToPoint(22, 19.85, DriveSide::LEFT, 700);
     waitd;
-    chassis.moveToPoint(22, 19.85, 1500, {.maxSpeed=85});
-    chassis.waitUntil(28.85);
+
+
+// move to pose 
+    chassis.moveToPose(25.585, 21.773, 299, 1500,{.forwards = true, .maxSpeed = 85, .minSpeed =60});
+    chassis.waitUntil(30);
     mogo.toggle();
-    waitd;
-    pros::delay(25);
 
-    chassis.turnToPoint(12, 30.313, 1000, {.forwards=false});
-    waitd;
-    intake.intake();
-    chassis.moveToPoint(12, 30.313, 900, {.forwards=false});
-    waitd;
-    
-    pros::delay(250);
+    // chassis.swingToPoint(22, 19.85, DriveSide::LEFT, 700);
+    // waitd;
+    // chassis.moveToPoint(22, 19.85, 1500, {.maxSpeed=85});
+    // chassis.waitUntil(28.85);
+    // mogo.toggle();
+    // waitd;
+    // pros::delay(25);
 
-    chassis.turnToPoint(23.745, 29.42, 400);
-    waitd;
-    chassis.moveToPoint(23.745, 29.42, 800);
-    waitd;
+    // chassis.turnToPoint(12, 30.313, 1000, {.forwards=false});
+    // waitd;
+    // intake.intake();
+    // chassis.moveToPoint(12, 30.313, 900, {.forwards=false});
+    // waitd;
     
+    // pros::delay(250);
+
+    // chassis.turnToPoint(23.745, 29.42, 400);
+    // waitd;
+    // chassis.moveToPoint(23.745, 29.42, 800);
+    // waitd;
+    
+
+
+
+
     // chassis.moveToPoint(9.373, 39.053, TO, {.forwards=false});
     // waitd;
 
