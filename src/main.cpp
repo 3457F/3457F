@@ -62,7 +62,9 @@ pros::Controller controller(pros::E_CONTROLLER_MASTER);
 /**
  * NOTE: The mogo mech is the front of the robot, from a driving perspective and an auton perspective
  */
-// 12 in -> track width
+
+
+// 12 in -> track width (distance between wheels)
 
 // 15.433 height (based on cad)
 // -> 15.933 (added .5 after sunny cooked with budget bot)
@@ -70,14 +72,6 @@ pros::Controller controller(pros::E_CONTROLLER_MASTER);
 // 14.00 -> width (based on cad)
 // -> 14.25 -> measured width
 // TECHNICALLY 14.48 in w/ side skirts (based on cad)
-
-// pros::Motor left_front(-2);
-// pros::Motor left_mid(-7);
-// pros::Motor left_back(-1);
-
-// pros::Motor right_front(6);
-// pros::Motor right_mid(12);
-// pros::Motor right_back(5);
 
 pros::Imu imu(7);
 
@@ -101,6 +95,8 @@ pros::MotorGroup right_motors({
 }, pros::MotorGearset::blue);
 
 pros::Rotation horizontal(5);
+
+pros::Rotation vertical(8);
 
 // liblem
 
@@ -141,7 +137,11 @@ lemlib::ControllerSettings angular_controller(3.25, // proportional gain (kP)
 // which is on front of robot!
 lemlib::TrackingWheel horizontal_track(&horizontal, lemlib::Omniwheel::NEW_2, 2.5);
 
-lemlib::OdomSensors sensors(nullptr, // vertical tracking wheel 1, set to null
+lemlib::TrackingWheel vertical_track(&vertical, lemlib::Omniwheel::NEW_2, 2.1);
+
+lemlib::OdomSensors sensors(
+							&vertical_track, // vert tracking wheel that kinda doesn't work
+							// nullptr, // vertical tracking wheel 1, set to null
                             nullptr, // vertical tracking wheel 2, set to nullptr as we are using IMEs
                             &horizontal_track, // horizontal tracking wheel 1
                             nullptr, // horizontal tracking wheel 2, set to nullptr as we don't have a second one
@@ -305,7 +305,7 @@ void autonomous() {
 	
 	// Run the selected autonomous function - UNCOMMENT ONCE DONE TESTING AUTONS
 	// blue_positive();
-	blue_neg_awp_redo();
+	prog_skills();
 	// std::cout << selector.getAuton() << std::endl;
 
 	/* stormlib */

@@ -418,8 +418,95 @@ void red_negative_sawp() {
  * for the fixed IMU (now points won't be drift offset!)
  */
 void red_neg_awp_redo() {
-    // arm.pid.kP
+    pros::Task task(
+        &print_robot_pos
+        , &chassis
+    );
 
+    // starts at top-right; inside of corner
+    chassis.setPose(-54.75, 16, 0);
+
+    // starts outtaking so it pushes the blue ring away
+    intake.outtake();
+
+    // TODO: point TOO FAR UP
+    // scores preload on alliance stake
+    // -61.5, 5 -> correct pt but too far
+
+    //Nov 30 fixed this issues above
+    turnAndMoveToPoint(-61 , 5.5  , {.turnTO = 1000, .moveTO = 1000, .forwards = false });
+    pros::delay(500);
+    arm.set_pos(arm.ALLIANCE_SCORE);
+    pros::delay(750);
+    // retracts, so as not to disturb ring when turning
+    // arm.set_pos(arm.START_POS);
+    // pros::delay(250);
+
+    // goes back to old point
+    chassis.moveToPose(
+        -54.75, 16 , 30 , 1000);
+
+    // starts retracting the arm
+    arm.set_pos(arm.START_POS);
+
+    /**
+     * TODO: try to make this cross less, so it doesn't interfere with the alliance's auton!
+     */
+
+    // lifts intake in prep to grab first red ring on top
+    intake.lift(1);
+    // starts INTAKING, since we WANT to get the red ring
+    intake.intake();
+    // turns and moves towards first ring on field (on top of stack)
+    turnAndMoveToPoint(-49.212, -1.908, {.turnTO = 750 , .moveTO = 1250, .forwards = false});
+    intake.lift(false);
+    pros::delay(400);
+
+//grab mogo code (old)
+    // chassis.moveToPose(-29.035, 23.595, 49  , 2000, {.maxSpeed = 127});
+    // chassis.waitUntil(3.4);
+    // intake.brake();
+    // chassis.waitUntil(33);
+    // mogo.toggle();
+    // waitd;
+
+    //grab mogo code (new) (Works as of nov 30)
+    //moves back to have a better angle to the mogo
+    chassis.moveToPose( -52.759 , 8.715 , 30, 1000);
+
+    //Nov 30 have to tune the value since the ring keeps on flying or not pickin up ;-;
+    chassis.waitUntil(2.3);
+    intake.brake();
+    waitd;
+
+    //moves to the mogo
+    chassis.moveToPose(-30.932, 20.603, 60, 1500, {.forwards = true, .maxSpeed = 90});
+    //wait until is pretty tuned (nov 30)
+    chassis.waitUntil(28);
+    mogo.toggle();
+    waitd;
+
+    //moves to the middle rings
+    chassis.moveToPose(-23.527, 57.616, 180, 2500, {.forwards = false, .horizontalDrift =2, .lead = 0,.maxSpeed=127});
+
+    //this wait until is for the first ring that we picked up with the intake lift since when turning fast and intaking is like ;-;
+    chassis.waitUntil(9);
+    intake.intake();
+    waitd;
+
+    //moves to the top rings! (works nov 30)
+    chassis.moveToPose(-9.3, 51.395, 280.3, 2500, {.forwards = false, .horizontalDrift =2, .lead = 0,.maxSpeed=127});
+    waitd;
+
+    //Getting the arm ready to score
+    arm.set_pos(arm.SCORE_POS);
+
+    //moves to the ladder for wp 
+    chassis.moveToPose(-17.616, 20.185, 315, 3000, {.forwards = false, .horizontalDrift =2, .lead = 0,.maxSpeed=127});
+    waitd;
+}
+
+void red_neg_elims(){
     pros::Task task(
         &print_robot_pos
         , &chassis
@@ -495,96 +582,9 @@ void red_neg_awp_redo() {
     //moves to the top rings! (works nov 30)
     chassis.moveToPose(-9.3, 51.395, 280.3, 2500, {.forwards = false, .horizontalDrift =2, .lead = 0,.maxSpeed=127});
     waitd;
-
-     //Getting the arm ready to score
-    arm.set_pos(arm.SCORE_POS);
-
-     //moves to the ladder for wp 
-    chassis.moveToPose(-17.616, 20.185, 315, 3000, {.forwards = false, .horizontalDrift =2, .lead = 0,.maxSpeed=127});
-    waitd;
-}
-
-void red_neg_elims(){
-     pros::Task task(
-        &print_robot_pos
-        , &chassis
-    );
-
-    // starts at top-right; inside of corner
-    chassis.setPose(-54.75, 16, 0);
-
-    // starts outtaking so it pushes the blue ring away
-    intake.outtake();
-
-    // TODO: point TOO FAR UP
-    // scores preload on alliance stake
-    // -61.5, 5 -> correct pt but too far
-
-    //Nov 30 fixed this issues above
-    turnAndMoveToPoint(-61 , 5.5  , {.turnTO = 1000, .moveTO = 1000, .forwards = false });
-    pros::delay(500);
-    arm.set_pos(arm.ALLIANCE_SCORE);
-    pros::delay(750);
-    // retracts, so as not to disturb ring when turning
-    // arm.set_pos(arm.START_POS);
-    // pros::delay(250);
-
-    // goes back to old point
-    chassis.moveToPose(
-        -54.75, 16 , 30 , 1000);
-
-    // starts retracting the arm
-    arm.set_pos(arm.START_POS);
-
-    // lifts intake in prep to grab first red ring on top
-    intake.lift(1);
-    // starts INTAKING, since we WANT to get the red ring
-    intake.intake();
-    // turns and moves towards first ring on field (on top of stack)
-    turnAndMoveToPoint(-49.212, -1.908, {.turnTO = 750 , .moveTO = 1250, .forwards = false});
-    intake.lift(false);
-    pros::delay(400);
-
-//grab mogo code (old)
-    // chassis.moveToPose(-29.035, 23.595, 49  , 2000, {.maxSpeed = 127});
-    // chassis.waitUntil(3.4);
-    // intake.brake();
-    // chassis.waitUntil(33);
-    // mogo.toggle();
-    // waitd;
-
-    //grab mogo code (new) (Works as of nov 30)
-    //moves back to have a better angle to the mogo
-    chassis.moveToPose( -52.759 , 8.715 , 30, 1000);
-
-    //Nov 30 have to tune the value since the ring keeps on flying or not pickin up ;-;
-    chassis.waitUntil(2.3);
-    intake.brake();
-    waitd;
-
-    //moves to the mogo
-    chassis.moveToPose(-30.932, 20.603, 60, 1500, {.forwards = true, .maxSpeed = 90});
-    //wait until is pretty tuned (nov 30)
-    chassis.waitUntil(28);
-    mogo.toggle();
-    waitd;
-
-    //moves to the middle rings
-    chassis.moveToPose(-23.527, 57.616, 180, 2500, {.forwards = false, .horizontalDrift =2, .lead = 0,.maxSpeed=127});
-
-    //this wait until is for the first ring that we picked up with the intake lift since when turning fast and intaking is like ;-;
-    chassis.waitUntil(9);
-    intake.intake();
-    waitd;
-
-    //moves to the top rings! (works nov 30)
-    chassis.moveToPose(-9.3, 51.395, 280.3, 2500, {.forwards = false, .horizontalDrift =2, .lead = 0,.maxSpeed=127});
-     waitd;
     
     //moves to the alliance stake to have a better shot for pos corner
     chassis.moveToPose(-38.143, 2.674, 0, 3000, {.forwards = false, .horizontalDrift =2, .lead = 0,.maxSpeed=127});
-
-    
 }
 
 /**
@@ -1075,6 +1075,10 @@ void blue_neg_awp_redo() {
     // starts retracting the arm
     arm.set_pos(arm.START_POS);
 
+    /**
+     * TODO: try to make this cross less, so it doesn't interfere with the alliance's auton!
+     */
+
     // lifts intake in prep to grab first red ring on top
     intake.lift(true);
     // starts INTAKING, since we WANT to get the red ring
@@ -1101,13 +1105,13 @@ void blue_neg_awp_redo() {
     intake.intake();
     waitd;
 
-     chassis.moveToPose(25.585, 21.773, 138, 1500,{.forwards = false, .maxSpeed = 85, .minSpeed =60});
+    chassis.moveToPose(25.585, 21.773, 138, 1500,{.forwards = false, .maxSpeed = 85, .minSpeed =60});
 
-     waitd;
+    waitd;
 
 
     //this needs work, fasster.
-     chassis.moveToPose(23.636, 47.303, 177, 1500, {.forwards = false});
+    chassis.moveToPose(23.636, 47.303, 177, 1500, {.forwards = false});
 
 
     // untested sunny code
@@ -1427,12 +1431,11 @@ void test_auton() {
         , 90
     );
 
-    // turnAndMoveToPoint(
-    //     24
-    //     , 24
-    //     , 1000
-    //     , 1000
-    // );
+    chassis.moveToPoint(
+        24
+        , 0
+        , 1000
+    );
 
     // turnAndMoveToPoint(
     //     -24
@@ -1443,6 +1446,112 @@ void test_auton() {
 }
 
 void prog_skills() {
+    // CODED RED NEG; NOT GOING FOR RED POS FIRST BC PPL WERE ON THE FIELD WHEN WE WERE TUNING
+    chassis.setPose(-60.478, -0.444, 270);
+
+    // scores preload on alliance stake
+    intake.intake();
+    pros::delay(750);
+
+    /* my mogo approach */
+
+    // chassis.moveToPoint(-49, -0.444, 1250, {
+    //     .forwards = false
+    // });
+    // waitd;
+
+    // chassis.turnToHeading(0, 1250);
+    // waitd;
+
+    /* sunny's mogo approach */
+
+    // turn to mogo 
+
+    chassis.swingToHeading(
+        0
+        , DriveSide::LEFT
+        , 1000
+        , {
+            .direction = AngularDirection::CW_CLOCKWISE
+            , .maxSpeed = 80.0
+        }
+    );
+    waitd;
+
+    // actual moving to mogo
+
+    // bc swing results in variable x coord due to drift;
+    // want to move DIRECTLY up!
+    lemlib::Pose approach_mogo_pose = chassis.getPose();
+
+    chassis.moveToPoint(
+        approach_mogo_pose.x
+        , 23.721
+        , 2000
+        , {
+            .maxSpeed = 70.0
+        }
+    );
+    // TODO: verify is tuned
+    chassis.waitUntil(27);
+    mogo.toggle();
+    waitd;
+
+    // goes for first ring on field; intake still running!
+    turnAndMoveToPoint(
+        -23.527
+        , 23.721
+        , {
+            .turnTO = 750
+            , .moveTO = 1500
+            , .forwards = false
+        }
+    );
+
+    // goes for second ring on field; intake still running!
+    // TODO: ring might not get in intake all the time!
+    // -> shld fix with turn
+    turnAndMoveToPoint(
+        -23.721
+        , 47.303
+        , {
+            .turnTO = 750
+            , .moveTO = 1500
+            , .forwards = false
+        }
+    );
+
+    // turns and goes to third ring, on the autonomous line on red neg side
+    // UNDERSHOOTS FOR LATER SWING; so ring hopefully not in intake yet
+
+    turnAndMoveToPoint(
+        -6.418
+        , 55.315
+        , {
+            .turnTO = 750
+            , .moveTO = 750
+            , .forwards = false
+        }
+    );
+
+    // put up arm; wait for it to move
+    arm.set_pos(arm.LOADIN_POS);
+
+    // turns towards wall stake; RING STARTS GOING THRU INTAKE
+    chassis.swingToHeading(
+        180
+        , DriveSide::RIGHT
+        , 1000
+        , {
+            .direction = AngularDirection::CCW_COUNTERCLOCKWISE
+            , .maxSpeed = 80.0
+        }
+    );
+
+    pros::delay(500);
+}
+
+// void prog_skills() {
 //     // policy of OVERSHOOTING on all rings!
 
 //     std::cout << "Running PROG skills" << std::endl;
@@ -1555,7 +1664,7 @@ void prog_skills() {
 //     // waitd;
 //     // // waits for ring to be intaked
 //     // pros::delay(1500);
-}
+// }
 
 void red_cross_sawp() {
     // ASSUME PUSHING HAS ALR HAPPENED!
