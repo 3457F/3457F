@@ -7,6 +7,7 @@
 #include "pros/rtos.h"
 #include "pros/rtos.hpp"
 #include <chrono>
+#include <type_traits>
 
 // default timeout for when im lazy to specify
 #define TO 1200
@@ -1054,11 +1055,7 @@ void blue_neg_awp_redo() {
 
     // starts outtaking so it pushes the blue ring away
     intake.outtake();
-
-    // TODO: point TOO FAR UP
-    // scores preload on alliance stake
-    // -61.5, 5 -> correct pt but too far
-
+    
     //Nov 30 fixed this issues above
     turnAndMoveToPoint(60.85 , 5.15  , {.turnTO = 700, .moveTO = 900, .forwards = false, .async=true });
     pros::delay(50);
@@ -1106,82 +1103,24 @@ void blue_neg_awp_redo() {
     waitd;
 
     chassis.moveToPose(25.585, 21.773, 138, 1500,{.forwards = false, .maxSpeed = 85, .minSpeed =60});
-
     waitd;
 
 
-    //this needs work, fasster.
-    chassis.moveToPose(23.636, 47.303, 177, 1500, {.forwards = false});
+    //turns to the heading for the middle ring
+    chassis.turnToHeading(177, 850);
+    waitd;
 
+    //moves to the stack, and also moving arm up
+    arm.set_pos(arm.SCORE_POS);
+    chassis.moveToPose(23.636, 47.303, 177, 1200, {.forwards = false});
+    waitd;
 
-    // untested sunny code
-    
-    // chassis.swingToPoint(22, 19.85, DriveSide::LEFT, 700);
-    // waitd;
+    //swinging to look at ladder since movetopose command wont do some  crazy curvy. 
+    chassis.swingToHeading(48, lemlib::DriveSide::RIGHT, 850, {.direction = lemlib::AngularDirection::CW_CLOCKWISE});
+    waitd;
 
-    
-    // chassis.moveToPoint(22, 19.85, 1500, {.maxSpeed=85});
-    // chassis.waitUntil(28.85);
-    // mogo.toggle();
-    // waitd;
-    // pros::delay(25);
-
-    // chassis.turnToPoint(12, 30.313, 1000, {.forwards=false});
-    // waitd;
-    // intake.intake();
-    // chassis.moveToPoint(12, 30.313, 900, {.forwards=false});
-    // waitd;
-    
-    // pros::delay(250);
-
-    // chassis.turnToPoint(23.745, 29.42, 400);
-    // waitd;
-    // chassis.moveToPoint(23.745, 29.42, 800);
-    // waitd;
-
-    // not sunny's code anymore
-    
-
-
-
-
-    // chassis.moveToPoint(9.373, 39.053, TO, {.forwards=false});
-    // waitd;
-
-    //grab mogo code (new) (Works as of nov 30)
-    //moves back to have a better angle to the mogo
-    // chassis.moveToPose( 52.759 , 8.715 , 30, 1000);
-
-    // //Nov 30 have to tune the value since the ring keeps on flying or not pickin up ;-;
-    // chassis.waitUntil(2.3);
-    // intake.brake();
-    // waitd;
-
-    // //moves to the mogo
-    // chassis.moveToPose(30.932, 20.603, 60, 1500, {.forwards = true, .maxSpeed = 90});
-    // //wait until is pretty tuned (nov 30)
-    // chassis.waitUntil(28);
-    // mogo.toggle();
-    // waitd;
-
-//     //moves to the middle rings
-//     chassis.moveToPose(23.527, 57.616, 180, 2500, {.forwards = false, .horizontalDrift =2, .lead = 0,.maxSpeed=127});
-
-//     //this wait until is for the first ring that we picked up with the intake lift since when turning fast and intaking is like ;-;
-//     chassis.waitUntil(9);
-//     intake.intake();
-//     waitd;
-
-//     //moves to the top rings! (works nov 30)
-//     chassis.moveToPose(-9.3, 51.395, 280.3, 2500, {.forwards = false, .horizontalDrift =2, .lead = 0,.maxSpeed=127});
-//     waitd;
-
-//      //Getting the arm ready to score
-//     arm.set_pos(arm.SCORE_POS);
-
-//      //moves to the ladder for wp 
-//     chassis.moveToPose(-17.616, 20.185, 315, 3000, {.forwards = false, .horizontalDrift =2, .lead = 0,.maxSpeed=127});
-//     waitd;
+    //moving to ladder (stopped a little short/ and slower because I don't want the arm to die)
+    chassis.moveToPose(17.466, 17.68, 48, 1969, {.forwards = false, .maxSpeed = 85});
 }
 
 /**
