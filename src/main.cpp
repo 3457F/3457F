@@ -75,10 +75,6 @@ pros::Controller controller(pros::E_CONTROLLER_MASTER);
 
 pros::Imu imu(7);
 
-// swapped ports 18 and 19
-// then, swapped ports 19 and 20
-// then, swapped ports 19 and 20 again
-
 // motor groups
 pros::MotorGroup left_motors({
 	-15
@@ -132,10 +128,9 @@ lemlib::ControllerSettings angular_controller(3.25, // proportional gain (kP)
                                               0 // maximum acceleration (slew)
 );
 
-// lemlib::TrackingWheel horizontal_track(&horizontal, lemlib::Omniwheel::NEW_2, -3);
 // chnged to positive because tracking wheel is on mogo mech side
 // which is on front of robot!
-lemlib::TrackingWheel horizontal_track(&horizontal, lemlib::Omniwheel::NEW_2, 2.5);
+lemlib::TrackingWheel horizontal_track(&horizontal, lemlib::Omniwheel::NEW_2, 2.5); // changed from -3
 
 lemlib::TrackingWheel vertical_track(&vertical, lemlib::Omniwheel::NEW_2, 2.1);
 
@@ -147,12 +142,6 @@ lemlib::OdomSensors sensors(
                             nullptr, // horizontal tracking wheel 2, set to nullptr as we don't have a second one
                             &imu // inertial sensor
 );
-// lemlib::OdomSensors sensors(nullptr, // vertical tracking wheel 1, set to null
-//                             nullptr, // vertical tracking wheel 2, set to nullptr as we are using IMEs
-//                         	nullptr, // horizontal tracking wheel 1
-//                             nullptr, // horizontal tracking wheel 2, set to nullptr as we don't have a second one
-//                             &imu // inertial sensor
-// );
 
 lemlib::Chassis chassis(drivetrain, // drivetrain settings
                         lateral_controller, // lateral PID settings
@@ -185,7 +174,6 @@ Intake intake = Intake(
 	
 	, pros::E_MOTOR_BRAKE_HOLD	// brake mode of intake
 
-	// was B
 	, 'G'
 	, 10
 	, true						// intake piston port
@@ -225,23 +213,6 @@ stormlib::selector selector(
 // Create robodash console
 rd::Console console;
 
-// // meant to be run as a task
-// void throws_ring(void* intakeVoid) {
-//     Intake* intake = (Intake*)(intakeVoid);
-
-//     intake->intake();
-//     // TODO: tune delay
-//     // 69 -> 50
-//     pros::delay(50);
-
-//     intake->brake();
-//     // TODO: tune delay
-//     pros::delay(50);
-    
-//     // returns back to normal driver control
-//     intake->state = 0;
-// }
-
 // pros::Task color_sort(&update_sort_auton, &intake);
 
 /**
@@ -258,10 +229,10 @@ void initialize() {
 
 	// selector.initialize();
 
-// 	pros::Task screenTask(
-// 		screenTaskFunc			// function that is the task
-// 		, &chassis				// pointer to parameter to task
-// 	);
+	// pros::Task screenTask(
+	// 	screenTaskFunc			// function that is the task
+	// 	, &chassis				// pointer to parameter to task
+	// );
 }
 
 /**

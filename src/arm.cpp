@@ -100,8 +100,6 @@ Arm::Arm(
         intake
         , this
     })
-    // kP 2, kD 10
-    // , pid(1.5, 0, 5)
     , pid(2, 0, 5)
 {
     brake_mode = arm_brake_mode;

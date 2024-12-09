@@ -37,6 +37,9 @@ struct tamtpParams {
     after turning to the point. it was more of a test on my side to see
     why the robot kept turning arbitrarily right before it reached the point  */
     bool move_to_pose = false; 
+
+    // adds in early exit range for move
+    float mvEarlyExitRange = 0.0;
 };
 
 void turnAndMoveToPoint(
@@ -73,6 +76,7 @@ void turnAndMoveToPoint(
             , {
                 .forwards = params.forwards
                 , .maxSpeed = params.mvMaxSpeed
+                , .earlyExitRange = params.mvEarlyExitRange
             }
         );
     }
@@ -503,7 +507,7 @@ void red_neg_awp_redo() {
     arm.set_pos(arm.SCORE_POS);
 
     //moves to the ladder for wp 
-    chassis.moveToPose(-17.616, 20.185, 315, 3000, {.forwards = false, .horizontalDrift =2, .lead = 0,.maxSpeed=127});
+    chassis.moveToPose(-12.499, 12.499, 315, 3000, {.forwards = false, .horizontalDrift =2, .lead = 0,.maxSpeed=127});
     waitd;
 }
 
@@ -1438,11 +1442,11 @@ void prog_skills() {
 
     // goes for first ring on field; intake still running!
     turnAndMoveToPoint(
-        -23.527
-        , 23.721
+        -23.721
+        , 21.967
         , {
             .turnTO = 750
-            , .moveTO = 1500
+            , .moveTO = 1000
             , .forwards = false
         }
     );
@@ -1455,39 +1459,152 @@ void prog_skills() {
         , 47.303
         , {
             .turnTO = 750
-            , .moveTO = 1500
-            , .forwards = false
-        }
-    );
-
-    // turns and goes to third ring, on the autonomous line on red neg side
-    // UNDERSHOOTS FOR LATER SWING; so ring hopefully not in intake yet
-
-    turnAndMoveToPoint(
-        -6.418
-        , 55.315
-        , {
-            .turnTO = 750
             , .moveTO = 750
             , .forwards = false
         }
     );
 
-    // put up arm; wait for it to move
-    arm.set_pos(arm.LOADIN_POS);
-
-    // turns towards wall stake; RING STARTS GOING THRU INTAKE
-    chassis.swingToHeading(
-        180
-        , DriveSide::RIGHT
+    // turns and scores third ring (which is on the autonomous line on red neg side)
+    // TODO: needs to go faster
+    chassis.moveToPose(
+        -0.215
+        , 57.027
+        , 270
+        , 750
+        , {
+            .forwards = false
+            , .lead = 0.2
+            , .minSpeed = 90.0
+        }
+    );
+    waitd;
+    
+    // turns and obtains fourth red ring on field, the upper lone ring on the blue negative side,
+    // to score on the negative neutral wall stake
+    chassis.moveToPose(
+        29.983
+        , 39.625
+        , 300
         , 1000
         , {
-            .direction = AngularDirection::CCW_COUNTERCLOCKWISE
-            , .maxSpeed = 80.0
+            .forwards = false
+            , .minSpeed = 60.0
+        }
+    );
+    // rest of auton!
+    waitd;
+
+    // queues arm to go to load in position
+    arm.set_pos(arm.LOADIN_POS);
+
+    // waits a bit more to get ring
+    pros::delay(500);
+
+    // moves back to where the ring on autonomous line was
+    // in prep to turn towards alliance stake
+    chassis.moveToPose(
+        -0.215
+        , 50.118
+        , 180
+        , 750
+        , {
+            .lead = 0.2
+            , .minSpeed = 60.0
+        }
+    );
+    waitd;
+
+    // moves towards alliance stake
+    chassis.moveToPoint(
+        -0.215
+        , 57.027
+        , 500
+        , {
+            .forwards = false
+        }
+    );
+    waitd;
+
+    // turns IN PLACE to the alliance stake
+    chassis.turnToHeading(
+        180
+        , 1000
+    );
+
+    pros::delay(850);
+    // stop intake so it doesn't inhibit the arm ;-;
+    intake.brake();
+
+    waitd;
+
+    intake.intake_motors.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+    // queues arm to move to scoring position -> overshooting a bit!
+    arm.set_pos(arm.ALLIANCE_SCORE);
+
+    // as you do that, VERY SLOWLY moves forward
+    chassis.moveToPoint(
+        -0.215
+        , 66.496
+        , 750
+        , {
+            .forwards = false
+            , .maxSpeed = 30.0
         }
     );
 
-    pros::delay(500);
+    pros::delay(250);
+    intake.intake_motors.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+    waitd;
+
+    // retracts arm
+    arm.set_pos(arm.START_POS);
+
+    // as you do that, move backwards from the stake!
+    chassis.moveToPoint(
+        -0.215
+        , 57.027
+        , 750 // extra time for arm to retract, so when we turn arm doesn't accidentally hit stake!
+    );
+
+    // starts intake again
+    intake.intake();
+
+    // turns towards and scores fifth ring on field, the top-most of the corner inverted L shape
+    turnAndMoveToPoint(
+        -47.047
+        , 47.303
+        , {
+            .turnTO = 750
+            , .moveTO = 2000
+            , .forwards = false
+            , .mvEarlyExitRange = 5.0
+        }
+    );
+
+    // movetoposes towards sixth ring on field
+    chassis.moveToPose(
+        -58.947
+        , 47.047
+        , 90
+        , 1000
+        , {
+            .forwards = false
+            , .lead = 0.2
+        }
+    );
+    waitd;
+
+
+    // // SWING to turn around, so that the ring is forced into intake if not already
+    // chassis.swingToHeading(
+    //     0
+    //     , DriveSide::LEFT
+    //     , 2500
+    //     , {
+    //         .direction = AngularDirection::CW_CLOCKWISE
+    //     }
+    // );
+    // waitd;
 }
 
 // void prog_skills() {
