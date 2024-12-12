@@ -38,7 +38,7 @@ class Intake {
 
         bool color;
 
-        // 0 -> not running
+        // 0 -> not running (CONTINUALLY BRAKING)
         // 1 -> intaking
         // 2 -> outtaking
         int auton_running;

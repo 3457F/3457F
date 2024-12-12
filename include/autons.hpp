@@ -21,14 +21,19 @@ void blue_negative_5_ring();
 void blue_negative_sawp();
 void blue_neg_awp_redo();
 void blue_negative_safe();
+void blue_neg_elims();
 
 void blue_positive();
 void blue_positive_normal_points();
 
-void red_cross_sawp();
-
+// testing
 void test_auton_task();
 void test_auton();
 
+// the hallowed and sacred programming skills
 void prog_skills();
 
+// ------
+
+// archived
+void red_cross_sawp();

@@ -117,22 +117,25 @@ void Intake::update_sort(bool R1_pressed, bool R2_pressed) {
 //      DEFINED OUTSIDE OF `Intake` CLASS
 // ]]
 
-// meant to be run as a task, or every 20ms!
+// meant to be run as a task
 void update_sort_auton(void* intakeVoid) {
-    while (true) {
-        Intake* intake = static_cast<Intake*>(intakeVoid);
+    Intake* intake = static_cast<Intake*>(intakeVoid);
 
+    while (true) {
         // keeps color sensor white LED on, so it can more accurately detect color
         intake->color_sensor.set_led_pwm(100);
 
-        // if in free driver control mode
+        // if in free "auton control" mode
+        // (following instructions of whatever
+        // the auton wants to run at that time)
         if (intake->state == 0) {
-            // checks if we're dealing with a ring we don't want -- for testing it's red
+            // checks if we're dealing with a ring we don't want (opposite alliance)
             if (within(intake->color_sensor.get_hue(), intake->color, 28)) {
-                // throw the red ring!
+                // throw the opposite alliance ring
              
                 intake->color_sort_task = new pros::Task(&throws_ring, intake);
                 intake->state = 1;
+            
             // otherwise run normal driver control version of intake!
             } else {
                 std::cout << "auton req: " << intake->auton_running << std::endl;
@@ -149,7 +152,6 @@ void update_sort_auton(void* intakeVoid) {
         // if running the color sort task
         } else if (intake->state == 1) {
             // don't disturb it! wait until color sorting is done
-            // return;
         }
 
         pros::delay(20);   
