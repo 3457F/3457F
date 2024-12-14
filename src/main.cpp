@@ -204,10 +204,10 @@ Doinker doinker = Doinker('B');
 // });
 stormlib::selector selector(
 	stormlib::selector::E_SKILLS_1,
-	"5 Ring (Negative)",	// E_RED_LEFT_1
+	"5 Ring (Negative)",		// E_RED_LEFT_1
 	"SAWP (Negative)",		// E_RED_LEFT_2
 	"Elims (Negative)",		// E_RED_LEFT_3
-	"Misc"				// E_RED_RIGHT_1
+	"Misc"					// E_RED_LEFT_4
 );
 
 // Create robodash console
@@ -228,7 +228,7 @@ void initialize() {
 	// alliance color is BLUE
 	intake.color = intake.BLUE_HUE;
 
-	// selector.initialize();
+	selector.initialize();
 
 	// pros::Task screenTask(
 	// 	screenTaskFunc			// function that is the task
@@ -276,7 +276,7 @@ void autonomous() {
 	chassis.setBrakeMode(pros::motor_brake_mode_e::E_MOTOR_BRAKE_HOLD);
 	
 	// Run the selected autonomous function - COMMENT ONCE DONE TESTING AUTONS
-	red_positive();
+	// red_positive();
 
 	// UNCOMMENT AUTON SELECTOR ONCE DONE TESTING AUTONS
 
@@ -285,37 +285,37 @@ void autonomous() {
 	// std::cout << selector.getAuton() << std::endl;
 
 	// default: skills
-	// if (selector.getAuton() == stormlib::selector::E_SKILLS_1) {
-	// 	prog_skills();
+	if (selector.getAuton() == stormlib::selector::E_SKILLS_1) {
+		prog_skills();
 	
-	// // red negative
+	// red negative
 	// } else if (selector.getAuton() == stormlib::selector::E_RED_LEFT_1) {
 	// 	red_negative_5_ring();
-	// } else if (selector.getAuton() == stormlib::selector::E_RED_LEFT_2) {
-	// 	red_neg_awp_redo();
-	// } else if (selector.getAuton() == stormlib::selector::E_RED_LEFT_3) {
-	// 	red_neg_elims();
+	} else if (selector.getAuton() == stormlib::selector::E_RED_LEFT_2) {
+		red_neg_awp_redo();
+	} else if (selector.getAuton() == stormlib::selector::E_RED_LEFT_3) {
+		red_neg_elims();
 	
-	// // red positive
+	// red positive
 	// } else if (selector.getAuton() == stormlib::selector::E_RED_RIGHT_1) {
 	// 	red_positive();
 	
-	// // blue negative
+	// blue negative
 	// } else if (selector.getAuton() == stormlib::selector::E_BLUE_RIGHT_1) {
 	// 	blue_negative_5_ring();
-	// } else if (selector.getAuton() == stormlib::selector::E_BLUE_RIGHT_2) {
-	// 	blue_neg_awp_redo();
-	// } else if (selector.getAuton() == stormlib::selector::E_BLUE_RIGHT_3) {
-	// 	// blue_negative_safe();
+	} else if (selector.getAuton() == stormlib::selector::E_BLUE_RIGHT_2) {
+		blue_neg_awp_redo();
+	} else if (selector.getAuton() == stormlib::selector::E_BLUE_RIGHT_3) {
+		blue_neg_elims();
 	// } else if (selector.getAuton() == stormlib::selector::E_BLUE_RIGHT_4) {
 	// 	blue_negative_5_ring();
 
-	// // blue positive
+	// blue positive
 	// } else if (selector.getAuton() == stormlib::selector::E_BLUE_LEFT_1) {
 	// 	blue_positive();
 	// } else if (selector.getAuton() == stormlib::selector::E_BLUE_LEFT_4) {
 	// 	blue_positive_normal_points();
-	// }
+	}
 
 	/* robodash */
 	// selector.run_auton();
