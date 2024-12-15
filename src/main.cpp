@@ -214,7 +214,7 @@ stormlib::selector selector(
 rd::Console console;
 
 // TODO: shld be ok if the task starts at the beginning...?
-pros::Task color_sort(&update_sort_auton, &intake);
+// pros::Task color_sort(&update_sort_auton, &intake);
 
 /**
  * Runs initialization code. This occurs as soon as the program is started.
@@ -258,7 +258,7 @@ void competition_initialize() {
 
 	// makes sure color sort task is running in preparation
 	// for autonomous routine to start!
-	color_sort.resume();
+	// color_sort.resume();
 };
 
 /**
@@ -276,7 +276,7 @@ void autonomous() {
 	chassis.setBrakeMode(pros::motor_brake_mode_e::E_MOTOR_BRAKE_HOLD);
 	
 	// Run the selected autonomous function - COMMENT ONCE DONE TESTING AUTONS
-	// red_positive();
+	red_neg_elims_new();
 
 	// UNCOMMENT AUTON SELECTOR ONCE DONE TESTING AUTONS
 
@@ -285,37 +285,37 @@ void autonomous() {
 	// std::cout << selector.getAuton() << std::endl;
 
 	// default: skills
-	if (selector.getAuton() == stormlib::selector::E_SKILLS_1) {
-		prog_skills();
+	// if (selector.getAuton() == stormlib::selector::E_SKILLS_1) {
+	// 	prog_skills();
 	
-	// red negative
-	// } else if (selector.getAuton() == stormlib::selector::E_RED_LEFT_1) {
-	// 	red_negative_5_ring();
-	} else if (selector.getAuton() == stormlib::selector::E_RED_LEFT_2) {
-		red_neg_awp_redo();
-	} else if (selector.getAuton() == stormlib::selector::E_RED_LEFT_3) {
-		red_neg_elims();
+	// // red negative
+	// // } else if (selector.getAuton() == stormlib::selector::E_RED_LEFT_1) {
+	// // 	red_negative_5_ring();
+	// } else if (selector.getAuton() == stormlib::selector::E_RED_LEFT_2) {
+	// 	red_neg_awp_redo();
+	// } else if (selector.getAuton() == stormlib::selector::E_RED_LEFT_3) {
+	// 	red_neg_elims();
 	
-	// red positive
-	// } else if (selector.getAuton() == stormlib::selector::E_RED_RIGHT_1) {
-	// 	red_positive();
+	// // red positive
+	// // } else if (selector.getAuton() == stormlib::selector::E_RED_RIGHT_1) {
+	// // 	red_positive();
 	
-	// blue negative
-	// } else if (selector.getAuton() == stormlib::selector::E_BLUE_RIGHT_1) {
-	// 	blue_negative_5_ring();
-	} else if (selector.getAuton() == stormlib::selector::E_BLUE_RIGHT_2) {
-		blue_neg_awp_redo();
-	} else if (selector.getAuton() == stormlib::selector::E_BLUE_RIGHT_3) {
-		blue_neg_elims();
-	// } else if (selector.getAuton() == stormlib::selector::E_BLUE_RIGHT_4) {
-	// 	blue_negative_5_ring();
+	// // blue negative
+	// // } else if (selector.getAuton() == stormlib::selector::E_BLUE_RIGHT_1) {
+	// // 	blue_negative_5_ring();
+	// } else if (selector.getAuton() == stormlib::selector::E_BLUE_RIGHT_2) {
+	// 	blue_neg_awp_redo();
+	// } else if (selector.getAuton() == stormlib::selector::E_BLUE_RIGHT_3) {
+	// 	blue_neg_elims();
+	// // } else if (selector.getAuton() == stormlib::selector::E_BLUE_RIGHT_4) {
+	// // 	blue_negative_5_ring();
 
-	// blue positive
-	// } else if (selector.getAuton() == stormlib::selector::E_BLUE_LEFT_1) {
-	// 	blue_positive();
-	// } else if (selector.getAuton() == stormlib::selector::E_BLUE_LEFT_4) {
-	// 	blue_positive_normal_points();
-	}
+	// // blue positive
+	// // } else if (selector.getAuton() == stormlib::selector::E_BLUE_LEFT_1) {
+	// // 	blue_positive();
+	// // } else if (selector.getAuton() == stormlib::selector::E_BLUE_LEFT_4) {
+	// // 	blue_positive_normal_points();
+	// }
 
 	/* robodash */
 	// selector.run_auton();
@@ -335,8 +335,8 @@ void autonomous() {
  * task, not resume it from where it left off.
  */
 void opcontrol() {
-	color_sort.suspend();
-	color_sort = nullptr;
+	// color_sort.suspend();
+	// color_sort = nullptr;
 
 	chassis.setPose(-54.779, 15.9, 0);
 
@@ -385,7 +385,7 @@ void opcontrol() {
 			* ARM
 		*/
 		if (DOWN_new_press) {
-			arm.score_cycle(); 
+			arm.score_cycle();
 		} else if (RIGHT_new_press) {
 			arm.start_pos();
 		}

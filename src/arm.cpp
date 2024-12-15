@@ -155,6 +155,18 @@ void Arm::set_pos(float target_val) {
 //     arm_motor.move_absolute(pos, 100);
 // }
 
+// void score_cycle(void* armVoid) {
+//     Arm* arm = static_cast<Arm*>(armVoid);
+
+//     if (arm->state == 0 || arm->state == 2) {
+//         arm->state = 1;
+//         arm->set_pos(arm->LOADIN_POS);
+//     } else if (arm->state == 1) {
+//         arm->state = 2;
+//         intake.intake();
+//     }
+// }
+
 void Arm::score_cycle() {
     // whether at START_POS or SCORE_POS, return to LOADIN_POS
     if (state == 0 || state == 2) {
@@ -167,11 +179,15 @@ void Arm::score_cycle() {
     // when at LOADIN_POS, go to SCORE_POS
     else if (state == 1) {
         state = 2;
-        intake->intake_motors.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+        intake->outtake();
+        // intake->
+        pros::delay(50);
+        intake->brake();
+        // intake->intake_motors.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
         std::cout << "SCORE_POS" << std::endl;
         this->set_pos(SCORE_POS);
-        pros::delay(1000);
-        intake->intake_motors.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+        // pros::delay(1000);
+        // intake->intake_motors.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
     }
 }
 

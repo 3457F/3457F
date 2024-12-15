@@ -11,6 +11,7 @@ void red_negative_5_ring();
 void red_negative_sawp();
 void red_neg_awp_redo();
 void red_neg_elims();
+void red_neg_elims_new();
 
 void blue_negative();
 
