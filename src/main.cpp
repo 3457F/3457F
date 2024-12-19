@@ -169,8 +169,7 @@ void arcade() {
 
 // right intake normal; left intake reversed 
 Intake intake = Intake(
-	
-		{14, 1}						// left intake (reversed)
+	{14, 1}						// left intake (reversed)
 	
 	, pros::E_MOTOR_BRAKE_HOLD	// brake mode of intake
 
@@ -179,7 +178,7 @@ Intake intake = Intake(
 	, true						// intake piston port
 );
 
-MogoMech mogo = MogoMech('A');
+MogoMech mogo = MogoMech('A', 'C');
 
 Arm arm = Arm(
 	9
@@ -423,7 +422,11 @@ void opcontrol() {
 
 		if (L2_new_press) {
 			mogo.toggle();
+			// mogo.request_clamp();
+			printf("Requested clamp!\n");
 		}
+
+		mogo.handle_clamp_requests();
 
 		/**
 		 * DRIVING:

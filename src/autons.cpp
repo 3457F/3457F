@@ -4,11 +4,8 @@
 #include "lemlib/pose.hpp"
 #include "main.h"
 #include "mogo.hpp"
-#include "pros/imu.h"
-#include "pros/rtos.h"
 #include "pros/rtos.hpp"
 #include <chrono>
-#include <type_traits>
 
 // default timeout for when im lazy to specify
 #define TO 1200
