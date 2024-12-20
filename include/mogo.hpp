@@ -15,13 +15,21 @@ class MogoMech {
             , std::uint8_t limit_switch_port
         );
 
-        bool check_if_mogo();
-
-        void request_clamp();
-
+        // core features
         void set(bool val);
         
         void toggle();
 
+        // implements limit switch
+        bool check_if_mogo();
+
+
+        // automatic clamp handlers!
+        void request_clamp();
+
+        void cancel_clamp();
+
         void handle_clamp_requests();
+
+        void handle_clamp_requests_task(void* mogoMechVoid);
 };

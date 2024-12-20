@@ -1,27 +1,6 @@
 #include <cstdint>
 #include "mogo.hpp"
 
-// task -- meant to be run every 20ms
-// void handle_clamp_requests(void* mogoMechVoid) {
-//     while (true) {
-//         MogoMech* mogoMech = static_cast<MogoMech*>(mogoMechVoid);
-
-//         // first off: do we want to clamp?
-//         if (mogoMech->clamp_requested) {
-//             // second of all: is there a mogo?
-//             if (mogoMech->check_if_mogo()) {
-//                 // yippee!!! clamp
-//                 mogoMech->set(false);
-
-//                 // handled request!
-//                 mogoMech->clamp_requested = false;
-//             }
-//         }
-
-//         pros::delay(20);
-//     }
-// }
-
 MogoMech::MogoMech(
     std::uint8_t mogo_pistons_port
     
@@ -42,6 +21,14 @@ MogoMech::MogoMech(
     clamp_requested = false;
 };
 
+void MogoMech::set(bool val) {
+    mogo_pistons.set_value(val);
+}
+
+void MogoMech::toggle() {
+    set(!mogo_pistons.get_value());
+};
+
 bool MogoMech::check_if_mogo() {
     // false -> limit switch pressed
     // true -> limit switch not pressed --> PROBS WRONG!!!!
@@ -52,13 +39,9 @@ void MogoMech::request_clamp() {
     clamp_requested = true;
 }
 
-void MogoMech::set(bool val) {
-    mogo_pistons.set_value(val);
+void MogoMech::cancel_clamp() {
+    clamp_requested = false;
 }
-
-void MogoMech::toggle() {
-    set(!mogo_pistons.get_value());
-};
 
 // run in `opcontrol();` (so every 20ms)
 void MogoMech::handle_clamp_requests() {
@@ -77,3 +60,34 @@ void MogoMech::handle_clamp_requests() {
         }
     }
 }
+
+void MogoMech::handle_clamp_requests_task(void* mogoMechVoid) {
+    MogoMech* mogoMech = static_cast<MogoMech*>(mogoMechVoid);
+
+    while (true) {
+        mogoMech->handle_clamp_requests();
+
+        pros::delay(20);
+    }
+}
+
+// task -- meant to be run every 20ms
+// void handle_clamp_requests(void* mogoMechVoid) {
+//     while (true) {
+//         MogoMech* mogoMech = static_cast<MogoMech*>(mogoMechVoid);
+
+//         // first off: do we want to clamp?
+//         if (mogoMech->clamp_requested) {
+//             // second of all: is there a mogo?
+//             if (mogoMech->check_if_mogo()) {
+//                 // yippee!!! clamp
+//                 mogoMech->set(false);
+
+//                 // handled request!
+//                 mogoMech->clamp_requested = false;
+//             }
+//         }
+
+//         pros::delay(20);
+//     }
+// }

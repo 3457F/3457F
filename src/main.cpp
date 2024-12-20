@@ -379,6 +379,7 @@ void opcontrol() {
 		bool UP_new_press = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP);
 		bool RIGHT_new_press = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT);
 		bool LEFT_new_press = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_LEFT);
+		bool X_new_press = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X);
 
 		/**
 			* ARM
@@ -422,11 +423,14 @@ void opcontrol() {
 
 		if (L2_new_press) {
 			mogo.toggle();
-			// mogo.request_clamp();
+		}
+
+		if (X_new_press) {
+			mogo.request_clamp();
 			printf("Requested clamp!\n");
 		}
 
-		mogo.handle_clamp_requests();
+		// mogo.handle_clamp_requests();
 
 		/**
 		 * DRIVING:
