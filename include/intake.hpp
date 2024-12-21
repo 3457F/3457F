@@ -53,6 +53,7 @@ class Intake {
 
         void intake();
         void intake_auton();
+        void floating();
 
         void outtake();
         void outtake_auton();

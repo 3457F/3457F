@@ -170,7 +170,6 @@ void arcade() {
 // right intake normal; left intake reversed 
 Intake intake = Intake(
 	{14, 1}						// left intake (reversed)
-	
 	, pros::E_MOTOR_BRAKE_HOLD	// brake mode of intake
 
 	, 'G'

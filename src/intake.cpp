@@ -1,5 +1,7 @@
+#include <algorithm>
 #include <cstdint>
 #include "intake.hpp"
+#include "pros/adi.hpp"
 #include "pros/rtos.h"
 #include "util.hpp"
 
@@ -59,6 +61,11 @@ void Intake::hues_debug() {
         // print the hue!
         std::cout << "significant hue: " << hue << std::endl;
     }
+}
+
+void floating(){
+    pros::Motor floating(1);
+    floating.move(127);
 }
 
 // meant to be run as a task

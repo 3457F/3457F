@@ -480,7 +480,6 @@ void red_neg_awp_redo() {
 
     // starts outtaking so it pushes the blue ring away
     intake.outtake();
-
     // goes towards the alliance stake and scores
     // BIT too much forward
     // turnAndMoveToPoint(-60.459, 6.561, {.turnTO = 1000, .moveTO = 1000, .forwards = false });
@@ -674,44 +673,24 @@ void red_neg_elims_new() {
  void red_rush(){
     chassis.setPose(-54.473,-59,270);
 
-    //moves up towards the top
-    chassis.moveToPose(-13.341, -59, 270, 1200, {.forwards = false, .maxSpeed = 127});
+    //only running the floating cuz there is not need for hooks
+    intake.floating();
+    chassis.moveToPose(-15.341, -51.31, 258, 1400, {.forwards = false});
+        //setting arm to dunk POS to ensure that arm doesn't get in the way of the hooks later on!
+         arm.set_pos(arm.DUNK_POS);
     waitd;
-
-    //turns and moves a LITTLe towards the mogo
-    chassis.moveToPose(-8.066, -52.544, 212, 550, {.forwards = false, .maxSpeed = 90});
-    waitd;
-
-    //doinker toggles latching onto the mogo and turns to diusprut the position of the mogo
+    //doinker to touch/grab the goal
     doinker.toggle();
-    pros::delay(700);
-    chassis.turnToHeading(270, 650);
+    intake.brake();
+
+    //moving the robot and the goal back!
+    chassis.moveToPoint(-40.092, -56.182, 1200, {.forwards =false});
     waitd;
+
     doinker.toggle();
-
-    //moves back
-    chassis.moveToPoint(-43, -59, 1700,{.forwards = false, .maxSpeed = 85});
-    waitd;
-
-    //turns and moves to the second mogo
-    turnAndMoveToPoint(-29.373, -25.39,{.mvMaxSpeed = 75});
-    mogo.toggle();
-    waitd;
-
-    //turns in place and then intakes the preloaded ring
-    chassis.moveToPose(-29.86, -26.13, 0, 800, {.forwards = false});
-    waitd;
-    intake.intake();  
-
-    //moves to middle rings
-    chassis.moveToPose(-24.306, -44.781, 346, 1000, {.forwards = false});
-    waitd;
-    pros::delay(200);
-
-
-    //not yet tuned (Dec 15th, 2024) this is for going to ring stack
-    turnAndMoveToPoint(-42.041, -9.799, {.forwards = false});
-    intake.lift(1);
+    
+    //do the rest of the code. 
+    
 
  }
 
