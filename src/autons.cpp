@@ -673,23 +673,39 @@ void red_neg_elims_new() {
  void red_rush(){
     chassis.setPose(-54.473,-59,270);
 
+//for some reason drifts time to time, gotta slow it down def, but currently reseraching a way.
     //only running the floating cuz there is not need for hooks
     intake.floating();
-    chassis.moveToPose(-15.341, -51.31, 258, 1400, {.forwards = false});
-        //setting arm to dunk POS to ensure that arm doesn't get in the way of the hooks later on!
-         arm.set_pos(arm.DUNK_POS);
+    chassis.moveToPose(-12.126,-50.335, 261 , 1200, {.forwards = false, .maxSpeed =127, .minSpeed = 120});
+    //setting arm to dunk POS to ensure that arm doesn't get in the way of the hooks later on!
+    arm.set_pos(arm.DUNK_POS);
     waitd;
-    //doinker to touch/grab the goal
-    doinker.toggle();
+
     intake.brake();
 
-    //moving the robot and the goal back!
-    chassis.moveToPoint(-40.092, -56.182, 1200, {.forwards =false});
-    waitd;
+    //doinker to touch/grab the goal
+    doinker.toggle();
+    pros::delay(300);
 
+    //moving the robot and the goal back!
+    chassis.moveToPose(-40.092, -56.182, 255, 1500, {.forwards = true});
+    waitd;
     doinker.toggle();
     
-    //do the rest of the code. 
+    //going to clamp mogo
+    chassis.moveToPose(-6.778, -50.238, 270, 1500, {.forwards = true, .maxSpeed = 60});
+    waitd;
+    mogo.toggle();
+    intake.intake();
+
+    //going to score on wall stake (meh as of rn)
+    chassis.moveToPose(-9.105, -63.977, 327.7, 1900, {.forwards = false, .maxSpeed = 100});
+    waitd;
+    arm.set_pos(arm.AUTON);
+
+
+
+    //do the rest of the code
     
 
  }
