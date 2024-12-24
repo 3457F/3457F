@@ -703,10 +703,31 @@ void red_neg_elims_new() {
     waitd;
     arm.set_pos(arm.AUTON);
 
+//rest of the code
 
-
-    //do the rest of the code
+    //moves towards our positive corner and drops mogo.
+    // turnAndMoveToPoint(-48.57, -32.211, {.forwards =true});
+    // waitd;
+    // mogo.toggle();
     
+    // //moving to second mogo
+    // chassis.moveToPose(-33.856, -27.241, 73.3, 1200, {.forwards = true, .maxSpeed = 100});
+    // mogo.request_clamp();
+    // waitd;
+
+    // //moving to ring stack
+    // intake.lift(true);
+    // chassis.moveToPoint(-43.21, -8.142,153, {.forwards = false});
+    // intake.intake();
+    // waitd;
+    // intake.lift(false);
+    // pros::delay(450);
+
+    // //moving to the front of the positive corner 
+    // chassis.moveToPose(-31.517, -60.372, 270, 1250., {.forwards = false, .minSpeed = 118});
+    
+
+
 
  }
 
