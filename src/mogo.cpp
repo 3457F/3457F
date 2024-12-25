@@ -13,9 +13,8 @@ MogoMech::MogoMech(
     //     &handle_clamp_requests
     //     , this
     // ) {
-    {
-    // ENABLES mogo mech
-    mogo_pistons.set_value(false);
+{
+    release();
 
     // NOT wanting to clamp rn
     clamp_requested = false;
@@ -28,6 +27,14 @@ void MogoMech::set(bool val) {
 void MogoMech::toggle() {
     set(!mogo_pistons.get_value());
 };
+
+void MogoMech::clamp() {
+    set(true);
+}
+
+void MogoMech::release() {
+    set(false);
+}
 
 bool MogoMech::check_if_mogo() {
     // false -> limit switch pressed

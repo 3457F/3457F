@@ -45,6 +45,7 @@
 #include "intake.hpp"
 #include "mogo.hpp"
 #include "doinker.hpp"
+#include "rushmech.hpp"
 
 extern lemlib::Chassis chassis;
 extern MogoMech mogo;
@@ -52,6 +53,7 @@ extern Hang hang;
 extern Intake intake;
 extern Doinker doinker;
 extern Arm arm;
+extern RushMech rushmech;
 
 /**
  * If you find doing pros::Motor() to be tedious and you'd prefer just to do

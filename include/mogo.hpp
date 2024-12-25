@@ -19,6 +19,11 @@ class MogoMech {
         void set(bool val);
         
         void toggle();
+        
+        // semantic convenience
+        void clamp();
+
+        void release();
 
         // implements limit switch
         bool check_if_mogo();

@@ -186,8 +186,10 @@ Arm arm = Arm(
 	, &intake
 );
 
-// was E
 Doinker doinker = Doinker('B');
+
+// TODO: get right port
+RushMech rushmech = RushMech('C');
 
 // Hang hang = Hang('D')
 
