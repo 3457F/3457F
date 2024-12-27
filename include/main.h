@@ -41,7 +41,6 @@
 #include "autons.hpp"
 
 #include "arm.hpp"
-#include "hang.hpp"
 #include "intake.hpp"
 #include "mogo.hpp"
 #include "doinker.hpp"
@@ -49,7 +48,6 @@
 
 extern lemlib::Chassis chassis;
 extern MogoMech mogo;
-extern Hang hang;
 extern Intake intake;
 extern Doinker doinker;
 extern Arm arm;

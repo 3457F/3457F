@@ -191,8 +191,6 @@ Doinker doinker = Doinker('B');
 // TODO: get right port
 RushMech rushmech = RushMech('C');
 
-// Hang hang = Hang('D')
-
 // rd::Selector selector({
 // 	{.name="RED LEFT SOLO AWP", .action=&red_cross_sawp}
 // 	, {.name="RED NEGATIVE (5 ring)", .action=&red_negative_5_ring}
