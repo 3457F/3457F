@@ -4,6 +4,7 @@
 #include "lemlib/pose.hpp"
 #include "main.h"
 #include "mogo.hpp"
+#include "pros/rtos.h"
 #include "pros/rtos.hpp"
 #include <chrono>
 
@@ -479,20 +480,24 @@ void red_neg_awp_redo() {
     chassis.setPose(-54.75, 16, 0);
 
     // starts outtaking so it pushes the blue ring away
-    intake.outtake();
+
     // goes towards the alliance stake and scores
     // BIT too much forward
     // turnAndMoveToPoint(-60.459, 6.561, {.turnTO = 1000, .moveTO = 1000, .forwards = false });
-    turnAndMoveToPoint(-61, 6, {.turnTO = 500, .moveTO = 1000, .forwards = false , .async=true});
-    pros::delay(250);
-    arm.set_pos(arm.ALLIANCE_SCORE);
-    waitd;
-    pros::delay(750);
+    // turnAndMoveToPoint(-61, 6, {.turnTO = 500, .moveTO = 1000, .forwards = false , .async=true});
+    // pros::delay(250);
+    // arm.set_pos(arm.ALLIANCE_SCORE);
+    // waitd;
+    // pros::delay(750);
 
+    chassis.moveToPose(-58.411, 12.028, 42.8, 1500, {.forwards = false});
+    waitd;
+    arm.set_pos(arm.ALLIANCE_SCORE);
+    pros::c::delay(870);
     // goes back to old point (NOT retracting arm yet
     // so it doesn't disturb the scored ring)
     chassis.moveToPose(
-        -54.75, 16 , 30 , 1000);
+        -47.303, 22.747 , 30 , 1000);
 
     // starts retracting the arm
     arm.set_pos(arm.START_POS);
@@ -504,10 +509,11 @@ void red_neg_awp_redo() {
     // lifts intake in prep to grab first red ring on top
     intake.lift(1);
     // starts INTAKING, since we WANT to get the red ring
-    intake.intake();
+    
     // turns and moves towards first ring on field (on top of stack)
     // -49.212, -1.908
     turnAndMoveToPoint(-49.094, 1.897, {.turnTO = 750 , .moveTO = 1250, .forwards = false, .mvMaxSpeed = 65.0});
+    intake.intake();
     intake.lift(false);
     pros::delay(750);
 
@@ -676,19 +682,19 @@ void red_neg_elims_new() {
 //for some reason drifts time to time, gotta slow it down def, but currently reseraching a way.
     //only running the floating cuz there is not need for hooks
     intake.floating();
-    chassis.moveToPose(-12.126,-50.335, 261 , 1200, {.forwards = false, .maxSpeed =127, .minSpeed = 120});
+    chassis.moveToPose(-10.266,-49.733, 261 , 1200, {.forwards = false, .maxSpeed =127, .minSpeed = 114});
     //setting arm to dunk POS to ensure that arm doesn't get in the way of the hooks later on!
-    arm.set_pos(arm.DUNK_POS);
+    arm.set_pos(arm.START_POS);
     waitd;
 
     intake.brake();
 
     //doinker to touch/grab the goal
     doinker.toggle();
-    pros::delay(300);
+    pros::delay(420);
 
     //moving the robot and the goal back!
-    chassis.moveToPose(-40.092, -56.182, 255, 1500, {.forwards = true});
+    chassis.moveToPose(-40.092, -56.182, 255, 1300, {.forwards = true});
     waitd;
     doinker.toggle();
     
@@ -697,19 +703,37 @@ void red_neg_elims_new() {
     waitd;
     mogo.toggle();
     intake.intake();
-
+    pros::delay(450);
     //going to score on wall stake (meh as of rn)
-    chassis.moveToPose(-9.105, -63.977, 327.7, 1900, {.forwards = false, .maxSpeed = 100});
-    waitd;
-    arm.set_pos(arm.AUTON);
+    // chassis.moveToPose(-10.34, -60.709, 317.2, 1900, {.forwards = false, .maxSpeed = 100});
+    // waitd;
+    // arm.set_pos(arm.AUTON); 
+    // pros::delay(500);
+   
 
 //rest of the code
 
     //moves towards our positive corner and drops mogo.
-    // turnAndMoveToPoint(-48.57, -32.211, {.forwards =true});
-    // waitd;
-    // mogo.toggle();
+    turnAndMoveToPoint( -47.985, -61.671, {.forwards =true});
+    waitd;
+    mogo.toggle();
+
+    chassis.moveToPose(-23.592, -32.826, 0, 1150, {.forwards = true});
+    waitd;
+    chassis.moveToPose(-23.592,-27.826 , 0, 1300, {.forwards = true});
+    waitd; 
+    mogo.toggle();
+
+    intake.lift(true);
+    turnAndMoveToPoint(-41.944, -0.619, {.forwards = false, .mvMaxSpeed = 105});
+    waitd;
+   intake.lift(false);
+   pros::delay(860);
+
+   chassis.moveToPose(-39.475, -54.537, 342, 1300);
+
     
+
     // //moving to second mogo
     // chassis.moveToPose(-33.856, -27.241, 73.3, 1200, {.forwards = true, .maxSpeed = 100});
     // mogo.request_clamp();

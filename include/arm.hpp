@@ -34,7 +34,7 @@ class Arm {
         static constexpr double DUNK_POS = 100.0 * 100; 
         static constexpr double AUTON = 200.0 * 100;
         static constexpr double SCORE_POS = 166.0 * 100;
-        static constexpr double ALLIANCE_SCORE = 180.0 * 100;
+        static constexpr double ALLIANCE_SCORE = 280 * 100;
 
         
 
