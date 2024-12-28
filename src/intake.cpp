@@ -20,7 +20,7 @@ Intake::Intake(
     state = 0;
     color_sort_task = nullptr;
 }
-void::Intake::floating(){
+void Intake::floating(){
      pros::Motor floating(1);
     floating.move(-127);
 }
