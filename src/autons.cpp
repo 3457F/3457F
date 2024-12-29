@@ -694,7 +694,7 @@ void red_neg_elims_new() {
     pros::delay(420);
 
     //moving the robot and the goal back!
-    chassis.moveToPose(-40.092, -56.182, 255, 1300, {.forwards = true});
+    chassis.moveToPose(-40.092, -56.182, 255, 1100, {.forwards = true});
     waitd;
     doinker.toggle();
     
@@ -704,14 +704,6 @@ void red_neg_elims_new() {
     mogo.toggle();
     intake.intake();
     pros::delay(450);
-    //going to score on wall stake (meh as of rn)
-    // chassis.moveToPose(-10.34, -60.709, 317.2, 1900, {.forwards = false, .maxSpeed = 100});
-    // waitd;
-    // arm.set_pos(arm.AUTON); 
-    // pros::delay(500);
-   
-
-//rest of the code
 
     //moves towards our positive corner and drops mogo.
     turnAndMoveToPoint( -47.985, -61.671, {.forwards =true});
@@ -731,28 +723,6 @@ void red_neg_elims_new() {
    pros::delay(860);
 
    chassis.moveToPose(-39.475, -54.537, 342, 1300);
-
-    
-
-    // //moving to second mogo
-    // chassis.moveToPose(-33.856, -27.241, 73.3, 1200, {.forwards = true, .maxSpeed = 100});
-    // mogo.request_clamp();
-    // waitd;
-
-    // //moving to ring stack
-    // intake.lift(true);
-    // chassis.moveToPoint(-43.21, -8.142,153, {.forwards = false});
-    // intake.intake();
-    // waitd;
-    // intake.lift(false);
-    // pros::delay(450);
-
-    // //moving to the front of the positive corner 
-    // chassis.moveToPose(-31.517, -60.372, 270, 1250., {.forwards = false, .minSpeed = 118});
-    
-
-
-
  }
 
 // THREE RING, TWO STAKE AUTON -> does awp!!!
