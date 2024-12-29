@@ -678,28 +678,25 @@ void red_neg_elims_new() {
 
  void red_rush(){
     chassis.setPose(-54.473,-59,270);
-
+    arm.set_pos(arm.DUNK_POS);
 //for some reason drifts time to time, gotta slow it down def, but currently reseraching a way.
     //only running the floating cuz there is not need for hooks
     intake.floating();
-    chassis.moveToPose(-10.266,-49.733, 261 , 1200, {.forwards = false, .maxSpeed =127, .minSpeed = 114});
-    //setting arm to dunk POS to ensure that arm doesn't get in the way of the hooks later on!
-    arm.set_pos(arm.START_POS);
+    chassis.moveToPose(-10.266,-49.733, 261 , 1250, {.forwards = false, .maxSpeed =127, .minSpeed = 114});
+    //setting arm to dunk POS to ensure that arm doesn't get in the way of the hooks later on
     waitd;
-
-    intake.brake();
 
     //doinker to touch/grab the goal
     doinker.toggle();
     pros::delay(420);
 
     //moving the robot and the goal back!
-    chassis.moveToPose(-40.092, -56.182, 255, 1100, {.forwards = true});
+    chassis.moveToPose(-40.092, -56.182, 261, 1200, {.forwards = true});
     waitd;
     doinker.toggle();
     
     //going to clamp mogo
-    chassis.moveToPose(-6.778, -50.238, 270, 1500, {.forwards = true, .maxSpeed = 60});
+    chassis.moveToPose(-6.778, -50.238, 270, 1200, {.forwards = true, .minSpeed = 60});
     waitd;
     mogo.toggle();
     intake.intake();
@@ -710,19 +707,22 @@ void red_neg_elims_new() {
     waitd;
     mogo.toggle();
 
-    chassis.moveToPose(-23.592, -32.826, 0, 1150, {.forwards = true});
-    waitd;
-    chassis.moveToPose(-23.592,-27.826 , 0, 1300, {.forwards = true});
+    // chassis.moveToPose(-23.592, -32.826, 0, 1150, {.forwards = true});
+    // waitd;
+    chassis.moveToPose(-24.592,-27.826 , 0, 2500, {.forwards = true,});
     waitd; 
     mogo.toggle();
 
     intake.lift(true);
-    turnAndMoveToPoint(-41.944, -0.619, {.forwards = false, .mvMaxSpeed = 105});
+    turnAndMoveToPoint(-41.066, -6.291, {.forwards = false, .mvMaxSpeed = 105});
     waitd;
    intake.lift(false);
    pros::delay(860);
 
-   chassis.moveToPose(-39.475, -54.537, 342, 1300);
+   chassis.turnToPoint(-75, 0, 650, {.forwards = false});
+    waitd; 
+    intake.brake();
+//    chassis.moveToPose(-39.475, -54.537, 342, 1300);
  }
 
 // THREE RING, TWO STAKE AUTON -> does awp!!!
