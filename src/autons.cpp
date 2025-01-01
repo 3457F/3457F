@@ -46,6 +46,8 @@ void turnAndMoveToPoint(
     , float y
     , tamtpParams params = {}
 ) {
+    pros::delay(1000);
+
     chassis.turnToPoint(
         x
         , y
@@ -1114,25 +1116,51 @@ void blue_neg_awp_redo() {
     // starts at top-right; inside of corner
     chassis.setPose(54.75, 16, 0);
 
-    // starts outtaking so it pushes the blue ring away
-    intake.outtake();
+    // // starts outtaking so it pushes the blue ring away
+    // intake.outtake();
 
-    // goes towards the alliance stake and scores
-    // BIT too much forward
-    // turnAndMoveToPoint(-60.459, 6.561, {.turnTO = 1000, .moveTO = 1000, .forwards = false });
-    turnAndMoveToPoint(59.9,5.9, {.turnTO = 500, .moveTO = 1000, .forwards = false , .async=true});
-    pros::delay(250);
-    arm.set_pos(arm.ALLIANCE_SCORE);
+    /* OLD CODE: scored on alliance stake with standoffs on lb */
+    // // goes towards the alliance stake and scores
+    // // BIT too much forward
+    // // turnAndMoveToPoint(-60.459, 6.561, {.turnTO = 1000, .moveTO = 1000, .forwards = false });
+    // turnAndMoveToPoint(59.9,5.9, {.turnTO = 500, .moveTO = 1000, .forwards = false , .async=true});
+    // pros::delay(250);
+    // arm.set_pos(arm.ALLIANCE_SCORE);
+    // waitd;
+    // pros::delay(750);
+
+    /* NEW CODE: scores on alliance stake with lb directly */
+    chassis.moveToPose(
+        58.411
+        , 12.028
+        , 42.8
+        , 1500
+        , {
+            .forwards = false
+        }
+    );
     waitd;
-    pros::delay(750);
+    arm.set_pos(arm.ALLIANCE_SCORE);
+    pros::delay(870);
 
+    /* OLD CODE: moves back less */
     // goes back to old point (NOT retracting arm yet
     // so it doesn't disturb the scored ring)
+    // chassis.moveToPose(
+    //     54.75, 16 , -30 , 1000);
+
+    /* NEW CODE: moves back more */
     chassis.moveToPose(
-        54.75, 16 , -30 , 1000);
+        47.303
+        , 22.747
+        , 30
+        , 1000
+    );
 
     // starts retracting the arm
     arm.set_pos(arm.START_POS);
+
+    waitd;
 
     /**
      * TODO: try to make this cross less, so it doesn't interfere with the alliance's auton!
@@ -1140,11 +1168,12 @@ void blue_neg_awp_redo() {
 
     // lifts intake in prep to grab first red ring on top
     intake.lift(1);
-    // starts INTAKING, since we WANT to get the red ring
+    // starts intaking
     intake.intake();
     // turns and moves towards first ring on field (on top of stack)
-    // -49.212, -1.908
     turnAndMoveToPoint(47.078, -0.176, {.turnTO = 750 , .moveTO = 1250, .forwards = false, .mvMaxSpeed = 65.0});
+    // once there, drop intake so that the intake exerts pressure on the top red ring,
+    // queueing it into the robot
     intake.lift(false);
     pros::delay(750);
 
@@ -1165,7 +1194,7 @@ void blue_neg_awp_redo() {
     // too far LEFT
     // chassis.moveToPose(-23.663, 45.948, 180, 2500, {.forwards = false, .horizontalDrift =2, .lead = 0,.maxSpeed=127});
     chassis.moveToPose(21.849, 45.948, -180, 2500, {.forwards = false, .horizontalDrift =2, .lead = 0,.maxSpeed=127});
-
+    
     // this wait until is for the first ring that we picked up with the intake lift since when turning fast and intaking is like ;-;
     chassis.waitUntil(9);
     intake.intake();
@@ -1478,7 +1507,6 @@ void test_auton() {
         , 1000
     );
 }
-
 void prog_skills() {
     // CODED RED NEG; NOT GOING FOR RED POS FIRST BC PPL WERE ON THE FIELD WHEN WE WERE TUNING
     chassis.setPose(-60.478, -0.444, 270);
@@ -1486,6 +1514,7 @@ void prog_skills() {
     // scores preload on alliance stake
     intake.intake();
     pros::delay(750);
+    pros::delay(250);
 
     /* sunny's mogo approach */
 
@@ -1558,7 +1587,7 @@ void prog_skills() {
         }
     );
     waitd;
-    
+
     // turns and obtains fourth red ring on field, the upper lone ring on the blue negative side,
     // to score on the negative neutral wall stake
     chassis.moveToPose(
