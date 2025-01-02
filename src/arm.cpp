@@ -147,6 +147,21 @@ void Arm::debug() {
         << std::endl;
 }
 
+void Arm::brake() {
+    arm_motor.brake();
+}
+
+
+void Arm::arm_up() {
+    // counter-clockwise is up
+    arm_motor.move(127);
+}
+
+void Arm::arm_down() {
+    // clockwise is down
+    arm_motor.move(-127);
+}
+
 void Arm::set_pos(float target_val) {
     target = target_val;
 }
@@ -198,38 +213,12 @@ void Arm::start_pos() {
     this->set_pos(START_POS);
 }
 
-// // to score
-// void Arm::score() {
-//     std::cout << "SCORE_POS" << std::endl;
-//     this->set_pos(SCORE_POS);
-// }
+void Arm::force() {
+    last_pos = target;
 
-
-// // BACK TO LOADIN
-// void Arm::load_in() {
-//     state = 1;
-
-//     this->set_pos(LOADIN_POS);
-// }
-
-// // BACK TO INIT
-// void Arm::init_pos() {
-//     state = 0;
-
-//     std::cout << "START_POS (FULL reset)" << std::endl;
-//     this->set_pos(INIT_POS);
-// }
-
-void Arm::arm_up() {
-    // counter-clockwise is up
-    arm_motor.move(127);
+    target = FORCE_POS;
 }
 
-void Arm::arm_down() {
-    // clockwise is down
-    arm_motor.move(-127);
-}
-
-void Arm::brake() {
-    arm_motor.brake();
+void Arm::release_force() {
+    target = last_pos;
 }

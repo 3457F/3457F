@@ -218,6 +218,12 @@ stormlib::selector selector(
 // Create robodash console
 rd::Console console;
 
+/**
+ * VARIABLE DEFINITION:
+ */
+
+bool L1_state = false;
+
 // TODO: shld be ok if the task starts at the beginning...?
 // pros::Task color_sort(&update_sort_auton, &intake);
 
@@ -392,26 +398,36 @@ void opcontrol() {
 
 		// arm
 		bool DOWN_new_press = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN);
-		bool UP_new_press = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP);
 		bool RIGHT_new_press = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT);
-		bool LEFT_new_press = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_LEFT);
+		bool L1_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1);
+		
+		// mogo
 		bool X_new_press = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X);
 
 		/**
 			* ARM
 		*/
-		if (DOWN_new_press) {
-			arm.score_cycle();
-		} else if (RIGHT_new_press) {
-			arm.start_pos();
+
+		// if L1 PRESSED
+		if (L1_pressed) {
+			// "rising edge"; JUST pressed
+			if (L1_state == false) {
+				L1_state = true;
+				arm.force();
+			}
+		} else {
+			// "falling edge"; JUST released
+			if (L1_state == true) {
+				L1_state = false;
+				arm.release_force();
+			}
+
+			if (DOWN_new_press) {
+				arm.score_cycle();
+			} else if (RIGHT_new_press) {
+				arm.start_pos();
+			}
 		}
-		// } else if (RIGHT_new_press) {
-		// 	arm.load_in();
-		// } else if (UP_new_press) {
-		// 	arm.score();
-		// } else if (LEFT_new_press) {
-		// 	arm.init_pos();
-		// }
 
 		/**
 		 * DOINKER:

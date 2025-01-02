@@ -35,9 +35,9 @@ class Arm {
         static constexpr double AUTON = 200.0 * 100;
         static constexpr double SCORE_POS = 166.0 * 100;
         static constexpr double ALLIANCE_SCORE = 280 * 100;
+        static constexpr double FORCE_POS = 290 * 100;
 
-        
-
+        double last_pos = 0;
 
         pros::Motor arm_motor;
 
@@ -70,23 +70,23 @@ class Arm {
 
         void debug();
 
-        void set_pos(float target_val);
+        // base funcs
 
-        void score_cycle();
-
-        void start_pos();
-
-        // void score();
-
-        // void load_in();
-
-        // void init_pos();
-
-        // void move(int pos);
+        void brake();
 
         void arm_up();
 
         void arm_down();
 
-        void brake();
+        void set_pos(float target_val);
+
+        // extended funcs
+
+        void score_cycle();
+
+        void start_pos();
+
+        void force();
+
+        void release_force();
 };
