@@ -2,6 +2,7 @@
  * IMPORTS:
 */
 #include <cmath>
+// #include <chrono>
 #include <algorithm>
 #include <string>
 #include <map>
@@ -20,6 +21,12 @@
 #include "robodash/api.h"
 #include "stormlib/api.hpp"
 #include "stormlib/selector.hpp"
+
+/**
+ * CONST VARS:
+ */
+// // 1:45 -- https://www.vexrobotics.com/high-stakes-manual#quickreference:~:text=V5RC%20High%20Stakes%3A%20A%20Primer
+// const int opcontrol_time = (60 * 1000) + (45 * 1000);
 
 /**
  * CONFIG VARS:
@@ -239,7 +246,10 @@ void initialize() {
  * the VEX Competition Switch, following either autonomous or opcontrol. When
  * the robot is enabled, this task will exit.
  */
-void disabled() {}
+void disabled() {
+	// meant for after driver control, in case we're almost at a corner, but driver cannot unclamp
+	mogo.release();
+}
 
 /**
  * Runs after initialize(), and before autonomous when connected to the Field
@@ -333,6 +343,10 @@ void autonomous() {
  * task, not resume it from where it left off.
  */
 void opcontrol() {
+	// // IMMEDIATELY starts timer
+	// const uint32_t start_time = pros::millis();
+
+
 	// color_sort.suspend();
 	// color_sort = nullptr;
 
@@ -350,6 +364,9 @@ void opcontrol() {
 	intake.STARTING_HUE = intake.color_sensor.get_hue();
 
 	while (true) {
+		// // if opcontrol is over, release pneumatics
+		// if (pros::millis() - start_time == opcontrol_time)
+
 		/**
 		* CONTROL FETCHING:
 		*/
