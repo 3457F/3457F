@@ -34,6 +34,7 @@ void test_auton();
 
 // the hallowed and sacred programming skills
 void prog_skills();
+void prog_skills_1095r();
 
 // ------
 

@@ -17,6 +17,7 @@
 
 // import pure pursuit files
 ASSET(red_neg_first_mogo_txt);
+ASSET(third_ring_txt);
 
 struct tamtpParams {
     int turnTO = TO;
@@ -39,6 +40,14 @@ struct tamtpParams {
 
     // adds in early exit range for move
     float mvEarlyExitRange = 0.0;
+
+    // optional waituntil -- REQUIRES `async` to be true
+    float waitUntil = 0.0;
+
+    // use pose x after turn
+    bool usePoseX = false;
+    // use pose y after turn
+    bool usePoseY = false;
 };
 
 void turnAndMoveToPoint(
@@ -53,12 +62,13 @@ void turnAndMoveToPoint(
         , y
         , params.turnTO
         , { .forwards = params.forwards }
+        , params.async
     );
     waitd;
 
+    lemlib::Pose pose = chassis.getPose();
+
     if (params.move_to_pose) {
-        lemlib::Pose pose = chassis.getPose();
-        
         chassis.moveToPose(
             x
             , y
@@ -68,8 +78,12 @@ void turnAndMoveToPoint(
                 .forwards = params.forwards
                 , .maxSpeed = params.mvMaxSpeed
             }
+            , params.async
         );
     } else {
+        float moveX = params.usePoseX ? pose.x : x;
+        float moveY = params.usePoseY ? pose.y : y;
+
         chassis.moveToPoint(
             x
             , y
@@ -79,7 +93,12 @@ void turnAndMoveToPoint(
                 , .maxSpeed = params.mvMaxSpeed
                 , .earlyExitRange = params.mvEarlyExitRange
             }
+            , params.async
         );
+
+        if (params.waitUntil != 0.0) {
+            chassis.waitUntil(params.waitUntil);
+        }
     }
 
     if (!params.async) {
@@ -1513,8 +1532,7 @@ void prog_skills() {
 
     // scores preload on alliance stake
     intake.intake();
-    pros::delay(750);
-    pros::delay(250);
+    pros::delay(1000);
 
     /* sunny's mogo approach */
 
@@ -1805,6 +1823,208 @@ void prog_skills() {
     //     }
     // );
     // waitd;
+}
+
+void prog_skills_1095r() {
+    chassis.setPose(
+        -60.478
+        , -0.444
+        , 270
+    );
+
+    // scores preload on alliance stake
+    intake.intake();
+    pros::delay(1000);
+
+    /** swing */
+
+    // turn to red positive mogo
+    // chassis.swingToHeading(
+    //     180
+    //     , DriveSide::RIGHT
+    //     , 1000
+    //     , {
+    //         .direction = AngularDirection::CCW_COUNTERCLOCKWISE
+    //         , .maxSpeed = 80.0
+    //     }
+    // );
+    // waitd;
+
+    /** move and turn */
+    
+    chassis.moveToPoint(
+        -47.244
+        , -0.444
+        , 500
+        , {
+            .forwards = false
+        }
+    );
+    waitd;
+    turnAndMoveToPoint(
+        -46.207
+        , -23.757
+        , {
+            .turnTO = 750
+            , .moveTO = 1000
+            , .async = true
+            , .mvMaxSpeed = 65.0
+            , .waitUntil = 24
+            , .usePoseX = true
+        }
+    );
+    // chassis.waitUntil(23.75);
+    mogo.clamp();
+    waitd;
+
+    // // approach red positive mogo, clamp
+    // lemlib::Pose approach_mogo_pose = chassis.getPose();
+
+    // chassis.moveToPoint(
+    //     approach_mogo_pose.x
+    //     , -24.016
+    //     , 2000
+    // );
+
+    /** funny curve approach */
+
+    // chassis.moveToPose(
+    //     -46.718
+    //     , -24.016
+    //     , 180
+    //     , 1500
+    // );
+
+    // go for first ring on field
+    turnAndMoveToPoint(
+        -23.404
+        , -25.052
+        , {
+            .turnTO = 750
+            , .moveTO = 750
+            , .forwards = false
+            , .mvMaxSpeed = 65.0
+        }
+    );
+
+    // go for second ring on field
+    // -- scoring on alliance stake!
+    turnAndMoveToPoint(
+        23.757
+        , -49.928
+        , {
+            .turnTO = 750
+            , .moveTO = 2000
+            , .forwards = false
+            , .async = true
+        }
+    );
+    // chassis.moveToPose(
+    //     23.497
+    //     , -47.337
+    //     , 90
+    //     , 1000
+    //     , {
+    //         .forwards = false
+    //     }
+    // );
+    // chassis.follow(
+    //     third_ring_txt
+    //     , 5
+    //     , 1000
+    //     , false
+    // );
+    // chassis.waitUntil(40);
+    pros::delay(1500);
+    // AFTER it gets there, set arm to loadinpos!
+    arm.set_pos(arm.LOADIN_POS);
+    waitd;
+
+    // turns horizontal with field,
+    // in preparation to reverse and align
+    // with the neutral wall stake
+    chassis.turnToHeading(270, 500);
+
+    // STOP intake
+    intake.brake();
+
+    // // moves a bit more, in case ring not gotten
+    // chassis.moveToPoint(
+    //     32.437
+    //     , -47.337
+    //     , 
+    // );
+
+    // come back, in prep to turn to "bottom
+    // neutral wall stake
+    chassis.moveToPoint(
+        2.379
+        , -47.337
+        , 1000
+    );
+
+    // extend arm
+    arm.set_pos(arm.DUNK_POS);
+
+    // turn to alliance stake
+    chassis.turnToHeading(0, 1000);
+    waitd;
+
+    // start intaking again, now that arm is up
+    intake.intake();
+
+    // RAM into wall
+    chassis.moveToPoint(
+        2.379
+        , -63.273
+        , 500
+        , {
+            .forwards = false
+        } 
+    );
+    waitd;
+
+    // score!
+    arm.set_pos(arm.SCORE_POS);
+    // wait to score
+    pros::delay(1000);
+    
+    // move back
+    chassis.moveToPoint(
+        2.379
+        , -47.337
+        , 1000
+    );
+    waitd;
+
+    // turn down, starts retracting arm now
+    // that we're safe
+    arm.set_pos(arm.INIT_POS);
+    chassis.turnToHeading(90, 1000);
+    waitd;
+
+    // // gets fifth ring
+    // chassis.moveToPoint(
+    //     -23.534
+    //     , -47.337
+    //     , 1000
+    //     , {
+    //         .forwards = false
+    //     }
+    // );
+    // waitd;
+
+    // gets other rings, sLOOWER
+    chassis.moveToPoint(
+        -59.811
+        , -46.948
+        , 5000
+        , {
+            .forwards = false
+            , .maxSpeed = 40.0
+        }
+    );
+    waitd;
 }
 
 void red_cross_sawp() {

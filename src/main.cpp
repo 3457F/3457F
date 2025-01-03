@@ -290,7 +290,8 @@ void autonomous() {
 	chassis.setBrakeMode(pros::motor_brake_mode_e::E_MOTOR_BRAKE_HOLD);
 	
 	// Run the selected autonomous function - COMMENT ONCE DONE TESTING AUTONS
-	red_rush();
+	// red_rush();
+	prog_skills_1095r();
 
 	// UNCOMMENT AUTON SELECTOR ONCE DONE TESTING AUTONS
 
