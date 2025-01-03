@@ -1,7 +1,7 @@
 {
     "py/object": "pros.conductor.project.Project",
     "py/state": {
-        "project_name": "3457F",
+        "project_name": "3457F-ui",
         "target": "v5",
         "templates": {
             "LemLib": {
@@ -318,9 +318,9 @@
         },
         "upload_options": {
             "after": "screen",
-            "description": "Showcase of 3457F main program",
+            "description": "Test UI",
             "icon": "pros",
-            "slot": 1
+            "slot": 2
         },
         "use_early_access": false
     }

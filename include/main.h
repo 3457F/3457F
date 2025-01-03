@@ -37,21 +37,9 @@
 
 #include "api.h"
 #include "lemlib/api.hpp"
-
-#include "autons.hpp"
-
-#include "arm.hpp"
-#include "hang.hpp"
-#include "intake.hpp"
-#include "mogo.hpp"
-#include "doinker.hpp"
-
-extern lemlib::Chassis chassis;
-extern MogoMech mogo;
-extern Hang hang;
-extern Intake intake;
-extern Doinker doinker;
-extern Arm arm;
+#include "ui/filesystem.h"
+#include "ui/Auton.hpp"
+#include "ui/Selector.hpp"
 
 /**
  * If you find doing pros::Motor() to be tedious and you'd prefer just to do

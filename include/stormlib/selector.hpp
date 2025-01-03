@@ -1,5 +1,6 @@
 #pragma once
 
+#include "robodash/api.h"
 #include "liblvgl/lvgl.h"
 #include "pros/adi.hpp"
 #include <string>
