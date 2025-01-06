@@ -56,6 +56,9 @@ extern Doinker doinker;
 extern Arm arm;
 extern RushMech rushmech;
 
+// how many ms to wait between each loop of driver control
+#define DRIVER_TICK 10
+
 /**
  * If you find doing pros::Motor() to be tedious and you'd prefer just to do
  * Motor, you can use the namespace with the following commented out line.

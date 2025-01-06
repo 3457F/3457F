@@ -198,26 +198,6 @@ Doinker doinker = Doinker('B');
 // TODO: get right port
 RushMech rushmech = RushMech('C');
 
-// rd::Selector selector({
-// 	{.name="RED LEFT SOLO AWP", .action=&red_cross_sawp}
-// 	, {.name="RED NEGATIVE (5 ring)", .action=&red_negative_5_ring}
-// 	// , {.name="RED POSITIVE (3 ring)", .action=&red_right_side}
-//     // , {.name="BLUE POSITIVE (3 ring)", .action=&blue_left_side}
-// 	, {.name = "BLUE NEGATIVE (5 ring)", .action=&blue_negative_5_ring}
-// 	, {.name = "BLUE SAWP", .action=&blue_positive}
-// 	,{.name = "RED SAWP", .action=&red_positive}
-// });
-// stormlib::selector selector(
-// 	stormlib::selector::E_SKILLS_1,
-// 	"5 Ring (Negative)",		// E_RED_LEFT_1
-// 	"SAWP (Negative)",		// E_RED_LEFT_2
-// 	"Elims (Negative)",		// E_RED_LEFT_3
-// 	"Misc"					// E_RED_LEFT_4
-// );
-
-// // Create robodash console
-// rd::Console console;
-
 /**
  * VARIABLE DEFINITION:
  */
@@ -246,24 +226,15 @@ void initialize() {
 			// red neg
 			Auton(red_neg_elims, Alliance::RED, Corner::NEGATIVE, "Red Neg Elims", "scores 4 rings, 2 stakes", 3, 0, true)
 			, Auton(red_neg_awp_redo, Alliance::RED, Corner::NEGATIVE, "Red Neg SAWP", "scores 4 rings, 2 stakes & touches ladder", 3, 0, true)
+			, Auton(red_rush, Alliance::RED, Corner::POSITIVE, "Red Rush", "2 rings (pos corner) + 1 ring", 2, 1, false)
 
 			// blue neg
 			, Auton(blue_neg_elims, Alliance::BLUE, Corner::NEGATIVE, "Blue Neg Elims", "scores 4 rings, 2 stakes", 3, 0, true)
 			, Auton(blue_neg_awp_redo, Alliance::BLUE, Corner::NEGATIVE, "Blue Neg SAWP", "scores 4 rings, 2 stakes & touches ladder", 3, 0, true)
-
-            // Auton([]() { printf("red neg\n"); }, Alliance::RED, Corner::NEGATIVE, "Red Neg", "red neg", 0, 0, false),
-            // Auton([]() { printf("blue neg\n"); }, Alliance::BLUE, Corner::NEGATIVE, "Blue Neg", "blue neg", 1, 0, false),
-            // Auton([]() { printf("red pos\n"); }, Alliance::RED, Corner::POSITIVE, "Red Pos", "red pos", 0, 1, false),
-            // Auton([]() { printf("blue pos\n"); }, Alliance::BLUE, Corner::POSITIVE, "Blue Pos", "blue pos", 1, 1, true),
         }
     );
 
 	screen_init();
-
-	// pros::Task screenTask(
-	// 	screenTaskFunc			// function that is the task
-	// 	, &chassis				// pointer to parameter to task
-	// );
 }
 
 /**
@@ -286,14 +257,9 @@ void disabled() {
  * starts.
  */
 void competition_initialize() {
-	// Focus auton selector on screen
-	// selector.focus();
-
 	// makes sure color sort task is running in preparation
 	// for autonomous routine to start!
 	// color_sort.resume();
-
-	auton_run();
 };
 
 /**
@@ -310,52 +276,12 @@ void competition_initialize() {
 void autonomous() {
 	chassis.setBrakeMode(pros::motor_brake_mode_e::E_MOTOR_BRAKE_HOLD);
 	
-	// Run the selected autonomous function - COMMENT ONCE DONE TESTING AUTONS
-	// red_rush();
+	/** FOR DEBUGGING */
+	// blue_neg_awp_redo();
 	// prog_skills_1095r();
-	blue_neg_awp_redo();
 
-	// UNCOMMENT AUTON SELECTOR ONCE DONE TESTING AUTONS
-
-	/* stormlib */
-
-	// std::cout << selector.getAuton() << std::endl;
-
-	// default: skills
-	// if (selector.getAuton() == stormlib::selector::E_SKILLS_1) {
-	// 	prog_skills();
-	
-	// // red negative
-	// // } else if (selector.getAuton() == stormlib::selector::E_RED_LEFT_1) {
-	// // 	red_negative_5_ring();
-	// } else if (selector.getAuton() == stormlib::selector::E_RED_LEFT_2) {
-	// 	red_neg_awp_redo();
-	// } else if (selector.getAuton() == stormlib::selector::E_RED_LEFT_3) {
-	// 	red_neg_elims();
-	
-	// // red positive
-	// // } else if (selector.getAuton() == stormlib::selector::E_RED_RIGHT_1) {
-	// // 	red_positive();
-	
-	// // blue negative
-	// // } else if (selector.getAuton() == stormlib::selector::E_BLUE_RIGHT_1) {
-	// // 	blue_negative_5_ring();
-	// } else if (selector.getAuton() == stormlib::selector::E_BLUE_RIGHT_2) {
-	// 	blue_neg_awp_redo();
-	// } else if (selector.getAuton() == stormlib::selector::E_BLUE_RIGHT_3) {
-	// 	blue_neg_elims();
-	// // } else if (selector.getAuton() == stormlib::selector::E_BLUE_RIGHT_4) {
-	// // 	blue_negative_5_ring();
-
-	// // blue positive
-	// // } else if (selector.getAuton() == stormlib::selector::E_BLUE_LEFT_1) {
-	// // 	blue_positive();
-	// // } else if (selector.getAuton() == stormlib::selector::E_BLUE_LEFT_4) {
-	// // 	blue_positive_normal_points();
-	// }
-
-	/* robodash */
-	// selector.run_auton();
+	/** AUTON SELECTOR RUNNING */
+	auton_run();
 };
 
 /**
@@ -372,10 +298,6 @@ void autonomous() {
  * task, not resume it from where it left off.
  */
 void opcontrol() {
-	// // IMMEDIATELY starts timer
-	// const uint32_t start_time = pros::millis();
-
-
 	// color_sort.suspend();
 	// color_sort = nullptr;
 
@@ -384,18 +306,12 @@ void opcontrol() {
 	// brake mode back to coast!
 	chassis.setBrakeMode(pros::motor_brake_mode_e::E_MOTOR_BRAKE_COAST);
 
-	// bc hang open at end of some autons, just do this so yeah
-	// hang.toggle();
-
 	arm.set_pos(arm.INIT_POS);
 
 	// starting hue tuned based on whatever venue we're at
 	intake.STARTING_HUE = intake.color_sensor.get_hue();
 
 	while (true) {
-		// // if opcontrol is over, release pneumatics
-		// if (pros::millis() - start_time == opcontrol_time)
-
 		/**
 		* CONTROL FETCHING:
 		*/
@@ -406,15 +322,11 @@ void opcontrol() {
 		bool R2_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2);
 
 		///// TOGGLE controls
-		// intake lift -> not using bc can just tip over a stack in driver control
-		// bool X_new_press = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X);
 		// mogo mech
 		bool L2_new_press = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2);
-		// toggle slapper
+		// toggle doinker
 		bool Y_new_press = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y);
-		// // toggle hang
-		// bool DOWN_new_press = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN);
-		// arm test
+		// arm
 		bool UP_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_UP);
 		bool LEFT_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT);
 
@@ -464,14 +376,6 @@ void opcontrol() {
 		 */
 		intake.update_sort(R1_pressed, R2_pressed);
 
-		// /**
-		//  * INTAKE LIFT: 
-		//  */
-		
-		// if (X_new_press) {
-		// 	intake.toggle();
-		// }
-
 		/**
 		 * MOGO:
 		 */
@@ -480,10 +384,10 @@ void opcontrol() {
 			mogo.toggle();
 		}
 
-		if (X_new_press) {
-			mogo.request_clamp();
-			printf("Requested clamp!\n");
-		}
+		// if (X_new_press) {
+		// 	mogo.request_clamp();
+		// 	printf("Requested clamp!\n");
+		// }
 
 		// mogo.handle_clamp_requests();
 
@@ -493,9 +397,9 @@ void opcontrol() {
 		// replace with tank() if u really don't like tank that much
 		arcade();
 
-		lemlib::Pose pos = chassis.getPose();
+		// lemlib::Pose pos = chassis.getPose();
 
 		// delay to save system resources
-		pros::delay(10);
+		pros::delay(DRIVER_TICK);
 	}
 }
