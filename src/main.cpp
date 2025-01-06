@@ -291,7 +291,8 @@ void autonomous() {
 	
 	// Run the selected autonomous function - COMMENT ONCE DONE TESTING AUTONS
 	// red_rush();
-	prog_skills_1095r();
+	// prog_skills_1095r();
+	blue_neg_awp_redo();
 
 	// UNCOMMENT AUTON SELECTOR ONCE DONE TESTING AUTONS
 
