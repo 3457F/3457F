@@ -207,16 +207,16 @@ RushMech rushmech = RushMech('C');
 // 	, {.name = "BLUE SAWP", .action=&blue_positive}
 // 	,{.name = "RED SAWP", .action=&red_positive}
 // });
-stormlib::selector selector(
-	stormlib::selector::E_SKILLS_1,
-	"5 Ring (Negative)",		// E_RED_LEFT_1
-	"SAWP (Negative)",		// E_RED_LEFT_2
-	"Elims (Negative)",		// E_RED_LEFT_3
-	"Misc"					// E_RED_LEFT_4
-);
+// stormlib::selector selector(
+// 	stormlib::selector::E_SKILLS_1,
+// 	"5 Ring (Negative)",		// E_RED_LEFT_1
+// 	"SAWP (Negative)",		// E_RED_LEFT_2
+// 	"Elims (Negative)",		// E_RED_LEFT_3
+// 	"Misc"					// E_RED_LEFT_4
+// );
 
-// Create robodash console
-rd::Console console;
+// // Create robodash console
+// rd::Console console;
 
 /**
  * VARIABLE DEFINITION:
@@ -239,7 +239,26 @@ void initialize() {
 	// alliance color is BLUE
 	intake.color = intake.BLUE_HUE;
 
-	selector.initialize();
+	// stormlib::initialize();
+
+	auton_table.auton_populate(
+        {
+			// red neg
+			Auton(red_neg_elims, Alliance::RED, Corner::NEGATIVE, "Red Neg Elims", "scores 4 rings, 2 stakes", 3, 0, true)
+			, Auton(red_neg_awp_redo, Alliance::RED, Corner::NEGATIVE, "Red Neg SAWP", "scores 4 rings, 2 stakes & touches ladder", 3, 0, true)
+
+			// blue neg
+			, Auton(blue_neg_elims, Alliance::BLUE, Corner::NEGATIVE, "Blue Neg Elims", "scores 4 rings, 2 stakes", 3, 0, true)
+			, Auton(blue_neg_awp_redo, Alliance::BLUE, Corner::NEGATIVE, "Blue Neg SAWP", "scores 4 rings, 2 stakes & touches ladder", 3, 0, true)
+
+            // Auton([]() { printf("red neg\n"); }, Alliance::RED, Corner::NEGATIVE, "Red Neg", "red neg", 0, 0, false),
+            // Auton([]() { printf("blue neg\n"); }, Alliance::BLUE, Corner::NEGATIVE, "Blue Neg", "blue neg", 1, 0, false),
+            // Auton([]() { printf("red pos\n"); }, Alliance::RED, Corner::POSITIVE, "Red Pos", "red pos", 0, 1, false),
+            // Auton([]() { printf("blue pos\n"); }, Alliance::BLUE, Corner::POSITIVE, "Blue Pos", "blue pos", 1, 1, true),
+        }
+    );
+
+	screen_init();
 
 	// pros::Task screenTask(
 	// 	screenTaskFunc			// function that is the task
@@ -273,6 +292,8 @@ void competition_initialize() {
 	// makes sure color sort task is running in preparation
 	// for autonomous routine to start!
 	// color_sort.resume();
+
+	auton_run();
 };
 
 /**

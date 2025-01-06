@@ -38,6 +38,9 @@
 #include "api.h"
 #include "lemlib/api.hpp"
 
+// #include "ui/filesystem.h"
+#include "ui/Selector.hpp"
+
 #include "autons.hpp"
 
 #include "arm.hpp"
