@@ -18,6 +18,7 @@ void blue_neg_elims();
 void blue_positive();
 void blue_positive_normal_points();
 void blue_rush();
+void blue_pos_safe();
 
 // testing
 void test_auton_task();

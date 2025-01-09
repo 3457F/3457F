@@ -7,6 +7,7 @@
 #include "pros/rtos.hpp"
 
 #include <chrono>
+#include <set>
 
 // import pure pursuit files
 ASSET(red_neg_first_mogo_txt);
@@ -1035,6 +1036,37 @@ void blue_positive_normal_points() {
  * Other Autons
  * ------------------------------------------------------------
  */
+
+void blue_pos_safe() {
+    chassis.setPose(54.428, -14.184, 180);
+    
+    intake.lift(true);
+    intake.floating();
+    turnAndMoveToPoint(51.212, -7.558,{.forwards = false});
+    waitd;
+    intake.lift(true);
+
+    pros::delay(300);
+
+    chassis.moveToPose(32.406, -18.374, 240, 2000, {.forwards = true});
+    waitd;
+    mogo.clamp();
+    intake.brake();
+
+    turnAndMoveToPoint(21.784, -51.699,{.forwards = false});
+    intake.intake();
+    waitd;
+
+    chassis.moveToPose(21.784, -51.699, 285, 1200, {.forwards = false});
+    waitd;
+    doinker.toggle(); 
+
+    chassis.turnToHeading(180, 700);
+    waitd;
+    doinker.toggle();
+
+
+}
 
 void blue_rush() {
     chassis.setPose(
