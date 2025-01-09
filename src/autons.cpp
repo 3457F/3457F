@@ -11,6 +11,7 @@
 // import pure pursuit files
 ASSET(red_neg_first_mogo_txt);
 ASSET(third_ring_txt);
+ASSET(blue_rush_first_part_txt);
 
 void print_robot_pos(void* chassisVoid) {
     lemlib::Chassis* chassis
@@ -1035,6 +1036,70 @@ void blue_positive_normal_points() {
  * ------------------------------------------------------------
  */
 
+void blue_rush() {
+    chassis.setPose(
+        54.573
+        , -59
+        , 90
+    );
+
+    arm.set_pos(arm.START_POS);
+
+    intake.floating();
+
+    // get first blue ring on field
+    chassis.follow(
+        blue_rush_first_part_txt
+        , 10
+        , 1000
+        , false
+    );
+    waitd;
+
+    // move to mogo
+    turnAndMoveToPoint(
+        14.967
+        , -48.623
+        , {
+            .turnTO = 500
+            , .turnDir = lemlib::AngularDirection::CCW_COUNTERCLOCKWISE
+            , .moveTO = 750
+            , .forwards = false
+        }
+    );
+
+    // grab goal with doinker
+    doinker.toggle();
+    pros::delay(420);
+
+    // moves robot + goal back
+    chassis.moveToPoint(
+        30.805
+        , -45.901
+        , 2000
+        , {
+            .maxSpeed = 30.0
+        }
+    );
+    waitd;
+
+    // release mogo and turn around
+    doinker.toggle();
+    chassis.moveToPoint(
+        41.694
+        , -43.674
+        , 500
+    );
+    turnAndMoveToPoint(
+        30.805
+        , -45.901
+        , {
+            .turnTO = 500
+            , .turnDir = lemlib::AngularDirection::CCW_COUNTERCLOCKWISE
+            , .moveTO = 750
+        }
+    );
+}
 
 void test_auton() {
     pros::Task task(
