@@ -1039,31 +1039,36 @@ void blue_positive_normal_points() {
 
 void blue_pos_safe() {
     chassis.setPose(54.428, -14.184, 180);
-    
+  
     intake.lift(true);
+    turnAndMoveToPoint(49.75, -5.122,{.forwards = false});
     intake.floating();
-    turnAndMoveToPoint(51.212, -7.558,{.forwards = false});
     waitd;
-    intake.lift(true);
-
+    intake.lift(false);
     pros::delay(300);
 
-    chassis.moveToPose(32.406, -18.374, 240, 2000, {.forwards = true});
+    turnAndMoveToPoint(32.211, -18.374,{.forwards = true, .mvMaxSpeed = 80});
     waitd;
     mogo.clamp();
     intake.brake();
+    intake.intake();
 
-    turnAndMoveToPoint(21.784, -51.699,{.forwards = false});
+    pros::delay(150);
+    turnAndMoveToPoint(21.784, -51.699, {.moveTO = 900, .forwards = false});
     intake.intake();
     waitd;
 
-    chassis.moveToPose(21.784, -51.699, 285, 1200, {.forwards = false});
-    waitd;
+    chassis.moveToPose(64.562, -65.146, 294.6, 2000, {.forwards = false});
+    chassis.waitUntil(10);
     doinker.toggle(); 
+    waitd;
 
+    pros::delay(500);
     chassis.turnToHeading(180, 700);
     waitd;
     doinker.toggle();
+
+    chassis.turnToHeading(270, 650);
 
 
 }

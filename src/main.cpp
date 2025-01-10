@@ -285,7 +285,7 @@ void autonomous() {
 	/** FOR DEBUGGING */
 	// blue_neg_awp_redo();
 	// prog_skills_1095r();
-	blue_rush();
+	blue_pos_safe();
 
 	/** AUTON SELECTOR RUNNING */
 	// auton_run();
