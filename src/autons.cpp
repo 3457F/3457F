@@ -1038,39 +1038,90 @@ void blue_positive_normal_points() {
  */
 
 void blue_pos_safe() {
-    chassis.setPose(54.428, -14.184, 180);
-  
+    // starts near the top ring
+    chassis.setPose(
+        54.428
+        , -14.184
+        , 180
+    );
+
+    // moves towards the stack with blue ring on top;
+    // RUNS ONLY FLOATING to ensure the ring is only "queued in"
+    // and preload is not thrown out of the robot
     intake.lift(true);
-    turnAndMoveToPoint(49.75, -5.122,{.forwards = false});
+    turnAndMoveToPoint(
+        49.75
+        , -5.122
+        , {
+            .forwards = false
+        }
+    );
     intake.floating();
     waitd;
+    // plops intake onto stack to create friction that intakes the
+    // blue ring on the stack 
     intake.lift(false);
     pros::delay(300);
 
-    turnAndMoveToPoint(32.211, -18.374,{.forwards = true, .mvMaxSpeed = 80});
-    waitd;
+    // goes to mogo and clamps it
+    turnAndMoveToPoint(
+        // 32.211
+        31.382
+        // , -18.374
+        , -18.929
+        // , -19.905
+        , {
+            .async = true
+            , .mvMaxSpeed = 80
+        }
+    );
+    chassis.waitUntil(16.75);
+    // chassis.moveToPose(
+    //     30.161
+    //     , -20.394
+    //     , 240
+    //     , 1200
+    // );
     mogo.clamp();
+    waitd;
+
+    // return;
+
     intake.brake();
     intake.intake();
-
+    // waits to ensure all queued rings are scored
     pros::delay(150);
+
+    // goes to the leftmost stack in corner
     turnAndMoveToPoint(21.784, -51.699, {.moveTO = 900, .forwards = false});
     intake.intake();
     waitd;
 
+    // goes to negative corner
     chassis.moveToPose(64.562, -65.146, 294.6, 2000, {.forwards = false});
     chassis.waitUntil(10);
     doinker.toggle(); 
     waitd;
-
     pros::delay(500);
+
+    // turns around to force the doinker to clear the corner
+    // also starts outtaking in case the sneaky red ring is upon us
+    intake.outtake();
     chassis.turnToHeading(180, 700);
     waitd;
     doinker.toggle();
 
+    // turns back horizontal
     chassis.turnToHeading(270, 650);
 
-
+    // moves back just cuz 
+    lemlib::Pose move_back_pose = chassis.getPose();
+    chassis.moveToPoint(
+        30.649
+        , move_back_pose.y
+        , 1000
+    );
+    waitd;
 }
 
 void blue_rush() {

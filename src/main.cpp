@@ -236,7 +236,8 @@ void initialize() {
 			, Auton(blue_neg_awp_redo, Alliance::BLUE, Corner::NEGATIVE, "Blue Neg SAWP", "scores 4 rings, 2 stakes & touches ladder", 3, 0, true)
 			
 			// blue pos
-			, Auton(blue_rush, Alliance::BLUE, Corner::POSITIVE, "Blue Rush", "2 rings (pos corner) + 1 ring", 2, 1, false)
+			, Auton(blue_rush, Alliance::BLUE, Corner::POSITIVE, "Blue Rush [DON'T USE]", "2 rings (pos corner) + 1 ring", 2, 1, false)
+			, Auton(blue_pos_safe, Alliance::BLUE, Corner::POSITIVE, "Blue Positive Safe", "3 rings + clears positive corner", 3, 0, false)
         }
     );
 
