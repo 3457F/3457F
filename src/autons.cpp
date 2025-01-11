@@ -207,7 +207,12 @@ void red_neg_awp_redo() {
     // waitd;
     // pros::delay(750);
 
-    chassis.moveToPose(-58.411, 12.028, 42.8, 1500, {.forwards = false});
+    chassis.moveToPose(
+        -58.411
+        // -57.047
+        , 12.028
+        // , 13.492
+        , 42.8, 1500, {.forwards = false});
     waitd;
     arm.set_pos(arm.ALLIANCE_SCORE);
     pros::c::delay(870);
@@ -446,17 +451,17 @@ void red_rush(){
     waitd; 
     mogo.toggle();
 
-    intake.lift(true);
-    turnAndMoveToPoint(-41.066, -6.291, {.forwards = false, .mvMaxSpeed = 105});
-    waitd;
-   intake.lift(false);
-   pros::delay(860);
+//     intake.lift(true);
+//     turnAndMoveToPoint(-41.066, -6.291, {.forwards = false, .mvMaxSpeed = 105});
+//     waitd;
+//    intake.lift(false);
+//    pros::delay(860);
 
-   chassis.turnToPoint(-75, 0, 650, {.forwards = false});
+    chassis.turnToPoint(-75, 0, 650, {.forwards = false});
     waitd; 
     intake.brake();
-//    chassis.moveToPose(-39.475, -54.537, 342, 1300);
- }
+    chassis.moveToPose(-39.475, -54.537, 342, 1300);
+}
 
 // TODO: need to tune
 // THREE RING, TWO STAKE AUTON -> does awp!!!
@@ -594,11 +599,11 @@ void blue_neg_awp_redo() {
     arm.set_pos(arm.LOADIN_POS);
 
     turnAndMoveToPoint(
-        // 59.348
-        59.36
-        // , 9.797
-        , 10
-        // 10.414
+        // 59.36
+        58.522
+        // , 10.414
+        // , 11.017
+        , 10.522
         , {
             .turnTO = 750
             , .turnDir = lemlib::AngularDirection::CCW_COUNTERCLOCKWISE
@@ -635,10 +640,10 @@ void blue_neg_awp_redo() {
      * TODO: try to make this cross less, so it doesn't interfere with the alliance's auton!
      */
 
-    // lifts intake in prep to grab first red ring on top
+    // lifts intake in prep to grab first blue ring on top
     intake.lift(1);
     // starts intaking
-    intake.intake();
+    intake.floating();
     // // turns and moves towards first ring on field (on top of stack)
     // turnAndMoveToPoint(
     //     47.123
@@ -714,14 +719,14 @@ void blue_neg_awp_redo() {
     intake.intake();
     waitd;
 
-    // queues NEXT ring only to be intaked after turning
-    pros::delay(100);
-    intake.brake();
+    // // queues NEXT ring only to be intaked after turning
+    // pros::delay(100);
+    // intake.brake();
 
     // moves to the top rings! (works nov 30)
     chassis.moveToPose(
-        9.3
-        , 51.395
+        9.77
+        , 54.077
         , -280.3
         , 1500
         , {
@@ -732,6 +737,12 @@ void blue_neg_awp_redo() {
         }
     );
     intake.intake();
+    waitd;
+
+    chassis.turnToHeading(
+        0
+        , 750
+    );
     waitd;
 
     //Getting the arm ready to score
@@ -1045,6 +1056,8 @@ void blue_pos_safe() {
         , 180
     );
 
+    pros::delay(4000);
+
     // moves towards the stack with blue ring on top;
     // RUNS ONLY FLOATING to ensure the ring is only "queued in"
     // and preload is not thrown out of the robot
@@ -1122,6 +1135,18 @@ void blue_pos_safe() {
         , 1000
     );
     waitd;
+
+    arm.set_pos(arm.SCORE_POS);
+    // goes towards ladder for awp
+    turnAndMoveToPoint(
+        16.452
+        , -17.937
+        , {
+            .turnTO = 750
+            , .moveTO = 1000
+            , .forwards = false
+        }
+    );
 }
 
 void blue_rush() {

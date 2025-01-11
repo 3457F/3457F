@@ -2,7 +2,6 @@
  * IMPORTS:
 */
 #include <cmath>
-// #include <chrono>
 #include <algorithm>
 #include <string>
 #include <map>
@@ -27,37 +26,6 @@
  */
 // // 1:45 -- https://www.vexrobotics.com/high-stakes-manual#quickreference:~:text=V5RC%20High%20Stakes%3A%20A%20Primer
 // const int opcontrol_time = (60 * 1000) + (45 * 1000);
-
-/**
- * CONFIG VARS:
-*/
-// whether PID is being tuned, or normal
-// driver control should run
-bool tuningPID = false;
-// whether the physical PID tuner is being 
-// used, or P, I, and D values are being set
-// manually, through the C++ structs
-// `lateralController` and
-// `angularController`
-bool usingPhysicalPIDTuner = false;
-// if `tuningPID` is set to `true`, whether
-// LINEAR PID is being tuned, or ANGULAR
-// PID is being tuned
-bool runningLinearPIDTest = false;
-
-/**
- * RUNTIME VARS: (**DO NOT MODIFY**)
-*/
-// if `tuningPID` is set to `true`, whether
-// the robot is CURRENTLY running a test
-// auton with target kP and kD values!
-bool runningPIDTest = false;
-// represents the TARGET (NOT actual) kP,
-// that you want to be set
-int kp_target = 0;
-// represents the TARGET (NOT actual) kD,
-// that you want to be set
-int kd_target = 0;
 
 // constants
 const int DRIVE_SPEED = 127;
@@ -286,10 +254,12 @@ void autonomous() {
 	/** FOR DEBUGGING */
 	// blue_neg_awp_redo();
 	// prog_skills_1095r();
-	blue_pos_safe();
+	// blue_pos_safe();
+	// blue_neg_awp_redo();
+	// red_neg_awp_redo();
 
 	/** AUTON SELECTOR RUNNING */
-	// auton_run();
+	auton_run();                                                                                                                                                                   
 };
 
 /**
