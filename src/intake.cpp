@@ -21,7 +21,7 @@ Intake::Intake(
     color_sort_task = nullptr;
 }
 void Intake::floating(){
-     pros::Motor floating(1);
+    pros::Motor floating(1);
     floating.move(-127);
 }
 
@@ -93,8 +93,67 @@ void throws_ring(void* intakeVoid) {
 
 // meant to be run as a task, or every 10ms!
 void Intake::update_sort(bool R1_pressed, bool R2_pressed) {
-    // // // keeps color sensor white LED on, so it can more accurately detect color
-    // color_sensor.set_led_pwm(100);
+    // keeps color sensor white LED on, so it can more accurately detect color
+    color_sensor.set_led_pwm(100);
+
+    // will throw out RED rings!
+    bool RED_OPPONENT = true;
+
+    // original intake code (just driver)
+    /**
+     * if (R1_pressed == R2_pressed) {
+                brake();
+            } else if (R1_pressed) {
+                intake();
+            } else if (R2_pressed) {
+                outtake();
+            }
+
+    printf("color sensor state: %f\n", color_sensor.get_hue());
+     */
+
+    if (state == 0) {
+        // checks for red
+        if (color_sensor.get_hue() > 9.0
+            && color_sensor.get_hue() < 15.0
+        ) {
+            if (first_received == 0) {
+                first_received = 1;
+            // ooh lah lah! a new contender!
+            } else if (first_received == 1 && first_ended) {
+                state = 1;
+                color_sort_task = new pros::Task(&throws_ring, this);
+            }
+        // if no bad rings then we calm
+        } else if (
+            color_sensor.get_hue() > 250.0
+            || color_sensor.get_hue() < 9.0
+        ) {
+            if (first_received == 0) {
+                first_received = 2;
+            } else if (first_received == 2 && first_ended) {
+                // if blue was opponent smth would go here
+                second_received = 2;
+            }
+        } else if (
+            // steady state
+            color_sensor.get_hue() > 18.0
+        ) {
+            if (first_received != 0) {
+                first_ended = true;
+            }
+        } else {
+            if (R1_pressed == R2_pressed) {
+                brake();
+            } else if (R1_pressed) {
+                intake();
+            } else if (R2_pressed) {
+                outtake();
+            }
+        }
+    } else if (state == 1) {
+        return;
+    }
 
     // // if in free driver control mode
     // if (state == 0) {
@@ -115,6 +174,8 @@ void Intake::update_sort(bool R1_pressed, bool R2_pressed) {
             } else if (R2_pressed) {
                 outtake();
             }
+
+    printf("color sensor state: %f\n", color_sensor.get_hue());
     //     } 
     
     // // if running the color sort task

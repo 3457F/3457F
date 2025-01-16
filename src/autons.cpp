@@ -1056,8 +1056,6 @@ void blue_pos_safe() {
         , 180
     );
 
-    pros::delay(4000);
-
     // moves towards the stack with blue ring on top;
     // RUNS ONLY FLOATING to ensure the ring is only "queued in"
     // and preload is not thrown out of the robot
@@ -1136,6 +1134,7 @@ void blue_pos_safe() {
     );
     waitd;
 
+    doinker.toggle();
     arm.set_pos(arm.SCORE_POS);
     // goes towards ladder for awp
     turnAndMoveToPoint(

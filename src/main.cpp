@@ -147,9 +147,9 @@ Intake intake = Intake(
 	{14, 1}						// left intake (reversed)
 	, pros::E_MOTOR_BRAKE_HOLD	// brake mode of intake
 
-	, 'G'
-	, 10
-	, true						// intake piston port
+	, 'G'						// intake piston port
+	, 2
+	, true						
 );
 
 MogoMech mogo = MogoMech('A', 'C');

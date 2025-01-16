@@ -12,6 +12,11 @@ void update_sort_auton(void* intakeVoid);
 
 class Intake {
     public:
+        // REDO:
+        // red range: 9 - 15
+        // blue range: >300 (>250 properly aligned), and < 0
+        // steady state: 18 - 27 (just say 18 - 100)
+
         // 132 -> 145 steady state
         double STARTING_HUE;
 
@@ -42,6 +47,14 @@ class Intake {
         // 1 -> intaking
         // 2 -> outtaking
         int auton_running;
+
+        // 0 -> none
+        // 1 -> red
+        // 2 -> blue
+        int first_received;
+        bool first_ended = false;
+        // same as first_received
+        int second_received;
 
         Intake(
             std::initializer_list<std::int8_t> intake_motor_ports
