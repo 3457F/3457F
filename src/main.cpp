@@ -7,6 +7,9 @@
 #include <map>
 #include <vector>
 
+#include "consts.hpp"
+#include "util.hpp"
+
 #include "main.h"
 #include "arm.hpp"
 #include "intake.hpp"
@@ -22,67 +25,52 @@
 #include "stormlib/selector.hpp"
 
 /**
- * CONST VARS:
+ * GENERAL STUFF:
  */
-// // 1:45 -- https://www.vexrobotics.com/high-stakes-manual#quickreference:~:text=V5RC%20High%20Stakes%3A%20A%20Primer
-// const int opcontrol_time = (60 * 1000) + (45 * 1000);
-
-// constants
-const int DRIVE_SPEED = 127;
 
 // controller definition
 pros::Controller controller(pros::E_CONTROLLER_MASTER);
 
+// TODO: add imu port
+pros::Imu imu(16);
+
+// ---
 
 /**
- * NOTE: The mogo mech is the front of the robot, from a driving perspective and an auton perspective
+ * MOTOR GROUPS:
  */
-
-
-// 12 in -> track width (distance between wheels)
-
-// 15.433 height (based on cad)
-// -> 15.933 (added .5 after sunny cooked with budget bot)
-// -> 15.75 -> measured height
-// 14.00 -> width (based on cad)
-// -> 14.25 -> measured width
-// TECHNICALLY 14.48 in w/ side skirts (based on cad)
-
-pros::Imu imu(7);
-
-// motor groups
+// front (mogo) -> back (intake) : ALL REVERSED
 pros::MotorGroup left_motors({
-	-15
-	, -16
-	// , -19
-	, -19
+	LEFT_FRONT_PORT
+	, LEFT_MID_PORT
+	, LEFT_BACK_PORT
 }, pros::MotorGearset::blue);
 
+// front (mogo) -> back (intake) : ALL NORMAL
 pros::MotorGroup right_motors({
-	17
-	, 18
-	// , 20
-	, 20
+	RIGHT_FRONT_PORT
+	, RIGHT_MID_PORT
+	, RIGHT_BACK_PORT
 }, pros::MotorGearset::blue);
 
+// TODO: get ports
 pros::Rotation horizontal(5);
 
-pros::Rotation vertical(8);
+/** liblem */
 
-// liblem
-
+// TODO: verify all config settings
 lemlib::Drivetrain drivetrain(
 	&left_motors, &right_motors,
-	12,
-	lemlib::Omniwheel::NEW_325,
-	450,
+	11.75,
+	lemlib::Omniwheel::NEW_275,
+	600,
 	2
 );
 
 // lateral PID controller
-lemlib::ControllerSettings lateral_controller(8, // proportional gain (kP)
+lemlib::ControllerSettings lateral_controller(DT_LATERAL_P, // proportional gain (kP)
                                               0, // integral gain (kI)
-                                              21, // derivative gain (kD)
+                                              DT_LATERAL_D, // derivative gain (kD)
                                               3, // anti windup
                                               1, // small error range, in inches
                                               100, // small error range timeout, in milliseconds
@@ -92,9 +80,9 @@ lemlib::ControllerSettings lateral_controller(8, // proportional gain (kP)
 );
 
 // angular PID controller
-lemlib::ControllerSettings angular_controller(3.25, // proportional gain (kP)
+lemlib::ControllerSettings angular_controller(DT_ANGULAR_P, // proportional gain (kP)
                                               0, // integral gain (kI)
-                                              26, // derivative gain (kD)
+                                              DT_ANGULAR_D, // derivative gain (kD)
                                               3, // anti windup
                                               1, // small error range, in inches
                                               100, // small error range timeout, in milliseconds
@@ -107,11 +95,9 @@ lemlib::ControllerSettings angular_controller(3.25, // proportional gain (kP)
 // which is on front of robot!
 lemlib::TrackingWheel horizontal_track(&horizontal, lemlib::Omniwheel::NEW_2, 2.5); // changed from -3
 
-lemlib::TrackingWheel vertical_track(&vertical, lemlib::Omniwheel::NEW_2, 2.1);
-
 lemlib::OdomSensors sensors(
-							&vertical_track, // vert tracking wheel that kinda doesn't work
-							// nullptr, // vertical tracking wheel 1, set to null
+							// &vertical_track, // vert tracking wheel that kinda doesn't work
+							nullptr, // vertical tracking wheel 1, set to nullptr as we are using IMEs
                             nullptr, // vertical tracking wheel 2, set to nullptr as we are using IMEs
                             &horizontal_track, // horizontal tracking wheel 1
                             nullptr, // horizontal tracking wheel 2, set to nullptr as we don't have a second one
@@ -124,27 +110,13 @@ lemlib::Chassis chassis(drivetrain, // drivetrain settings
                         sensors // odometry sensors
 );
 
-// driving functions
-void tank() {
-	left_motors.move((controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y) / 127.0) * DRIVE_SPEED);
-	right_motors.move((controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y) / 127.0) * DRIVE_SPEED);
-}
-
-void arcade() {
-	int move = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
-	int turn = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
-
-	left_motors.move(((move + turn) / 127.0) * DRIVE_SPEED);
-	right_motors.move(((move - turn) / 127.0) * DRIVE_SPEED);
-}
-
 /**
  * SUBSYSTEM INITIALIZATION:
 */
 
-// right intake normal; left intake reversed 
+// TODO: set intake piston port + color sensor port
 Intake intake = Intake(
-	{14, 1}						// left intake (reversed)
+	{INTAKE_PORT}						
 	, pros::E_MOTOR_BRAKE_HOLD	// brake mode of intake
 
 	, 'G'						// intake piston port
@@ -152,19 +124,19 @@ Intake intake = Intake(
 	, true						
 );
 
-MogoMech mogo = MogoMech('A', 'C');
+// TODO: set ports
+MogoMech mogo = MogoMech(MOGO_MECH_PORT);
 
+// TODO: set ports
 Arm arm = Arm(
-	9
+	ARM_PORT
 	, pros::E_MOTOR_BRAKE_HOLD
-	, -4
+	, 11
 	, &intake
 );
 
-Doinker doinker = Doinker('B');
-
-// TODO: get right port
-RushMech rushmech = RushMech('C');
+// TODO: set port
+Doinker doinker = Doinker(DOINKER_PORT);
 
 /**
  * VARIABLE DEFINITION:
@@ -183,9 +155,6 @@ bool L1_state = false;
  */
 void initialize() {
 	chassis.calibrate();
-
-	// alliance color is BLUE
-	intake.color = intake.BLUE_HUE;
 
 	// stormlib::initialize();
 
@@ -218,8 +187,7 @@ void initialize() {
  * the robot is enabled, this task will exit.
  */
 void disabled() {
-	// meant for after driver control, in case we're almost at a corner, but driver cannot unclamp
-	mogo.release();
+
 }
 
 /**
@@ -232,9 +200,7 @@ void disabled() {
  * starts.
  */
 void competition_initialize() {
-	// makes sure color sort task is running in preparation
-	// for autonomous routine to start!
-	// color_sort.resume();
+
 };
 
 /**
@@ -253,10 +219,6 @@ void autonomous() {
 	
 	/** FOR DEBUGGING */
 	// blue_neg_awp_redo();
-	// prog_skills_1095r();
-	// blue_pos_safe();
-	// blue_neg_awp_redo();
-	// red_neg_awp_redo();
 
 	/** AUTON SELECTOR RUNNING */
 	auton_run();                                                                                                                                                                   
@@ -276,13 +238,9 @@ void autonomous() {
  * task, not resume it from where it left off.
  */
 void opcontrol() {
-	// color_sort.suspend();
-	// color_sort = nullptr;
-
-	chassis.setPose(-54.779, 15.9, 0);
-
 	// brake mode back to coast!
 	chassis.setBrakeMode(pros::motor_brake_mode_e::E_MOTOR_BRAKE_COAST);
+	intake.intake_motors.set_brake_mode_all(pros::motor_brake_mode_e::E_MOTOR_BRAKE_COAST);
 
 	arm.set_pos(arm.INIT_POS);
 
@@ -293,21 +251,23 @@ void opcontrol() {
 		/**
 		* CONTROL FETCHING:
 		*/
+		
 		///// HOLD controls
+
 		// intake
 		bool R1_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1);
 		// outtake
 		bool R2_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2);
 
+		// ---
+
 		///// TOGGLE controls
+
 		// mogo mech
 		bool L2_new_press = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2);
-		// toggle doinker
+		
+		// doinker
 		bool Y_new_press = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y);
-		// arm
-		bool UP_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_UP);
-		bool LEFT_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT);
-
 
 		// arm
 		bool DOWN_new_press = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN);
@@ -318,8 +278,8 @@ void opcontrol() {
 		bool X_new_press = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X);
 
 		/**
-			* ARM
-		*/
+		 * ARM:
+		 */
 
 		// if L1 PRESSED
 		if (L1_pressed) {
@@ -362,20 +322,13 @@ void opcontrol() {
 			mogo.toggle();
 		}
 
-		// if (X_new_press) {
-		// 	mogo.request_clamp();
-		// 	printf("Requested clamp!\n");
-		// }
-
-		// mogo.handle_clamp_requests();
-
 		/**
 		 * DRIVING:
 		 */
 		// replace with tank() if u really don't like tank that much
 		arcade();
 
-		// lemlib::Pose pos = chassis.getPose();
+		printf("arm pos: %f\n", arm.encoder.get_position());
 
 		// delay to save system resources
 		pros::delay(DRIVER_TICK);

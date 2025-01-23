@@ -1225,7 +1225,7 @@ void test_auton() {
         , 90
     );
 
-    mogo.request_clamp();
+    // mogo.request_clamp();
 
     chassis.moveToPoint(
         24
@@ -1271,9 +1271,9 @@ void prog_skills() {
         }
     );
     // TODO: verify is tuned
-    // chassis.waitUntil(27);
-    // mogo.toggle();
-    mogo.request_clamp();
+    chassis.waitUntil(27);
+    mogo.toggle();
+    // mogo.request_clamp();
     waitd;
 
     // goes for first ring on field; intake still running!

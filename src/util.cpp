@@ -2,10 +2,33 @@
 #include "util.hpp"
 #include <cmath>
 
+
 bool within(double num, double expected_val, double range) {
     double diff = std::abs(num - expected_val);
 
     return diff < range;
+}
+
+bool within_range(double num, double min, double max) {
+    return num >= min && num <= max;
+}
+
+/**
+ * driver control
+ */
+
+// driving functions
+void tank() {
+	left_motors.move((controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y) / 127.0) * DRIVE_SPEED);
+	right_motors.move((controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y) / 127.0) * DRIVE_SPEED);
+}
+
+void arcade() {
+	int move = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
+	int turn = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
+
+	left_motors.move(((move + turn) / 127.0) * DRIVE_SPEED);
+	right_motors.move(((move - turn) / 127.0) * DRIVE_SPEED);
 }
 
 /**

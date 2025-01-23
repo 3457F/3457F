@@ -5,6 +5,25 @@
 
 #include "intake.hpp"
 
+/**
+ * GLOBAL CONSTANTS
+ */
+
+// how many ms to wait between each loop of driver control
+#define DRIVER_TICK 10
+
+// default timeout for when im lazy to specify
+#define TO 1200
+
+#define waitd chassis.waitUntilDone()
+#define MAX_SPEED 127.0
+
+// 1:45 -- https://www.vexrobotics.com/high-stakes-manual#quickreference:~:text=V5RC%20High%20Stakes%3A%20A%20Primer
+const int opcontrol_time = (60 * 1000) + (45 * 1000);
+
+// constants
+constexpr int DRIVE_SPEED = 127;
+
 class Arm;
 
 struct LoadInInfo {
@@ -30,15 +49,13 @@ struct SetInfo {
 
 bool within(double num, double expected_val, double range);
 
-/**
- * for autons
- */
-// default timeout for when im lazy to specify
-#define TO 1200
+bool within_range(double num, double min, double max);
 
-#define TUNING_TO 2000
-#define waitd chassis.waitUntilDone()
-#define MAX_SPEED 127.0
+/**
+ * driving functions
+ */
+void tank();
+void arcade();
 
 struct tamtpParams {
     int turnTO = TO;

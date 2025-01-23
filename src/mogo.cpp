@@ -3,21 +3,9 @@
 
 MogoMech::MogoMech(
     std::uint8_t mogo_pistons_port
-    
-    // ours is an OFF-MOM (off-momentarily) switch;
-    // ON always except for when pressed!
-    , std::uint8_t limit_switch_port
 ) : mogo_pistons(mogo_pistons_port, pros::E_ADI_DIGITAL_OUT)
-    , limit_switch(limit_switch_port, pros::E_ADI_DIGITAL_IN)
-    // , clamp_request_handler(
-    //     &handle_clamp_requests
-    //     , this
-    // ) {
 {
     release();
-
-    // NOT wanting to clamp rn
-    clamp_requested = false;
 };
 
 void MogoMech::set(bool val) {
@@ -36,65 +24,10 @@ void MogoMech::release() {
     set(false);
 }
 
-bool MogoMech::check_if_mogo() {
-    // false -> limit switch pressed
-    // true -> limit switch not pressed --> PROBS WRONG!!!!
-    return limit_switch.get_value();
+void unclamp_timer() {
+    
 }
 
-void MogoMech::request_clamp() {
-    clamp_requested = true;
+void MogoMech::set_unclamp_timer() {
+
 }
-
-void MogoMech::cancel_clamp() {
-    clamp_requested = false;
-}
-
-// run in `opcontrol();` (so every 20ms)
-void MogoMech::handle_clamp_requests() {
-    // debug -- prints current limit switch state
-    printf("limit switch state: %d\n", this->check_if_mogo());
-
-    // first off: do we want to clamp?
-    if (this->clamp_requested) {
-        // second of all: is there a mogo?
-        if (this->check_if_mogo()) {
-            // yippee!!! clamp
-            set(true);
-
-            // handled request!
-            this->clamp_requested = false;
-        }
-    }
-}
-
-void MogoMech::handle_clamp_requests_task(void* mogoMechVoid) {
-    MogoMech* mogoMech = static_cast<MogoMech*>(mogoMechVoid);
-
-    while (true) {
-        mogoMech->handle_clamp_requests();
-
-        pros::delay(20);
-    }
-}
-
-// task -- meant to be run every 20ms
-// void handle_clamp_requests(void* mogoMechVoid) {
-//     while (true) {
-//         MogoMech* mogoMech = static_cast<MogoMech*>(mogoMechVoid);
-
-//         // first off: do we want to clamp?
-//         if (mogoMech->clamp_requested) {
-//             // second of all: is there a mogo?
-//             if (mogoMech->check_if_mogo()) {
-//                 // yippee!!! clamp
-//                 mogoMech->set(false);
-
-//                 // handled request!
-//                 mogoMech->clamp_requested = false;
-//             }
-//         }
-
-//         pros::delay(20);
-//     }
-// }

@@ -13,21 +13,20 @@ void update_sort_auton(void* intakeVoid);
 class Intake {
     public:
         // REDO:
-        // red range: 9 - 15
-        // blue range: >300 (>250 properly aligned), and < 0
-        // steady state: 18 - 27 (just say 18 - 100)
-
-        // 132 -> 145 steady state
+        // red range: 9 - 15 (12 apparently?)
+        // blue RANGE: 200 - 320ish
+        // blue actual: ~240 - 270
+        // steady state: just say 20-40
         double STARTING_HUE;
 
-        const double RED_HUE = 30.0;
-        // int RED_HUE_MAX;
-        // int RED_HUE_MIN;
+        const double RED_MIN = 0.0;
+        const double RED_MAX = 15.0;
 
-        // within 220 and 230 -> blue
-        const double BLUE_HUE = 225.0;
-        // int BLUE_HUE_MAX;
-        // int BLUE_HUE_MIN;
+        const double STEADY_MIN = 20.0;
+        const double STEADY_MAX = 40.0;
+
+        const double BLUE_MIN = 200.0;
+        const double BLUE_MAX = 300.0;
 
         pros::MotorGroup intake_motors;
 
@@ -37,7 +36,11 @@ class Intake {
 
         pros::Optical color_sensor;
 
+        // 0 -> running freely
+        // 1 -> running color sort task
         int state;
+
+        bool debounce;
 
         pros::Task* color_sort_task;
 
@@ -80,5 +83,7 @@ class Intake {
         void toggle();
 
         void hues_debug();
+
+        void handle_driver_input(bool R1_pressed, bool R2_pressed);
         void update_sort(bool R1_pressed, bool R2_pressed);
 };

@@ -82,13 +82,29 @@ void throws_ring(void* intakeVoid) {
 
     Intake* intake = (Intake*)(intakeVoid);
 
+    // moves ring a bit more up the intake
+    intake->intake();
+    pros::delay(75); 
+
+
+    intake->brake();    
     pros::delay(50);
-    intake->brake();
-    
-    pros::delay(1500);
     
     // returns back to normal driver control
     intake->state = 0;
+
+    pros::delay(200);
+    intake->debounce = false;
+}
+
+void Intake::handle_driver_input(bool R1_pressed, bool R2_pressed) {
+    if (R1_pressed == R2_pressed) {
+        brake();
+    } else if (R1_pressed) {
+        intake();
+    } else if (R2_pressed) {
+        outtake();
+    }
 }
 
 // meant to be run as a task, or every 10ms!
@@ -96,93 +112,23 @@ void Intake::update_sort(bool R1_pressed, bool R2_pressed) {
     // keeps color sensor white LED on, so it can more accurately detect color
     color_sensor.set_led_pwm(100);
 
-    // will throw out RED rings!
-    bool RED_OPPONENT = true;
-
-    // original intake code (just driver)
-    /**
-     * if (R1_pressed == R2_pressed) {
-                brake();
-            } else if (R1_pressed) {
-                intake();
-            } else if (R2_pressed) {
-                outtake();
-            }
-
-    printf("color sensor state: %f\n", color_sensor.get_hue());
-     */
+    // debug: print hue detected
 
     if (state == 0) {
-        // checks for red
-        if (color_sensor.get_hue() > 9.0
-            && color_sensor.get_hue() < 15.0
-        ) {
-            if (first_received == 0) {
-                first_received = 1;
-            // ooh lah lah! a new contender!
-            } else if (first_received == 1 && first_ended) {
-                state = 1;
-                color_sort_task = new pros::Task(&throws_ring, this);
-            }
-        // if no bad rings then we calm
-        } else if (
-            color_sensor.get_hue() > 250.0
-            || color_sensor.get_hue() < 9.0
-        ) {
-            if (first_received == 0) {
-                first_received = 2;
-            } else if (first_received == 2 && first_ended) {
-                // if blue was opponent smth would go here
-                second_received = 2;
-            }
-        } else if (
-            // steady state
-            color_sensor.get_hue() > 18.0
-        ) {
-            if (first_received != 0) {
-                first_ended = true;
-            }
-        } else {
-            if (R1_pressed == R2_pressed) {
-                brake();
-            } else if (R1_pressed) {
-                intake();
-            } else if (R2_pressed) {
-                outtake();
-            }
+        if (within_range(color_sensor.get_hue(), RED_MIN, RED_MAX) && debounce == false) {
+            printf("throwing red!");
+            state = 1;
+            debounce = true;
+            color_sort_task = new pros::Task(&throws_ring, this);
         }
+
+        printf("detected hue: %f\n", color_sensor.get_hue());
+
+        handle_driver_input(R1_pressed, R2_pressed);
     } else if (state == 1) {
+        // if running color sort task
         return;
     }
-
-    // // if in free driver control mode
-    // if (state == 0) {
-    //     // checks if we're dealing with a ring we don't want -- for testing it's red
-    //     if (within(color_sensor.get_hue(), color, 10)) {
-    //         std::cout << "detected opposite color ring!" << std::endl;
-    //         // timeout not working bc NOT DETECTING (and sometimes just brakes in the middle for some reason)
-    //         // throw the red ring!
-    //         state = 1;
-    //         color_sort_task = new pros::Task(&throws_ring, this);
-        
-    //     // otherwise run normal driver control version of intake!
-    //     } else {
-            if (R1_pressed == R2_pressed) {
-                brake();
-            } else if (R1_pressed) {
-                intake();
-            } else if (R2_pressed) {
-                outtake();
-            }
-
-    printf("color sensor state: %f\n", color_sensor.get_hue());
-    //     } 
-    
-    // // if running the color sort task
-    // } else if (state == 1) {
-    //     // don't disturb it! wait until color sorting is done
-    //     return;
-    // }
 }
 
 // -- [[ 

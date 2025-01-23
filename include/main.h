@@ -35,6 +35,10 @@
  */
 #define PROS_USE_LITERALS
 
+/**
+ * track width (dist btwn centers of left and right wheels): ~11.75in (cad says 11.878 for some reason)
+ */
+
 #include "api.h"
 #include "lemlib/api.hpp"
 
@@ -47,17 +51,20 @@
 #include "intake.hpp"
 #include "mogo.hpp"
 #include "doinker.hpp"
-#include "rushmech.hpp"
+
+/**
+ * NOTE: The mogo mech is the front of the robot, from a driving perspective and an auton perspective
+ */
+
+extern pros::MotorGroup left_motors;
+extern pros::MotorGroup right_motors;
+extern pros::Controller controller;
 
 extern lemlib::Chassis chassis;
 extern MogoMech mogo;
 extern Intake intake;
 extern Doinker doinker;
 extern Arm arm;
-extern RushMech rushmech;
-
-// how many ms to wait between each loop of driver control
-#define DRIVER_TICK 10
 
 /**
  * If you find doing pros::Motor() to be tedious and you'd prefer just to do

@@ -1,5 +1,7 @@
 #include <cmath>
 
+#include "consts.hpp"
+
 #include "arm.hpp"
 #include "lemlib/pid.hpp"
 #include "main.h"
@@ -7,52 +9,12 @@
 #include "pros/motors.h"
 #include "pros/rtos.hpp"
 #include "util.hpp"
-// // meant to be run as a task
-// float update_info(void* setInfoVoid) {
-//     SetInfo* setInfo = static_cast<SetInfo*>(setInfoVoid);
-
-//     float error = static_cast<float>(*setInfo->target - setInfo->curr_angle);
-
-//     float pid_unit = setInfo->pid->update(error);
-
-//     return pid_unit;
-// };
 
 struct LoadInInfo;
-
-// task
-// void loadin_unstuck(void* loadInInfoVoid) {
-//     LoadInInfo* loadInInfo = static_cast<LoadInInfo*>(loadInInfoVoid);
-
-//     // loadInInfo->intake->outtake();
-//     // pros::delay(500);
-//     // loadInInfo->intake->brake();
-
-//     loadInInfo->arm->state = 1;
-
-//     std::cout << "LOADIN_POS (half reset)" << std::endl;
-//     loadInInfo->arm->set_pos(loadInInfo->arm->LOADIN_POS);
-// }
 
 // calculates error when max_val = both max_val and 0!
 float calc_error(float curr_val, float expected_val) {
     float error = expected_val - curr_val;
-
-    // failed cooking
-
-    // go the negative way (AROUND the loop)
-    // if (std::abs(error) > (max_val / 2)) {
-    //     error = max_val - std::abs(error);
-
-    //     if (curr_val > expected_val) {
-    //         // +
-    //         error = std::abs(error);
-    //     } else if (curr_val < expected_val) {
-    //         error = error * -1;
-    //     }
-    
-    // // just go the normal way! (THROUGH the domain)
-    // }
 
     return error;
 }
@@ -64,12 +26,9 @@ void update(void* fetchInfoVoid) {
     while (true) {
         std::int32_t curr_angle = fetchInfo->encoder->get_position();
 
-        // float error = static_cast<float>(*fetchInfo->target - curr_angle);
-
         float error = calc_error(
             static_cast<float>(*fetchInfo->target)
             , static_cast<float>(curr_angle)
-            // , (360 * 100)
         );
 
         SetInfo setInfo = {
@@ -100,13 +59,13 @@ Arm::Arm(
         intake
         , this
     })
-    , pid(2, 0, 5)
+    , pid(ARM_P, 0, ARM_D)
 {
     brake_mode = arm_brake_mode;
 
     arm_motor.set_brake_mode(arm_brake_mode);
     // resets to 0
-    // encoder.reset_position();
+    encoder.reset_position();
     // resets built-up integral and derivative
     pid.reset();
 
