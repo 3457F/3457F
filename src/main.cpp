@@ -8,10 +8,8 @@
 #include <sstream>
 #include <cstdio>
 
-#include "pros/abstract_motor.hpp"
 #include "pros/misc.h"
 #include "pros/motors.h"
-#include "robodash/api.h"
 
 #include "main.h"
 
@@ -30,6 +28,7 @@ pros::Motor right_front(-10);
 pros::Motor right_mid(9);
 pros::Motor right_back(8);
 
+// TODO: add imu port
 pros::Imu imu(1);
 
 // motor groups
@@ -49,10 +48,10 @@ pros::MotorGroup right_motors({
 
 lemlib::Drivetrain drivetrain(
 	&left_motors, &right_motors,
-	12.426,
+	11.878,
 	lemlib::Omniwheel::NEW_275,
-	450,
-	8
+	600,
+	2
 );
 
 // lateral PID controller -> using kP 10 kD 3
@@ -92,35 +91,6 @@ lemlib::Chassis chassis(drivetrain // drivetrain settings
                         , angular_controller // angular PID settings
                         , sensors // odometry sensors
 );
-
-// driving functions
-void tank() {
-	left_motors.move((controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y) / 127.0) * DRIVE_SPEED);
-	right_motors.move((controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y) / 127.0) * DRIVE_SPEED);
-}
-
-void arcade() {
-	int move = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
-	int turn = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
-
-	left_motors.move(((move + turn) / 127.0) * DRIVE_SPEED);
-	right_motors.move(((move - turn) / 127.0) * DRIVE_SPEED);
-}
-
-/**
- * SUBSYSTEM INITIALIZATION:
-*/
-Intake intake = Intake({
-	-19 // left intake motor
-	, 4 // right intake motor
-}, pros::E_MOTOR_BRAKE_HOLD, 'B');
-
-MogoMech mogo = MogoMech('A');
-
-Slapper slapper = Slapper('C');
-
-// Arm arm = Arm(10, pros::E_MOTOR_BRAKE_HOLD);
-
 
 /**
  * Runs initialization code. This occurs as soon as the program is started.
@@ -183,7 +153,7 @@ void autonomous() {};
  * operator control task will be stopped. Re-enabling the robot will restart the
  * task, not resume it from where it left off.
  */
- 
+
 void test_input() {
 	bool A_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_A);
 	bool X_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_X);
@@ -216,87 +186,6 @@ void opcontrol() {
 
 				continue;
 			}
-
-			/**
-			* CONTROL FETCHING:
-			*/
-			///// HOLD controls
-			// outtake (HOLD)
-			bool R1_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1);
-			// intake (HOLD)
-			bool R2_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2);
-
-			// arm
-			// bool UP_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_UP);
-			// bool DOWN_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN);
-
-			///// TOGGLE controls
-			// intake lift
-			bool X_new_press = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X);
-			// mogo mech
-			bool L2_new_press = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2);
-			// slapper
-			bool Y_new_press = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y);
-
-
-			/**
-			* ARM
-			*/
-			// if (UP_pressed == DOWN_pressed) {
-			// 	arm.brake();
-			// } else if (UP_pressed) {
-			// 	arm.arm_up();
-			// } else if (DOWN_pressed) {
-			// 	arm.arm_down();
-			// }
-
-
-			/**
-			* INTAKE:
-			*/
-			if (R1_pressed == R2_pressed) {
-				// if both controls are pressed or depressed, brake (stop) the intake
-
-				intake.brake();
-			} else if (R1_pressed) {
-				// intaking
-
-				intake.outtake();
-			} else if (R2_pressed) {
-				// outtaking
-
-				intake.intake();
-			}
-
-			/**
-			 * INTAKE LIFT:
-			 */
-			if (X_new_press) {
-				intake.toggle();
-			}
-
-
-			/**
-			 * MOGO:
-			 */
-
-			if (L2_new_press) {
-				mogo.toggle();
-			}
-
-			/**
-			 * SLAPPER:
-			 */
-			if (Y_new_press) {
-				slapper.toggle();
-			}
-
-
-			/**
-			 * DRIVING:
-			 */
-			// replace with tank() if u really don't like tank that much
-			arcade();
 		} else {
 			/* tuning PID! wee! */
 

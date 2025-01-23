@@ -39,18 +39,9 @@
 #include "api.h"
 #include "lemlib/api.hpp"
 
-#include "intake.hpp"
-#include "arm.hpp"
-#include "mogo.hpp"
-#include "slapper.hpp"
 #include "tuning_cli.hpp"
 
 #include "util.hpp"
-
-extern MogoMech mogo;
-extern Intake intake;
-
-#include "autons.hpp"
 
 /**
  * If you find doing pros::Motor() to be tedious and you'd prefer just to do
