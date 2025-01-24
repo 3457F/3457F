@@ -1,7 +1,5 @@
 #pragma "once"
 
-// void prog_skills();
-
 void print_robot_pos(void* chassisVoid);
 
 void red_neg_awp_redo();

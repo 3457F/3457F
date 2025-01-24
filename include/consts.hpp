@@ -16,6 +16,9 @@
 #define ARM_ROT_PORT 11 // reversed in budget code, but rotation sensor flipped on new bot, so
                         // reversed the reversion to make it normal!
 
+// color sensor ports
+#define COLOR_PORT 15
+
 // intake port
 #define INTAKE_PORT 18
 
@@ -33,5 +36,7 @@
 #define DT_ANGULAR_D 26
 
 // arm PID
-#define ARM_P 2
-#define ARM_D 5
+// 1 15 before
+// 2 20 too high
+#define ARM_P 1.5 // 2
+#define ARM_D 1 // 5; 15 works too slow though

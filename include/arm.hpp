@@ -30,13 +30,13 @@ class Arm {
 
         static constexpr double INIT_POS = 0.0 * 100;
         static constexpr double START_POS = 18.0 * 100;
-        static constexpr double LOADIN_POS = 52.0 * 100; // 52
+        // static constexpr double LOADIN_POS = 52.0 * 100; // 52
+        static constexpr double LOADIN_POS = 44.5 * 100; // 43.5 -> 45.5
         static constexpr double DUNK_POS = 100.0 * 100; 
         static constexpr double SCORE_POS = 177.0 * 100;
         static constexpr double AUTON = 200.0 * 100;
-        static constexpr double ALLIANCE_SCORE = 280 * 100;
-        static constexpr double FORCE_POS = 290 * 100;
-
+        static constexpr double ALLIANCE_SCORE = 280.0 * 100;
+        static constexpr double FORCE_POS = 290.0 * 100;
         double last_pos = 0;
 
         pros::Motor arm_motor;

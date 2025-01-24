@@ -1,5 +1,7 @@
 #include "main.h"
 #include "util.hpp"
+
+#include <functional>
 #include <cmath>
 
 
@@ -29,6 +31,27 @@ void arcade() {
 
 	left_motors.move(((move + turn) / 127.0) * DRIVE_SPEED);
 	right_motors.move(((move - turn) / 127.0) * DRIVE_SPEED);
+}
+
+Timer::Timer() {}
+
+void Timer::start() {
+    start_time = pros::millis();
+}
+
+uint32_t Timer::getElapsedTime() {
+    return pros::millis() - start_time;
+}
+
+// ---
+
+uint32_t timer(std::function<void()> func) {
+    Timer timer;
+    timer.start();
+
+    func();
+
+    return timer.getElapsedTime();
 }
 
 /**

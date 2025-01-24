@@ -57,6 +57,24 @@ bool within_range(double num, double min, double max);
 void tank();
 void arcade();
 
+/** 
+ * other util
+ */
+
+class Timer {
+    private:
+        // pros::millis() should be stored here
+        // time since timer was started
+        uint32_t start_time;
+
+    public:
+        Timer();
+
+        void start();
+
+        uint32_t getElapsedTime();
+};
+
 struct tamtpParams {
     int turnTO = TO;
 

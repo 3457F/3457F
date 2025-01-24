@@ -32,7 +32,7 @@
 pros::Controller controller(pros::E_CONTROLLER_MASTER);
 
 // TODO: add imu port
-pros::Imu imu(16);
+pros::Imu imu(17);
 
 // ---
 
@@ -117,10 +117,10 @@ lemlib::Chassis chassis(drivetrain, // drivetrain settings
 // TODO: set intake piston port + color sensor port
 Intake intake = Intake(
 	{INTAKE_PORT}						
-	, pros::E_MOTOR_BRAKE_HOLD	// brake mode of intake
+	, pros::E_MOTOR_BRAKE_COAST	// brake mode of intake
 
 	, 'G'						// intake piston port
-	, 2
+	, COLOR_PORT
 	, true						
 );
 
@@ -328,7 +328,8 @@ void opcontrol() {
 		// replace with tank() if u really don't like tank that much
 		arcade();
 
-		printf("arm pos: %f\n", arm.encoder.get_position());
+		// printf("arm pos: %d | target: %d\n", arm.encoder.get_position(), arm.target);
+		printf("arm current: %d\n", arm.arm_motor.get_current_draw());
 
 		// delay to save system resources
 		pros::delay(DRIVER_TICK);

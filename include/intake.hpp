@@ -8,15 +8,9 @@
 #include <vector>
 
 void throws_ring(void* intakeVoid);
-void update_sort_auton(void* intakeVoid);
 
 class Intake {
     public:
-        // REDO:
-        // red range: 9 - 15 (12 apparently?)
-        // blue RANGE: 200 - 320ish
-        // blue actual: ~240 - 270
-        // steady state: just say 20-40
         double STARTING_HUE;
 
         const double RED_MIN = 0.0;

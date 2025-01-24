@@ -41,7 +41,7 @@ void update(void* fetchInfoVoid) {
         // float pid_unit = update_info(&setInfo);
         float pid_unit = fetchInfo->pid->update(error);
 
-        fetchInfo->arm->arm_motor.move_voltage(-pid_unit);
+        fetchInfo->arm->arm_motor.move_voltage(pid_unit);
         
         pros::delay(20);
     }
@@ -63,9 +63,10 @@ Arm::Arm(
 {
     brake_mode = arm_brake_mode;
 
-    arm_motor.set_brake_mode(arm_brake_mode);
+    // arm_motor.set_brake_mode(arm_brake_mode);
     // resets to 0
     encoder.reset_position();
+
     // resets built-up integral and derivative
     pid.reset();
 
@@ -153,10 +154,10 @@ void Arm::score_cycle() {
     // when at LOADIN_POS, go to SCORE_POS
     else if (state == 1) {
         state = 2;
-        intake->outtake();
-        // intake->
-        pros::delay(50);
-        intake->brake();
+        // intake->outtake();
+        // // intake->
+        // pros::delay(50);
+        // intake->brake();
         // intake->intake_motors.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
         std::cout << "SCORE_POS" << std::endl;
         this->set_pos(SCORE_POS);
