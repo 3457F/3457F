@@ -11,27 +11,9 @@
 // counter-clockwise DOWN
 class Arm {
     public:
-        // actual score position -> 195.4316402 (195)
-        // OUT OF SIZE score position -> 130 (FULLY HORIZ -> OUT OF SIZE)
-
-        // angle constants for different states of the arm
-        
-        // relative to the LOWEST POSITION when "retracted"
-        // (not facing outwards)
-        // -> start pos 330.0
-        // -> load in pos 310.0
-        // -> vert pos 225.0
-
-        // length of arm: 12.159
-        // ~8in can fully extend (6 to be safe)
-        // -> ~60* (60.43164023*) max FROM HORIZ; ~30* (29.56835977*) max FROM VERT
-        // -> score pos 195.0
-
-
         static constexpr double INIT_POS = 0.0 * 100;
         static constexpr double START_POS = 18.0 * 100;
-        // static constexpr double LOADIN_POS = 52.0 * 100; // 52
-        static constexpr double LOADIN_POS = 44.5 * 100; // 43.5 -> 45.5
+        static constexpr double LOADIN_POS = 44.5 * 100;
         static constexpr double DUNK_POS = 100.0 * 100; 
         static constexpr double SCORE_POS = 177.0 * 100;
         static constexpr double AUTON = 200.0 * 100;
@@ -74,9 +56,9 @@ class Arm {
 
         void brake();
 
-        void arm_up();
+        void extend();
 
-        void arm_down();
+        void retract();
 
         void set_pos(float target_val);
 

@@ -63,9 +63,7 @@ Arm::Arm(
 {
     brake_mode = arm_brake_mode;
 
-    // arm_motor.set_brake_mode(arm_brake_mode);
-    // resets to 0
-    encoder.reset_position();
+    arm_motor.set_brake_mode(arm_brake_mode);
 
     // resets built-up integral and derivative
     pid.reset();
@@ -112,14 +110,14 @@ void Arm::brake() {
 }
 
 
-void Arm::arm_up() {
+void Arm::extend() {
     // counter-clockwise is up
-    arm_motor.move(127);
+    arm_motor.move(-127);
 }
 
-void Arm::arm_down() {
+void Arm::retract() {
     // clockwise is down
-    arm_motor.move(-127);
+    arm_motor.move(127);
 }
 
 void Arm::set_pos(float target_val) {
