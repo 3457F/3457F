@@ -322,8 +322,8 @@ void opcontrol() {
 			mogo.toggle();
 		}
 
-		// printf("arm pos: %d | target: %d\n", arm.encoder.get_position(), arm.target);
-		printf("arm current: %d\n", arm.arm_motor.get_current_draw());
+		printf("arm pos: %d | target: %d\n", arm.encoder.get_position(), arm.target);
+		// printf("arm current: %d\n", arm.arm_motor.get_current_draw());
 
 		// delay to save system resources
 		pros::delay(DRIVER_TICK);
