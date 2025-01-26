@@ -14,7 +14,7 @@ int selected = 0;
 Alliance red_blu_store = Alliance::RED;
 /** "0" as per Jordan is NEGATIVE; "1" as per Jordan is POSITIVE */
 Corner pos_neg_store = Corner::NEGATIVE;
-std::vector<Auton> curated_autons = {};
+std::vector<Auton> autons = {};
 bool page_side[2]{true, false};
 
 /**
@@ -75,6 +75,8 @@ std::vector<lv_color_t> color_table = {
 };
 
 void auton_run() {
+    printf("hmmmmmmm...\n");
+
     autons[selected].autonCall();
 }
 
@@ -134,10 +136,10 @@ static void auton_curate(lv_event_t* e) {
     lv_obj_has_state(red_blu, LV_STATE_CHECKED) == true ? red_blu_store = Alliance::BLUE : red_blu_store = Alliance::RED;
     lv_obj_has_state(pos_neg, LV_STATE_CHECKED) == true ? pos_neg_store = Corner::POSITIVE : pos_neg_store = Corner::NEGATIVE;
 
-    for (auto auton : autons) {
+    for (auto auton : auton_table.auton_table) {
         if (auton.alliance == red_blu_store || auton.alliance == Alliance::ALLIANCE_NONE) {
             if (auton.corner == pos_neg_store || auton.corner == Corner::CORNER_NONE) {
-                curated_autons.push_back(auton);
+                autons.push_back(auton);
             }
         }
     }
@@ -178,13 +180,13 @@ static void select_auton(lv_event_t* e) {
         lv_label_set_text(selected_auton, autons[selected].desc.c_str());
         
         lv_obj_set_style_bg_color(mogo_ring_1, color_table[autons[selected].alliance], LV_PART_MAIN);
-        lv_obj_set_size(mogo_ring_back_1, 46, (78 - (13 * curated_autons[selected].mogo1)));
+        lv_obj_set_size(mogo_ring_back_1, 46, (78 - (13 * autons[selected].mogo1)));
         
         lv_obj_set_style_bg_color(mogo_ring_2, color_table[autons[selected].alliance], LV_PART_MAIN);
-        lv_obj_set_size(mogo_ring_back_2, 46, (78 - (13 * curated_autons[selected].mogo2)));
+        lv_obj_set_size(mogo_ring_back_2, 46, (78 - (13 * autons[selected].mogo2)));
 
         // TODO: huh...???
-        curated_autons[selected].alliance_ring == true
+        autons[selected].alliance_ring == true
             ? lv_obj_add_flag(alliance_ring, LV_OBJ_FLAG_HIDDEN)
             : lv_obj_clear_flag(alliance_ring, LV_OBJ_FLAG_HIDDEN);
     }
@@ -192,8 +194,8 @@ static void select_auton(lv_event_t* e) {
 
 static void up_down_btn(lv_event_t* e) {
     if (lv_obj_has_state(auton_select_up, LV_EVENT_CLICKED)) {
-        if (curated_autons.size() % 4 == 0 && j < 4) {
-            j = (curated_autons.size() - 4);
+        if (autons.size() % 4 == 0 && j < 4) {
+            j = (autons.size() - 4);
         } else if (j < 4) {
             j = (autons.size() - (autons.size() % 4));
         } else {
