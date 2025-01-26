@@ -322,12 +322,6 @@ void opcontrol() {
 			mogo.toggle();
 		}
 
-		/**
-		 * DRIVING:
-		 */
-		// replace with tank() if u really don't like tank that much
-		arcade();
-
 		// printf("arm pos: %d | target: %d\n", arm.encoder.get_position(), arm.target);
 		printf("arm current: %d\n", arm.arm_motor.get_current_draw());
 
