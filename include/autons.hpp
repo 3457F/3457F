@@ -21,6 +21,7 @@ void blue_pos_safe();
 // testing
 void test_auton_task();
 void test_auton();
+void rush_mech_auton();
 
 // the hallowed and sacred programming skills
 void prog_skills();

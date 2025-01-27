@@ -51,6 +51,7 @@
 #include "intake.hpp"
 #include "mogo.hpp"
 #include "doinker.hpp"
+#include "rushmech.hpp"
 
 /**
  * NOTE: The mogo mech is the front of the robot, from a driving perspective and an auton perspective
@@ -65,6 +66,7 @@ extern MogoMech mogo;
 extern Intake intake;
 extern Doinker doinker;
 extern Arm arm;
+extern RushMech rush_mech;
 
 /**
  * If you find doing pros::Motor() to be tedious and you'd prefer just to do

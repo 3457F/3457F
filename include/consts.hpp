@@ -11,6 +11,9 @@
 #define RIGHT_MID_PORT 3
 #define RIGHT_FRONT_PORT 10
 
+// tracking wheel port
+#define HORIZ_TRACK_WHEEL 9
+
 // arm ports
 #define ARM_PORT 12
 #define ARM_ROT_PORT 11 // reversed in budget code, but rotation sensor flipped on new bot, so
@@ -25,6 +28,8 @@
 // pneumatics ports
 #define MOGO_MECH_PORT 'A'
 #define DOINKER_PORT 'B'
+#define INTAKE_LIFT_PORT 'C'
+#define RUSH_MECH_PORT 'D'
 
 // ---
 

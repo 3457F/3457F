@@ -1233,6 +1233,39 @@ void test_auton() {
         , 1000
     );
 }
+
+void rush_mech_auton() {
+    chassis.setPose(
+        0
+        , 0
+        , 90
+    );
+
+    rush_mech.toggle();
+
+    // move forward
+    chassis.moveToPoint(
+        24
+        , 0
+        , 1000
+    );
+    waitd;
+
+    // move back
+    chassis.moveToPoint(
+        0
+        , 0
+        , 1000
+        , {
+            .forwards = false
+            , .maxSpeed = 60
+        }
+    );
+    waitd;
+}
+
+// ---- the hallowed prog skills ----
+
 void prog_skills() {
     // CODED RED NEG; NOT GOING FOR RED POS FIRST BC PPL WERE ON THE FIELD WHEN WE WERE TUNING
     chassis.setPose(-60.478, -0.444, 270);

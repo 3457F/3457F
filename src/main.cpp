@@ -21,8 +21,6 @@
 #include "pros/rotation.hpp"
 #include "pros/rtos.hpp"
 #include "robodash/api.h"
-#include "stormlib/api.hpp"
-#include "stormlib/selector.hpp"
 
 /**
  * GENERAL STUFF:
@@ -54,7 +52,7 @@ pros::MotorGroup right_motors({
 }, pros::MotorGearset::blue);
 
 // TODO: get ports
-pros::Rotation horizontal(5);
+pros::Rotation horizontal(HORIZ_TRACK_WHEEL);
 
 /** liblem */
 
@@ -119,7 +117,7 @@ Intake intake = Intake(
 	{INTAKE_PORT}						
 	, pros::E_MOTOR_BRAKE_COAST	// brake mode of intake
 
-	, 'G'						// intake piston port
+	, INTAKE_LIFT_PORT				// intake piston port
 	, COLOR_PORT
 	, true						
 );
@@ -138,6 +136,8 @@ Arm arm = Arm(
 // TODO: set port
 Doinker doinker = Doinker(DOINKER_PORT);
 
+RushMech rush_mech = RushMech(RUSH_MECH_PORT);
+
 /**
  * VARIABLE DEFINITION:
  */
@@ -155,8 +155,6 @@ bool L1_state = false;
  */
 void initialize() {
 	chassis.calibrate();
-
-	// stormlib::initialize();
 
 	auton_table.auton_populate(
         {
@@ -219,9 +217,10 @@ void autonomous() {
 	
 	/** FOR DEBUGGING */
 	// blue_neg_awp_redo();
+	rush_mech_auton();
 
 	/** AUTON SELECTOR RUNNING */
-	auton_run();                                                                                                                                                                   
+	// auton_run();                                                                                                                                                                   
 };
 
 /**
@@ -238,6 +237,9 @@ void autonomous() {
  * task, not resume it from where it left off.
  */
 void opcontrol() {
+	rush_mech_auton();
+	return;
+
 	// brake mode back to coast!
 	chassis.setBrakeMode(pros::motor_brake_mode_e::E_MOTOR_BRAKE_COAST);
 	intake.intake_motors.set_brake_mode_all(pros::motor_brake_mode_e::E_MOTOR_BRAKE_COAST);
@@ -268,6 +270,12 @@ void opcontrol() {
 		
 		// doinker
 		bool Y_new_press = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y);
+
+		// intake lift test
+		bool B_new_press = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B);
+
+		// rush mech test
+		bool UP_new_press = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP);
 
 		// arm
 		bool DOWN_new_press = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN);
@@ -314,6 +322,10 @@ void opcontrol() {
 		 */
 		intake.update_sort(R1_pressed, R2_pressed);
 
+		if (B_new_press) {
+			intake.toggle();
+		}
+
 		/**
 		 * MOGO:
 		 */
@@ -321,6 +333,19 @@ void opcontrol() {
 		if (L2_new_press) {
 			mogo.toggle();
 		}
+
+		/**
+		 * RUSH MECH:
+		 */
+
+		if (UP_new_press) {
+			rush_mech.toggle();
+		}
+
+		/**
+		 * DRIVING:
+		 */
+		arcade();
 
 		printf("arm pos: %d | target: %d\n", arm.encoder.get_position(), arm.target);
 		// printf("arm current: %d\n", arm.arm_motor.get_current_draw());
