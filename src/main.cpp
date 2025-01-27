@@ -3,6 +3,10 @@
 */
 
 #include "main.h"
+#include "robodash/api.h"
+
+rd::Console console;
+pros::Controller controller(pros::E_CONTROLLER_MASTER);
 
 /**
  * Runs initialization code. This occurs as soon as the program is started.
@@ -11,7 +15,18 @@
  * to keep execution time for this mode under a few seconds.
  */
 void initialize() {
+    auton_table.auton_populate(
+        {
+            Auton([]() { printf("red neg\n"); }, Alliance::RED, Corner::NEGATIVE, "Red Neg", "red neg", 0, 0, false),
+            Auton([]() { printf("blue neg\n"); }, Alliance::BLUE, Corner::NEGATIVE, "Blue Neg", "blue neg", 1, 0, false),
+            Auton([]() { printf("red pos\n"); }, Alliance::RED, Corner::POSITIVE, "Red Pos", "red pos", 0, 1, false),
+            Auton([]() { printf("blue pos\n"); }, Alliance::BLUE, Corner::POSITIVE, "Blue Pos", "blue pos", 1, 1, true),
+        }
+    );
 
+    screen_init();
+
+    motor_temp_initialize();
 }
 
 /**
@@ -31,6 +46,7 @@ void disabled() {}
  * starts.
  */
 void competition_initialize() {
+    // rd_view_focus(auton_selector);
 };
 
 /**
@@ -61,24 +77,15 @@ void autonomous() {
  * task, not resume it from where it left off.
  */
 void opcontrol() {
-	auton_table.auton_populate(
-        {
-            Auton([]() { printf("red neg\n"); }, Alliance::RED, Corner::NEGATIVE, "Red Neg", "red neg", 0, 0, false),
-            Auton([]() { printf("blue neg\n"); }, Alliance::BLUE, Corner::NEGATIVE, "Blue Neg", "blue neg", 1, 0, false),
-            Auton([]() { printf("red pos\n"); }, Alliance::RED, Corner::POSITIVE, "Red Pos", "red pos", 0, 1, false),
-            Auton([]() { printf("blue pos\n"); }, Alliance::BLUE, Corner::POSITIVE, "Blue Pos", "blue pos", 1, 1, true),
-        }
-    );
-    
-    screen_init();
-
     printf("initialized screen!\n");
 
-    while (true) {
-        pros::delay(5000);
+    pros::c::controller_print(pros::E_CONTROLLER_MASTER, 0, 0, "warm :D");
 
-        printf("RUNNN\n");
+    // while (true) {
+    //     pros::delay(5000);
 
-        auton_run();
-    }
+    //     printf("RUNNN\n");
+
+    //     auton_run();
+    // }
 }

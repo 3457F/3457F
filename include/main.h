@@ -40,6 +40,9 @@
 #include "ui/filesystem.h"
 #include "ui/Auton.hpp"
 #include "ui/Selector.hpp"
+#include "ui/MotorDash.hpp"
+
+extern rd::Console console;
 
 /**
  * If you find doing pros::Motor() to be tedious and you'd prefer just to do

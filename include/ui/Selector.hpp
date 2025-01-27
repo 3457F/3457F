@@ -3,10 +3,12 @@
 #include <vector>
 
 #include "liblvgl/lvgl.h"
+#include "robodash/api.h"
 
 #include "Auton.hpp"
 
 // heavily inspired by: https://github.com/udderfool/pringle-21S/blob/main/src/ui/brainui.cpp
+// demo found at: https://discord.com/channels/703422250212261939/900591595315929098/1312588676152295516
 
 #define LIGHT_GREEN lv_color_hex(0xcfffe9)
 #define DARK_GREEN lv_color_hex(0x071808)
@@ -21,9 +23,10 @@
 void screen_init();
 void auton_run();
 
-extern lv_obj_t* main_screen;
-extern lv_obj_t* auton_selector;
-extern lv_obj_t* motor_temps;
+// extern lv_obj_t* auton_selector;
+extern rd_view_t* auton_selector;
+// extern lv_obj_t* motor_temps;
+extern rd_view_t* motor_temps;
 // skipping automatic auto builder and manual auto builder
 extern lv_obj_t* page_switch;
 extern lv_obj_t* ring_ind;
