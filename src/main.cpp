@@ -342,11 +342,6 @@ void opcontrol() {
 			rush_mech.toggle();
 		}
 
-		/**
-		 * DRIVING:
-		 */
-		arcade();
-
 		printf("arm pos: %d | target: %d\n", arm.encoder.get_position(), arm.target);
 		// printf("arm current: %d\n", arm.arm_motor.get_current_draw());
 
