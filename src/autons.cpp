@@ -410,7 +410,7 @@ void red_rush(){
 
     // for some reason drifts time to time, gotta slow it down def, but currently reseraching a way.
     // only running the floating cuz there is not need for hooks
-    intake.floating();
+    intake.floating_intake();
     chassis.moveToPose(
         -10.266
         , -49.733
@@ -643,7 +643,7 @@ void blue_neg_awp_redo() {
     // lifts intake in prep to grab first blue ring on top
     intake.lift(1);
     // starts intaking
-    intake.floating();
+    intake.floating_intake();
     // // turns and moves towards first ring on field (on top of stack)
     // turnAndMoveToPoint(
     //     47.123
@@ -1067,7 +1067,7 @@ void blue_pos_safe() {
             .forwards = false
         }
     );
-    intake.floating();
+    intake.floating_intake();
     waitd;
     // plops intake onto stack to create friction that intakes the
     // blue ring on the stack 
@@ -1157,7 +1157,7 @@ void blue_rush() {
 
     arm.set_pos(arm.START_POS);
 
-    intake.floating();
+    intake.floating_intake();
 
     // get first blue ring on field
     chassis.follow(

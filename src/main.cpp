@@ -114,12 +114,14 @@ lemlib::Chassis chassis(drivetrain, // drivetrain settings
 
 // TODO: set intake piston port + color sensor port
 Intake intake = Intake(
-	{INTAKE_PORT}						
+	{INTAKE_PORT}
+	, FLOATING_PORT
 	, pros::E_MOTOR_BRAKE_COAST	// brake mode of intake
 
 	, INTAKE_LIFT_PORT				// intake piston port
 	, COLOR_PORT
-	, true						
+	, INTAKE_LIM_SWITCH_PORT
+	, 0
 );
 
 // TODO: set ports
@@ -317,7 +319,8 @@ void opcontrol() {
 		/**
 		 * INTAKE:
 		 */
-		intake.update_sort(R1_pressed, R2_pressed);
+		// intake.update_sort(R1_pressed, R2_pressed);
+		intake.handle_driver_input(R1_pressed, R2_pressed);
 
 		if (B_new_press) {
 			intake.toggle();
@@ -344,8 +347,12 @@ void opcontrol() {
 		 */
 		arcade();
 
-		printf("arm pos: %d | target: %d\n", arm.encoder.get_position(), arm.target);
+		// printf("arm pos: %d | target: %d\n", arm.encoder.get_position(), arm.target);
 		// printf("arm current: %d\n", arm.arm_motor.get_current_draw());
+		// intake.hues_debug();
+
+		intake.check_color_sensor();
+		intake.check_limit_switch();
 
 		// delay to save system resources
 		pros::delay(DRIVER_TICK);
