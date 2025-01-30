@@ -237,9 +237,6 @@ void autonomous() {
  * task, not resume it from where it left off.
  */
 void opcontrol() {
-	rush_mech_auton();
-	return;
-
 	// brake mode back to coast!
 	chassis.setBrakeMode(pros::motor_brake_mode_e::E_MOTOR_BRAKE_COAST);
 	intake.intake_motors.set_brake_mode_all(pros::motor_brake_mode_e::E_MOTOR_BRAKE_COAST);

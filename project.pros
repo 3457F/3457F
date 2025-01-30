@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "3457F NO DT",
+    "project_name": "3457F",
     "target": "v5",
     "templates": {
       "LemLib": {
@@ -318,7 +318,7 @@
     },
     "upload_options": {
       "after": "screen",
-      "description": "3457F's bot code MINUS driving",
+      "description": "3457F's OFFICIAL PRODUCTION CODE",
       "icon": "pros",
       "slot": 1
     },

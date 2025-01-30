@@ -111,18 +111,18 @@ void Intake::update_sort(bool R1_pressed, bool R2_pressed) {
 
     // debug: print hue detected
 
-    if (state == 0) {
-        if (within_range(color_sensor.get_hue(), RED_MIN, RED_MAX) && debounce == false) {
-            state = 1;
-            // printf("throwing ring!\n");
-            // color_sort_task = new pros::Task(&throws_ring, this);
-        }
+    // if (state == 0) {
+    //     if (within_range(color_sensor.get_hue(), RED_MIN, RED_MAX) && debounce == false) {
+    //         state = 1;
+    //         // printf("throwing ring!\n");
+    //         // color_sort_task = new pros::Task(&throws_ring, this);
+    //     }
 
-        printf("detected hue: %f\n", color_sensor.get_hue());
+    //     printf("detected hue: %f\n", color_sensor.get_hue());
 
-        handle_driver_input(R1_pressed, R2_pressed);
-    } else if (state == 1) {
-        // if running color sort task
-        return;
-    }
+    handle_driver_input(R1_pressed, R2_pressed);
+    // } else if (state == 1) {
+    //     // if running color sort task
+    //     return;
+    // }
 }
