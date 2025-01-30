@@ -22,15 +22,16 @@
 // color sensor ports
 #define COLOR_PORT 15
 
-// intake port
+// intake ports
 #define INTAKE_PORT 18
+#define FLOATING_PORT 1
 
 // pneumatics ports
 #define MOGO_MECH_PORT 'A'
 #define DOINKER_PORT 'B'
 #define INTAKE_LIFT_PORT 'C'
 #define RUSH_MECH_PORT 'D'
-
+#define INTAKE_LIM_SWITCH_PORT 'E'
 // ---
 
 // dt PID
