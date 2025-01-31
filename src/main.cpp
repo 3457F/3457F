@@ -161,24 +161,20 @@ void initialize() {
 	auton_table.auton_populate(
         {
 			// red neg
-			Auton(red_neg_elims_new, Alliance::RED, Corner::NEGATIVE, "Red Neg Elims", "scores 4 rings, 2 stakes", 3, 0, true)
-			, Auton(red_neg_awp_redo, Alliance::RED, Corner::NEGATIVE, "Red Neg SAWP (OLD)", "scores 4 rings, 2 stakes & touches ladder (AARAV CODE)", 3, 0, true)
-			, Auton(red_neg_awp_redo_new, Alliance::RED, Corner::NEGATIVE, "Red Neg SAWP", "scores 4 rings, 2 stakes & touches ladder", 3, 0, true)
 			
 			// red pos
-			, Auton(red_rush, Alliance::RED, Corner::POSITIVE, "Red Rush", "2 rings (pos corner) + 1 ring", 2, 1, false)
-
+			Auton(red_positive_awp, Alliance::RED, Corner::POSITIVE, "Red Swap", "No ring stack! + 3 rings", 2, 0, true),
 			// blue neg
-			, Auton(blue_neg_elims, Alliance::BLUE, Corner::NEGATIVE, "Blue Neg Elims", "scores 4 rings, 2 stakes", 3, 0, true)
-			, Auton(blue_neg_awp_redo, Alliance::BLUE, Corner::NEGATIVE, "Blue Neg SAWP", "scores 4 rings, 2 stakes & touches ladder", 3, 0, true)
+			
 			
 			// blue pos
-			, Auton(blue_rush, Alliance::BLUE, Corner::POSITIVE, "Blue Rush [DON'T USE]", "2 rings (pos corner) + 1 ring", 2, 1, false)
-			, Auton(blue_pos_safe, Alliance::BLUE, Corner::POSITIVE, "Blue Positive Safe", "3 rings + clears positive corner", 3, 0, false)
-        }
-    );
 
+		}
+	);
+		
+		
 	screen_init();
+	
 }
 
 /**
@@ -220,7 +216,7 @@ void autonomous() {
 	/** FOR DEBUGGING */
 	// blue_neg_awp_redo();
 	// rush_mech_auton();
-	red_positive_awp_mecha();
+	red_positive_awp();
 
 	/** AUTON SELECTOR RUNNING */
 	// auton_run();                                                                                                                                                                   
