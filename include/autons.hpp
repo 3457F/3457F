@@ -2,6 +2,12 @@
 
 void print_robot_pos(void* chassisVoid);
 
+// NEW AUTONS
+void red_positive_awp_mecha();
+
+
+// ----
+
 void red_neg_awp_redo();
 void red_neg_elims();
 void red_neg_awp_redo_new();

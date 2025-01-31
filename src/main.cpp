@@ -219,7 +219,8 @@ void autonomous() {
 	
 	/** FOR DEBUGGING */
 	// blue_neg_awp_redo();
-	rush_mech_auton();
+	// rush_mech_auton();
+	red_positive_awp_mecha();
 
 	/** AUTON SELECTOR RUNNING */
 	// auton_run();                                                                                                                                                                   

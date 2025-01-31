@@ -10,9 +10,7 @@
 #include <set>
 
 // import pure pursuit files
-ASSET(red_neg_first_mogo_txt);
-ASSET(third_ring_txt);
-ASSET(blue_rush_first_part_txt);
+ASSET(mecha_red_pos_awp_corner_txt);
 
 void print_robot_pos(void* chassisVoid) {
     lemlib::Chassis* chassis
@@ -31,6 +29,109 @@ void print_robot_pos(void* chassisVoid) {
         pros::delay(20);
     } 
 }
+
+/**
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * NEW AUTONSSSSS
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ */
+
+void red_positive_awp_mecha() {
+    chassis.setPose(
+        -58.386
+        , -24
+        , 90
+    );
+
+    // TODO: make a pure pursuit path
+    // that slows down just at the end, to
+    // save time
+    // goes to mogo
+    chassis.moveToPoint(
+        // -30.323
+        -28.69
+        // , -23.647
+        , -24
+        , 1500
+        , {
+            .maxSpeed = 70
+        }
+    );
+    chassis.waitUntil(25.5);
+    mogo.clamp();
+    waitd;
+
+    // turns intake towards the first stack
+    chassis.turnToPoint(
+        -21.849
+        , -48.6
+        , 1000
+        , {
+            .forwards = false
+            , .direction = lemlib::AngularDirection::CCW_COUNTERCLOCKWISE
+        }
+    );
+    waitd;
+
+    // to intake preload + ring stack!
+    intake.intake();
+
+    // goes to ring stack
+    chassis.moveToPoint(
+        -24.395
+        , -48.771
+        , 1500
+        , {
+            .forwards = false
+        }
+    );
+    waitd;
+    // waits for ring to be scored
+    pros::delay(500);
+
+    // brake so that next blue ring don't get in
+    intake.brake();
+
+    intake.lift(1);
+    arm.set_pos(arm.LOADIN_POS);
+    // brake intake temporarily j in case
+    intake.brake();
+
+    // TODO: make pure pursuit path for this
+    // go to corner stack
+    chassis.follow(
+        mecha_red_pos_awp_corner_txt
+        , 5
+        , 2000
+        , false
+    );
+}
+
+// ------
+// ------
+// ------
+
+// ------
+
+// ------
+
+// ------
+
+// ------
+
 
 /**
  * PART OF THE ALG for 
@@ -1159,14 +1260,14 @@ void blue_rush() {
 
     intake.floating_intake();
 
-    // get first blue ring on field
-    chassis.follow(
-        blue_rush_first_part_txt
-        , 10
-        , 1000
-        , false
-    );
-    waitd;
+    // // get first blue ring on field
+    // chassis.follow(
+    //     blue_rush_first_part_txt
+    //     , 10
+    //     , 1000
+    //     , false
+    // );
+    // waitd;
 
     // move to mogo
     turnAndMoveToPoint(
