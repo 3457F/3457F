@@ -49,7 +49,7 @@ void print_robot_pos(void* chassisVoid) {
  * 
  */
 
-void red_positive_awp() {
+void red_positive_awp_nostack() {
     chassis.setPose(
         -58.386
         , -24
