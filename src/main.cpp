@@ -164,6 +164,8 @@ void initialize() {
 			
 			// red pos
 			Auton(red_positive_awp_nostack, Alliance::RED, Corner::POSITIVE, "Red Swap", "No ring stack! + 3 rings", 2, 0, true),
+			Auton(red_negative_five_ring, RED, NEGATIVE, "Red 5 ring", "5 rings on mogo, WITH RING STACK", 5, 0, true),
+			
 			// blue neg
 			
 			

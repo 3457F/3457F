@@ -120,6 +120,40 @@ void red_positive_awp_nostack() {
     );
 }
 
+void red_negative_five_ring(){
+    
+    chassis.setPose(-54.319, 31.127, 270);
+
+    turnAndMoveToPoint(-10.177, 42.041, { .moveTO = 1300, .forwards = false});
+    intake.intake(); 
+    waitd;
+    intake.is_ring_on_top(); 
+    intake.brake();
+
+    chassis.moveToPose(-17.875, 27.132, 56.5, 1950, {.forwards = true});
+    waitd;
+    mogo.toggle();
+
+    chassis.moveToPose(-17.875, 27.132, 56.5, 1200, {.forwards = false}); 
+    pros::delay(650);
+    intake.intake(); 
+    waitd;
+
+    chassis.moveToPose(-48.959, 24.111, 54, 1500, {.forwards = false});
+    waitd; 
+    
+    chassis.moveToPose(-47.595, 6.961, 355, 1500, {.forwards = false});
+    intake.lift(true);
+    waitd;
+
+    intake.lift(false);
+    intake.is_ring_on_top(); 
+    pros::delay(800);
+    intake.brake();
+
+}
+
+
 
 void move_forward() {
     chassis.setPose(
