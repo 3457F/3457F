@@ -106,9 +106,6 @@ void red_positive_awp_nostack() {
     intake.brake();
 
     intake.lift(1);
-    arm.set_pos(arm.LOADIN_POS);
-    // brake intake temporarily j in case
-    intake.brake();
 
     // TODO: make pure pursuit path for this
     // go to corner stack
@@ -118,10 +115,13 @@ void red_positive_awp_nostack() {
         , 2000
         , false
     );
+     arm.set_pos(arm.LOADIN_POS);
+     intake.intake();
+    
 }
 
 void red_negative_five_ring(){
-    
+
     chassis.setPose(-54.319, 31.127, 270);
 
     turnAndMoveToPoint(-10.177, 42.041, { .moveTO = 1300, .forwards = false});
@@ -152,8 +152,6 @@ void red_negative_five_ring(){
     intake.brake();
 
 }
-
-
 
 void move_forward() {
     chassis.setPose(
