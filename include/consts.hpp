@@ -35,11 +35,11 @@
 // ---
 
 // dt PID
-#define DT_LATERAL_P 8
-#define DT_LATERAL_D 21
+#define DT_LATERAL_P 10
+#define DT_LATERAL_D 3
 
-#define DT_ANGULAR_P 3.25
-#define DT_ANGULAR_D 26
+#define DT_ANGULAR_P 7
+#define DT_ANGULAR_D 63
 
 // arm PID
 // 1 15 before
