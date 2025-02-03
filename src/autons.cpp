@@ -106,40 +106,23 @@ void red_positive_awp_nostack() {
     chassis.moveToPoint(
         -26.332
         , -26.5
-        , 1500
+        , 1300
         , {
-            .maxSpeed = 60
+            .maxSpeed = 90
         }
     );
     waitd;
+    // edit aarav, what the bron ah statement doin, (in english: the chassis.waituntil is doing nthing lol)
     chassis.waitUntil(27);
     mogo.clamp();
     // waitd;
 
-    // turns INTAKE SIDE towards the first stack
-    chassis.turnToPoint(
-        -24.395
-        , -48.771
-        , 1000
-        , {
-            .forwards = false
-            , .direction = lemlib::AngularDirection::CCW_COUNTERCLOCKWISE
-        }
-    );
-    waitd;
-
-    // start intake to score preload + ring stack!
+    //going to middle stack rings 
+    // TODO: integrate functions into tamtp
+    turnAndMoveToPoint(-24.395, -48.771, { .moveTO = 1200, .forwards = false});
+    //delay for turning so ring doesnt go "newhow ma"
+    pros::delay(700);
     intake.intake();
-
-    // goes to ring stack
-    chassis.moveToPoint(
-        -24.395
-        , -48.771
-        , 1500
-        , {
-            .forwards = false
-        }
-    );
     waitd;
 
     // go to corner stack
