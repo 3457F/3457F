@@ -9,8 +9,12 @@
 #include <chrono>
 #include <set>
 
-// import pure pursuit files
+// declares pure pursuit files
+
+// red nostack awp
 ASSET(mecha_red_pos_awp_corner_txt);
+ASSET(mecha_red_pos_awp_mogo_txt);
+ASSET(mecha_red_pos_awp_stake_txt);
 
 void print_robot_pos(void* chassisVoid) {
     lemlib::Chassis* chassis
@@ -50,34 +54,72 @@ void print_robot_pos(void* chassisVoid) {
  */
 
 void red_positive_awp_nostack() {
+    // START POS WHEN APPROACHING MOGO STRAIGHT
+    // chassis.setPose(
+    //     -58.386
+    //     , -24
+    //     , 90
+    // );
+
+    // MOGO APPROACH CODE FOR STRAIGHT
+    // chassis.moveToPoint(
+    //     // -30.323
+    //     -28.69
+    //     // , -23.647
+    //     , -24
+    //     , 1500
+    //     , {
+    //         .maxSpeed = 70
+    //     }
+    // );
+    // chassis.waitUntil(25.5);
+    // mogo.clamp();
+    // waitd;
+    
+    // // approaches mogo
+    // chassis.follow(
+    //     mecha_red_pos_awp_mogo_txt
+    //     , 15
+    //     , 1500
+    // );
+    // chassis.waitUntil(25.5);
+    // mogo.toggle();
+    // waitd;
+
     chassis.setPose(
-        -58.386
-        , -24
+        -58.568
+        , -40.501
         , 90
     );
-
-    // TODO: make a pure pursuit path
-    // that slows down just at the end, to
-    // save time
-    // goes to mogo
-    chassis.moveToPoint(
-        // -30.323
-        -28.69
-        // , -23.647
-        , -24
-        , 1500
+    
+    /* turn in place and move to mogo */
+    chassis.turnToPoint(
+        -26.332
+        , -26.5
+        , 750
         , {
-            .maxSpeed = 70
+            .direction = lemlib::AngularDirection::CCW_COUNTERCLOCKWISE
         }
     );
-    chassis.waitUntil(25.5);
-    mogo.clamp();
     waitd;
 
-    // turns intake towards the first stack
+    chassis.moveToPoint(
+        -26.332
+        , -26.5
+        , 1500
+        , {
+            .maxSpeed = 60
+        }
+    );
+    waitd;
+    chassis.waitUntil(27);
+    mogo.clamp();
+    // waitd;
+
+    // turns INTAKE SIDE towards the first stack
     chassis.turnToPoint(
-        -21.849
-        , -48.6
+        -24.395
+        , -48.771
         , 1000
         , {
             .forwards = false
@@ -86,7 +128,7 @@ void red_positive_awp_nostack() {
     );
     waitd;
 
-    // to intake preload + ring stack!
+    // start intake to score preload + ring stack!
     intake.intake();
 
     // goes to ring stack
@@ -99,15 +141,7 @@ void red_positive_awp_nostack() {
         }
     );
     waitd;
-    // waits for ring to be scored
-    pros::delay(500);
 
-    // brake so that next blue ring don't get in
-    intake.brake();
-
-    intake.lift(1);
-
-    // TODO: make pure pursuit path for this
     // go to corner stack
     chassis.follow(
         mecha_red_pos_awp_corner_txt
@@ -115,9 +149,70 @@ void red_positive_awp_nostack() {
         , 2000
         , false
     );
-     arm.set_pos(arm.LOADIN_POS);
-     intake.intake();
-    
+    // TODO: add color sensor logic to queue intake robot until after turn
+    // TODO: cumulative dist or dist after last call?
+    // lift ONCE the ring stack ring is in
+    chassis.waitUntil(7);
+    intake.lift(1);
+    waitd; 
+
+    // queues arm so next ring goes into arm; CORNER RINGS NOT LIKELY TO EASILIY ENTER ROBOT
+    arm.set_pos(arm.LOADIN_POS);
+
+    /* turns like ajksldfjaslkdfjasdf */
+    // TODO: color sort
+    chassis.turnToHeading(
+        90
+        , 750
+    );
+    waitd;
+
+    // drops intake... hopefully onto red ring!
+    intake.toggle();
+
+    chassis.turnToHeading(
+        45
+        , 750
+    );
+
+    chassis.turnToHeading(
+        90
+        , 750
+    );
+
+    chassis.turnToHeading(
+        45
+        , 750
+    );
+
+    // TODO: hopefully alr oriented w point...?
+    // moves backwards
+    chassis.moveToPoint(
+        -47.054
+        , -46.969
+        , 1500
+    );
+
+    /* moves towards alliance steak */
+    chassis.turnToHeading(
+        180
+        , 750
+    );
+
+    chassis.follow(
+        mecha_red_pos_awp_stake_txt
+        , 5
+        , 1500
+        , false
+    );
+
+    // extend arm to score!
+    // TODO: ARM GETS STUCK WHEN SCORING ON ALLIANCE
+    arm.set_pos(arm.ALLIANCE_SCORE);
+
+    pros::delay(750);
+
+    arm.set_pos(arm.START_POS);
 }
 
 void red_negative_five_ring(){

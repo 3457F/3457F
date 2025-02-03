@@ -280,9 +280,6 @@ void opcontrol() {
 		bool RIGHT_new_press = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT);
 		bool L1_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1);
 		
-		// mogo
-		bool X_new_press = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X);
-
 		/**
 		 * ARM:
 		 */
@@ -350,6 +347,7 @@ void opcontrol() {
 		// printf("arm current: %d\n", arm.arm_motor.get_current_draw());
 		// intake.hues_debug();
 
+		// FOR COLOR SORT
 		intake.check_color_sensor();
 		intake.check_limit_switch();
 
