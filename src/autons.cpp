@@ -144,7 +144,7 @@ void red_positive_awp_nostack() {
     turnAndMoveToPoint(-60.75, -10.189, {.forwards = false});
     waitd; 
 
-
+waitd;
 
     
     // turnAndMoveToPoint(-58.983, -61.872, {.forwards = false, .async = true });
