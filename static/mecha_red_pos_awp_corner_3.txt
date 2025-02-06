@@ -1,0 +1,34 @@
+-24.395, -48.771, 55.941
+-25.494, -50.442, 51.2
+-26.681, -52.051, 45.973
+-27.961, -53.587, 40.071
+-29.339, -55.035, 33.134
+-30.819, -56.38, 31
+-32.407, -57.595, 31
+-34.092, -58.67, 31
+-35.862, -59.599, 31
+-37.704, -60.377, 31
+-39.61, -60.98, 31
+-41.558, -61.427, 33.718
+-43.534, -61.735, 48.739
+-45.527, -61.893, 56.891
+-47.526, -61.944, 63.315
+-49.525, -61.89, 59.168
+-51.521, -61.762, 54.708
+-53.512, -61.576, 49.849
+-55.501, -61.364, 44.463
+-57.49, -61.159, 38.327
+-59.485, -61.018, 31
+-61.484, -61.04, 31
+-63.438, -61.431, 31
+-65.063, -62.55, 31
+-65.879, -64.351, 31
+-66.066, -66.136, 0
+-66.066, -66.136, 0
+-68.149, -86.027, 0
+endData
+127
+127
+200
+-24.395, -48.771, -40.287, -74.501, -66.066, -51.967, -66.066, -66.136
+#PATH.JERRYIO-DATA {"appVersion":"0.8.3","format":"LemLib v0.5","gc":{"robotWidth":14,"robotHeight":13.5,"robotIsHolonomic":false,"showRobot":true,"uol":2.54,"pointDensity":2,"controlMagnetDistance":1.968503937007874,"fieldImage":{"displayName":"V5RC 2025 - High Stakes","signature":"V5RC 2025 - High Stakes","origin":{"__type":"built-in"}},"coordinateSystem":"VEX Gaming Positioning System"},"paths":[{"segments":[{"controls":[{"uid":"lqZdLRDkSv","x":-24.395,"y":-48.771,"lock":false,"visible":true,"heading":180,"__type":"end-point"},{"uid":"nX9PjhcqBm","x":-40.28677033529212,"y":-74.50090249504386,"lock":false,"visible":true,"__type":"control"},{"uid":"7DeiYn2n4u","x":-66.0656116830051,"y":-51.967458373862115,"lock":false,"visible":true,"__type":"control"},{"uid":"JiQ9fJXoTJ","x":-66.066,"y":-66.136,"lock":false,"visible":true,"heading":45,"__type":"end-point"}],"speedProfiles":[],"lookaheadKeyframes":[],"uid":"8tYHHldpFz"}],"pc":{"speedLimit":{"minLimit":{"value":0,"label":"0"},"maxLimit":{"value":127,"label":"127"},"step":1,"from":31,"to":127},"bentRateApplicableRange":{"minLimit":{"value":0,"label":"0"},"maxLimit":{"value":1,"label":"1"},"step":0.001,"from":0,"to":0.015},"maxDecelerationRate":127},"name":"Path","uid":"2HBhqXpXuY","lock":false,"visible":true}]}

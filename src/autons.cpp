@@ -12,7 +12,7 @@
 // declares pure pursuit files
 
 // red nostack awp
-ASSET(mecha_red_pos_awp_corner_txt);
+ASSET(mecha_red_pos_awp_corner_3_txt);
 ASSET(mecha_red_pos_awp_mogo_txt);
 ASSET(mecha_red_pos_awp_stake_txt);
 
@@ -87,115 +87,146 @@ void red_positive_awp_nostack() {
     // waitd;
 
     chassis.setPose(
-        -58.568
-        , -40.501
+        -54.726
+        , -36.09
         , 90
     );
     
     /* turn in place and move to mogo */
-    chassis.turnToPoint(
-        -26.332
-        , -26.5
-        , 750
-        , {
-            .direction = lemlib::AngularDirection::CCW_COUNTERCLOCKWISE
-        }
-    );
-    waitd;
-
-    chassis.moveToPoint(
-        -26.332
-        , -26.5
-        , 1300
-        , {
-            .maxSpeed = 90
-        }
-    );
-    waitd;
-    // edit aarav, what the bron ah statement doin, (in english: the chassis.waituntil is doing nthing lol)
-    chassis.waitUntil(27);
-    mogo.clamp();
+    // chassis.turnToPoint(
+    //     -33.144
+    //     , -28.396
+    //     , 750
+    //     , {
+    //         .direction = lemlib::AngularDirection::CCW_COUNTERCLOCKWISE
+    //     }
+    // );
     // waitd;
 
-    //going to middle stack rings 
-    // TODO: integrate functions into tamtp
-    turnAndMoveToPoint(-24.395, -48.771, { .moveTO = 1200, .forwards = false});
-    //delay for turning so ring doesnt go "newhow ma"
-    pros::delay(700);
-    intake.intake();
+    
+    // chassis.moveToPoint(
+    //    -33.144
+    //     , -28.396
+    //     , 1300
+    //     , {
+    //         .maxSpeed = 65
+    //     }
+    // );
+    
+    
+    chassis.moveToPoint(-41.396, -36.09, 450);
+    arm.set_pos(arm.START_POS);
+    waitd; 
+    turnAndMoveToPoint(-30.737, -29.287, {.forwards = true, .mvMaxSpeed = 75});
+    waitd;
+    mogo.clamp();
+    pros::delay(500);
+    intake.intake(); 
+
+    chassis.moveToPose(-22.586, -49.579, 340, 1200, {.forwards = false});
+    waitd;
+    pros::delay(500);
+    chassis.moveToPose( -61.529, -35.524, 15, 2000, {.forwards = false, .minSpeed = 100  });
     waitd;
 
-    // go to corner stack
-    chassis.follow(
-        mecha_red_pos_awp_corner_txt
-        , 5
-        , 2000
-        , false
-    );
-    // TODO: add color sensor logic to queue intake robot until after turn
-    // TODO: cumulative dist or dist after last call?
-    // lift ONCE the ring stack ring is in
-    chassis.waitUntil(7);
-    intake.lift(1);
+    doinker.toggle();
+    chassis.moveToPoint(-62.504, -56.377, 1500, {.forwards = false});
+    waitd;
+    chassis.turnToHeading(310, 750);
+    waitd;
+
+    arm.set_pos(arm.LOADIN_POS);
+    doinker.toggle();
+    turnAndMoveToPoint(-55.683, -71.773, { .moveTO = 2000, .forwards = false});
+    waitd; 
+    chassis.turnToHeading(270, 650);
+    waitd;
+    turnAndMoveToPoint(-60.75, -10.189, {.forwards = false});
     waitd; 
 
-    // queues arm so next ring goes into arm; CORNER RINGS NOT LIKELY TO EASILIY ENTER ROBOT
-    arm.set_pos(arm.LOADIN_POS);
 
-    /* turns like ajksldfjaslkdfjasdf */
-    // TODO: color sort
-    chassis.turnToHeading(
-        90
-        , 750
-    );
-    waitd;
 
-    // drops intake... hopefully onto red ring!
-    intake.toggle();
+    
+    // turnAndMoveToPoint(-58.983, -61.872, {.forwards = false, .async = true });
+    // intake.outtake();
+    // chassis.waitUntil(10); 
+    // doinker.toggle();
+    // waitd;
 
-    chassis.turnToHeading(
-        45
-        , 750
-    );
 
-    chassis.turnToHeading(
-        90
-        , 750
-    );
 
-    chassis.turnToHeading(
-        45
-        , 750
-    );
 
-    // TODO: hopefully alr oriented w point...?
-    // moves backwards
-    chassis.moveToPoint(
-        -47.054
-        , -46.969
-        , 1500
-    );
+    // //going to middle stack rings 
+    // // TODO: integrate functions into tamtp
+    //  turnAndMoveToPoint(-32.367, -29.23, {.forwards = true, .mvMaxSpeed = 60});
+    // intake.intake();
 
-    /* moves towards alliance steak */
-    chassis.turnToHeading(
-        180
-        , 750
-    );
+    // // chassis.moveToPose(-23.332, -46.827, 170.8, 1200, {.forwards =false, .minSpeed 120})
+    // //delay for turning so ring doesnt go "newhow ma"
+    // waitd;
 
-    chassis.follow(
-        mecha_red_pos_awp_stake_txt
-        , 5
-        , 1500
-        , false
-    );
+    // turnAndMoveToPoint(-58.76, -61.443,{.moveTO = 1800, .forwards = false });
+    // // queues arm so next ring goes into arm; CORNER RINGS NOT LIKELY TO EASILIY ENTER ROBOT
+    // doinker.toggle();
+    // waitd;
+    // chassis.turnToHeading(90, 650);
+    // doinker.toggle();
 
-    // extend arm to score!
-    // TODO: ARM GETS STUCK WHEN SCORING ON ALLIANCE
-    arm.set_pos(arm.ALLIANCE_SCORE);
+    // /* turns like ajksldfjaslkdfjasdf */
+    // // TODO: color sort
+    // chassis.turnToHeading(
+    //     90
+    //     , 750
+    // );
+    // waitd;
 
-    pros::delay(750);
+    // // drops intake... hopefully onto red ring!
+    // intake.toggle();
 
-    arm.set_pos(arm.START_POS);
+    // // chassis.turnToHeading(
+    // //     45
+    // //     , 350
+    // // );
+
+    // // chassis.turnToHeading(
+    // //     90
+    // //     , 250
+    // // );
+
+    // // chassis.turnToHeading(
+    // //     45
+    // //     , 350
+    // // );
+
+    // // TODO: hopefully alr oriented w point...?
+    // // moves backwards
+    // chassis.moveToPoint(
+    //     -47.054
+    //     , -46.969
+    //     , 1500
+    // );
+
+    // /* moves towards alliance steak */
+    // chassis.turnToHeading(
+    //     180
+    //     , 650
+    // );
+
+    // // chassis.follow(
+    // //     mecha_red_pos_awp_stake_txt
+    // //     , 5
+    // //     , 1500
+    // //     , false
+    // // );
+
+    // chassis.moveToPose(-57.152, -7.269, -113, 2550,{.forwards = false, .minSpeed = 127});
+    // // extend arm to score!
+    // // TODO: ARM GETS STUCK WHEN SCORING ON ALLIANCE
+    // // arm.set_pos(arm.ALLIANCE_SCORE);
+
+    // pros::delay(750);
+
+
 }
 
 void red_negative_five_ring(){
