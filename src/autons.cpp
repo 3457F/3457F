@@ -153,7 +153,7 @@ void red_negative_awp() {
     pros::delay(250);
 
     arm.set_pos(arm.INIT_POS);
-    chassis.moveToPose(-20.212, 15.281, -45, TO);
+    chassis.moveToPose(-20.212, 15.281, 324.5, TO, {.forwards = false});
     waitd;
 }
 
