@@ -113,6 +113,73 @@ void red_positive_awp_nostack() {
     waitd;
 }
 
+void red_rush(){
+    chassis.setPose(
+        -54.473
+        , -59
+        , 270
+    );
+
+    // setting arm to dunk POS to ensure that arm doesn't get in the way of the hooks later on
+    arm.set_pos(arm.DUNK_POS);
+
+    // for some reason drifts time to time, gotta slow it down def, but currently reseraching a way.
+    // only running the floating cuz there is not need for hooks
+    intake.intake();
+    chassis.moveToPose(
+        -10.266
+        , -49.733
+        , 261
+        , 1250
+        , {
+            .forwards = false
+            , .maxSpeed = 127
+            , .minSpeed = 114
+        }
+    );
+    waitd;
+    intake.brake();
+
+    //doinker to touch/grab the goal
+    doinker.toggle();
+    pros::delay(420);
+
+    //moving the robot and the goal back!
+    chassis.moveToPose(-40.092, -56.182, 261, 1200, {.forwards = true});
+    waitd;
+    doinker.toggle();
+    
+    //going to clamp mogo
+    chassis.moveToPose(-6.778, -50.238, 270, 1200, {.forwards = true, .minSpeed = 60});
+    waitd;
+    mogo.toggle();
+    intake.intake();
+    pros::delay(450);
+
+    //moves towards our positive corner and drops mogo.
+    turnAndMoveToPoint( -47.985, -61.671, {.forwards =true});
+    waitd;
+    mogo.toggle();
+
+    // chassis.moveToPose(-23.592, -32.826, 0, 1150, {.forwards = true});
+    // waitd;
+    chassis.moveToPose(-24.592,-27.826 , 0, 2500, {.forwards = true,});
+    waitd; 
+    mogo.toggle();
+
+//     intake.lift(true);
+//     turnAndMoveToPoint(-41.066, -6.291, {.forwards = false, .mvMaxSpeed = 105});
+//     waitd;
+//    intake.lift(false);
+//    pros::delay(860);
+
+    chassis.turnToPoint(-75, 0, 650, {.forwards = false});
+    waitd; 
+    intake.brake();
+    chassis.moveToPose(-39.475, -54.537, 342, 1300);
+}
+
+
 void red_negative_awp() {
     chassis.setPose(-54.211, 16.319, 90);
 
