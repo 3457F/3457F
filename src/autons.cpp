@@ -1,4 +1,6 @@
 #include "main.h"
+#include "pros/colors.hpp"
+#include "pros/motors.h"
 #include "util.hpp"
 
 #include "lemlib/chassis/chassis.hpp"
@@ -54,225 +56,223 @@ void print_robot_pos(void* chassisVoid) {
  */
 
 void red_positive_awp_nostack() {
-    // START POS WHEN APPROACHING MOGO STRAIGHT
-    // chassis.setPose(
-    //     -58.386
-    //     , -24
-    //     , 90
-    // );
-
-    // MOGO APPROACH CODE FOR STRAIGHT
-    // chassis.moveToPoint(
-    //     // -30.323
-    //     -28.69
-    //     // , -23.647
-    //     , -24
-    //     , 1500
-    //     , {
-    //         .maxSpeed = 70
-    //     }
-    // );
-    // chassis.waitUntil(25.5);
-    // mogo.clamp();
-    // waitd;
-    
-    // // approaches mogo
-    // chassis.follow(
-    //     mecha_red_pos_awp_mogo_txt
-    //     , 15
-    //     , 1500
-    // );
-    // chassis.waitUntil(25.5);
-    // mogo.toggle();
-    // waitd;
-
     chassis.setPose(
         -54.726
         , -36.09
         , 90
     );
     
-    /* turn in place and move to mogo */
-    // chassis.turnToPoint(
-    //     -33.144
-    //     , -28.396
-    //     , 750
-    //     , {
-    //         .direction = lemlib::AngularDirection::CCW_COUNTERCLOCKWISE
-    //     }
-    // );
-    // waitd;
-
-    
-    // chassis.moveToPoint(
-    //    -33.144
-    //     , -28.396
-    //     , 1300
-    //     , {
-    //         .maxSpeed = 65
-    //     }
-    // );
-    
-    
-    chassis.moveToPoint(-41.396, -36.09, 450);
-    arm.set_pos(arm.START_POS);
+    arm.set_pos(arm.LOADIN_POS);
+    chassis.moveToPoint(-46, -36.09, TO, {.maxSpeed=80});
     waitd; 
-    turnAndMoveToPoint(-30.737, -29.287, {.forwards = true, .mvMaxSpeed = 75});
+    intake.intake();
+    chassis.turnToPoint(-26.8751, -25.061, 650);
+    waitd;
+    chassis.moveToPoint(-26.8751, -25.061, 850, {.maxSpeed=60});
+    waitd;
+    intake.intake_brake_mode = pros::motor_brake_mode_e::E_MOTOR_BRAKE_COAST;
+    intake.brake();
+    arm.set_pos(arm.HOLD_POS);
+    mogo.clamp();
+    pros::delay(150);
+
+    // second ring
+
+    chassis.moveToPose(-21.77, -55.985, 340, 1500, {.forwards = false});
+    pros::delay(250);
+    intake.intake(); 
+    waitd;
+    pros::delay(450);
+    chassis.moveToPose( -61.529, -30.524, 15, 2000, {.forwards = false, .minSpeed = 100  });
+    waitd;
+
+    doinker.toggle();
+    chassis.moveToPoint(-62.504, -63.377, 1250, {.forwards = false});
+    waitd;
+    chassis.turnToHeading(310, 1200);
+    waitd;
+
+    // arm.set_pos(arm.LOADIN_POS);
+    doinker.toggle();
+    turnAndMoveToPoint(-56.75, -80.773, {.turnTO = 400, .moveTO = 1800, .forwards = false});
+    waitd; 
+    chassis.turnToHeading(180, 650);
+    waitd;
+    // alliance stake
+    chassis.moveToPose(-59, -32.86, 156, 5000, {.forwards = false, .maxSpeed=80});
+    waitd; 
+
+    intake.brake();
+    arm.set_pos(arm.ALLIANCE_SCORE);
+    pros::delay(250);
+
+    chassis.moveToPoint(-39.158, -20.305, 700);
+    waitd;
+    arm.set_pos(arm.SCORE_POS);
+    turnAndMoveToPoint(-9.572, -8.336, {.turnTO=750, .forwards=false});
+    waitd;
+}
+
+void red_negative_awp() {
+    chassis.setPose(-54.211, 16.319, 90);
+
+    chassis.turnToHeading(45, 600);
+    waitd;
+    arm.set_pos(arm.HOLD_POS);
+    chassis.moveToPoint(-57.25, 9, 600, {.forwards=false});
+    waitd;
+    arm.set_pos(arm.ALLIANCE_SCORE);
+    pros::delay(1500);
+    chassis.moveToPoint(-54.211, 16.319, 1000);
+    waitd;
+    arm.set_pos(arm.HOLD_POS);
+    chassis.turnToHeading(90, 750);
+    waitd;
+
+    chassis.moveToPose(-24.736, 28.412, 45, 1750, {.maxSpeed=90});
     waitd;
     mogo.clamp();
-    pros::delay(500);
-    intake.intake(); 
+    pros::delay(250);
 
-    chassis.moveToPose(-22.586, -49.579, 340, 1200, {.forwards = false});
+    chassis.turnToPoint(-9, 38.639, 850, {.forwards=false});
     waitd;
-    pros::delay(500);
-    chassis.moveToPose( -61.529, -35.524, 15, 2000, {.forwards = false, .minSpeed = 100  });
+    intake.intake();
+    chassis.moveToPoint(-15 , 38.639, 2000, {.forwards=false});
+    waitd;
+    chassis.moveToPose(-16, 63.029, 170, 2000, {.forwards=false, .lead=0.1, .maxSpeed=70});
+    waitd;
+    pros::delay(1000);
+
+    // arm.set_pos(arm.LOADIN_POS);
+    chassis.moveToPoint(-17.877, 32.151, 1200);
+    waitd;
+    chassis.turnToPoint(-30.182, 54.73, 750, {.forwards=false});
+    waitd;
+    chassis.moveToPoint(-30.182, 54.73, 850, {.forwards=false});
+    waitd;
+    pros::delay(250);
+
+    arm.set_pos(arm.INIT_POS);
+    chassis.moveToPose(-20.212, 15.281, -45, TO);
+    waitd;
+}
+
+/**
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * skulls
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ */
+
+ASSET(skills_1_txt);
+
+void skills() {
+    chassis.setPose(-59.142, 0, -90);
+
+    // start of first mogo
+
+    chassis.moveToPoint(-47.982, 0, 850);
+    waitd;
+    chassis.moveToPose(-47.463, 23.327, 0, TO, {.maxSpeed=90});
+    waitd;
+    mogo.clamp();
+    
+    pros::delay(150);
+
+    chassis.turnToHeading(-90, 500);
+    waitd;
+    intake.intake();
+    chassis.follow(skills_1_txt, 5, 6000, false);
     waitd;
 
-    doinker.toggle();
-    chassis.moveToPoint(-62.504, -56.377, 1500, {.forwards = false});
-    waitd;
-    chassis.turnToHeading(310, 750);
-    waitd;
+    pros::delay(1000);
 
+    chassis.moveToPoint(0, 46.685, TO);
+    waitd;
+    chassis.turnToHeading(-180, 750);
+    waitd;
     arm.set_pos(arm.LOADIN_POS);
-    doinker.toggle();
-    turnAndMoveToPoint(-55.683, -71.773, { .moveTO = 2000, .forwards = false});
-    waitd; 
-    chassis.turnToHeading(270, 650);
+    chassis.moveToPoint(0, 63.035, 900, {.forwards=false, .maxSpeed=100});
     waitd;
-    turnAndMoveToPoint(-60.75, -10.189, {.forwards = false});
-    waitd; 
-
-waitd;
-
+    pros::delay(150);
+    arm.set_pos(arm.SCORE_POS);
+    pros::delay(500);
+    arm.set_pos(arm.INIT_POS);
     
-    // turnAndMoveToPoint(-58.983, -61.872, {.forwards = false, .async = true });
-    // intake.outtake();
-    // chassis.waitUntil(10); 
-    // doinker.toggle();
-    // waitd;
+    chassis.moveToPoint(0, 46.685, TO);
+    waitd;
+    chassis.turnToHeading(-90, 750);
+    waitd;
+    chassis.moveToPoint(-59.142, 47.204, 2000, {.forwards=false, .maxSpeed=100});
+    waitd;
+    pros::delay(250);
+    
+    chassis.moveToPose(-47.204, 58.883, 45, TO, {.forwards=false});
+    waitd;
+    pros::delay(150);
+    chassis.moveToPose(-58.104, 58.104, 135, TO, {.forwards=false});
+    waitd;
+    mogo.release();
 
-
-
-
-    // //going to middle stack rings 
-    // // TODO: integrate functions into tamtp
-    //  turnAndMoveToPoint(-32.367, -29.23, {.forwards = true, .mvMaxSpeed = 60});
-    // intake.intake();
-
-    // // chassis.moveToPose(-23.332, -46.827, 170.8, 1200, {.forwards =false, .minSpeed 120})
-    // //delay for turning so ring doesnt go "newhow ma"
-    // waitd;
-
-    // turnAndMoveToPoint(-58.76, -61.443,{.moveTO = 1800, .forwards = false });
-    // // queues arm so next ring goes into arm; CORNER RINGS NOT LIKELY TO EASILIY ENTER ROBOT
-    // doinker.toggle();
-    // waitd;
-    // chassis.turnToHeading(90, 650);
-    // doinker.toggle();
-
-    // /* turns like ajksldfjaslkdfjasdf */
-    // // TODO: color sort
-    // chassis.turnToHeading(
-    //     90
-    //     , 750
-    // );
-    // waitd;
-
-    // // drops intake... hopefully onto red ring!
-    // intake.toggle();
-
-    // // chassis.turnToHeading(
-    // //     45
-    // //     , 350
-    // // );
-
-    // // chassis.turnToHeading(
-    // //     90
-    // //     , 250
-    // // );
-
-    // // chassis.turnToHeading(
-    // //     45
-    // //     , 350
-    // // );
-
-    // // TODO: hopefully alr oriented w point...?
-    // // moves backwards
-    // chassis.moveToPoint(
-    //     -47.054
-    //     , -46.969
-    //     , 1500
-    // );
-
-    // /* moves towards alliance steak */
-    // chassis.turnToHeading(
-    //     180
-    //     , 650
-    // );
-
-    // // chassis.follow(
-    // //     mecha_red_pos_awp_stake_txt
-    // //     , 5
-    // //     , 1500
-    // //     , false
-    // // );
-
-    // chassis.moveToPose(-57.152, -7.269, -113, 2550,{.forwards = false, .minSpeed = 127});
-    // // extend arm to score!
-    // // TODO: ARM GETS STUCK WHEN SCORING ON ALLIANCE
-    // // arm.set_pos(arm.ALLIANCE_SCORE);
-
-    // pros::delay(750);
-
-
+    // end of first mogo
 }
 
-void red_negative_five_ring(){
+// void red_negative_five_ring(){
     
-    //Where the robot is placed the ring is going to the side of the bot, not in the intake. (if you need a visual pranesh js let aarav know)
-        //to futher explain the intake will be rushing to the top ring (near auton line), and having a ring in the intake will like spit out the ring
-            // on the last bot we able to carry two rings cuz we had the hooks and floating moving separtly, unlike where ts robot's intake moves all at once cuz there is one motor
+//     //Where the robot is placed the ring is going to the side of the bot, not in the intake. (if you need a visual pranesh js let aarav know)
+//         //to futher explain the intake will be rushing to the top ring (near auton line), and having a ring in the intake will like spit out the ring
+//             // on the last bot we able to carry two rings cuz we had the hooks and floating moving separtly, unlike where ts robot's intake moves all at once cuz there is one motor
     
-    chassis.setPose(-54.319, 31.127, 270);
+//     chassis.setPose(-54.319, 31.127, 270);
 
-    //zooming to the rings on auton line (going for the ring that is like on the right when looking at red alliance driver station)
-    turnAndMoveToPoint(-10.177, 42.041, { .moveTO = 1300, .forwards = false});
-    intake.intake(); 
-    waitd;
-    //to lazy to stop intake cuz the intake likes to stroke the ring lol (ts bascially allows us to not have to tune when to stop intake <3 limit switch)
-    intake.is_ring_on_top(); 
-    intake.brake();
+//     //zooming to the rings on auton line (going for the ring that is like on the right when looking at red alliance driver station)
+//     turnAndMoveToPoint(-10.177, 42.041, { .moveTO = 1300, .forwards = false});
+//     intake.intake(); 
+//     waitd;
+//     //to lazy to stop intake cuz the intake likes to stroke the ring lol (ts bascially allows us to not have to tune when to stop intake <3 limit switch)
+//     intake.is_ring_on_top(); 
+//     intake.brake();
 
-    //moving to mogo (if ts works first try i get $5 @codemygame)
-    chassis.moveToPose(-17.875, 27.132, 56.5, 1950, {.forwards = true});
-    waitd;
-    mogo.toggle();
+//     //moving to mogo (if ts works first try i get $5 @codemygame)
+//     chassis.moveToPose(-17.875, 27.132, 56.5, 1950, {.forwards = true});
+//     waitd;
+//     mogo.toggle();
 
-    //going and intaking to the middle ring stack (ring stack: red ring is bottom and blue ring is ontop)
-    chassis.moveToPose(-17.875, 27.132, 56.5, 1200, {.forwards = false}); 
-    //This delay is for the est time that the robot takes to turn (ion want the ring to go flying thas why delay)
-    pros::delay(650);
-    intake.intake(); 
-    waitd;
+//     //going and intaking to the middle ring stack (ring stack: red ring is bottom and blue ring is ontop)
+//     chassis.moveToPose(-17.875, 27.132, 56.5, 1200, {.forwards = false}); 
+//     //This delay is for the est time that the robot takes to turn (ion want the ring to go flying thas why delay)
+//     pros::delay(650);
+//     intake.intake(); 
+//     waitd;
 
-    //Going to where the preload was (Pranesh if you are confused please refer to the first comment, before where we set the pose)
-    chassis.moveToPose(-48.959, 24.111, 54, 1500, {.forwards = false});
-    waitd; 
+//     //Going to where the preload was (Pranesh if you are confused please refer to the first comment, before where we set the pose)
+//     chassis.moveToPose(-48.959, 24.111, 54, 1500, {.forwards = false});
+//     waitd; 
     
-    //moving to the ring stack
-    chassis.moveToPose(-47.595, 6.961, 355, 1500, {.forwards = false});
-    intake.lift(true);
-    waitd;
+//     //moving to the ring stack
+//     chassis.moveToPose(-47.595, 6.961, 355, 1500, {.forwards = false});
+//     intake.lift(true);
+//     waitd;
 
-    //this is so when the red ring gets to the limit switch, and the 800ms delay to know that the ring is scored and we can stop the intake before we pick up the blue ring!!!
-    intake.lift(false);
-    intake.is_ring_on_top(); 
-    pros::delay(800);
-    intake.brake();
+//     //this is so when the red ring gets to the limit switch, and the 800ms delay to know that the ring is scored and we can stop the intake before we pick up the blue ring!!!
+//     intake.lift(false);
+//     intake.is_ring_on_top(); 
+//     pros::delay(800);
+//     intake.brake();
 
-}
+// }
 
 void move_forward() {
     chassis.setPose(

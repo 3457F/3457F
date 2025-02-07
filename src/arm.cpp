@@ -16,6 +16,10 @@ struct LoadInInfo;
 float calc_error(float curr_val, float expected_val) {
     float error = expected_val - curr_val;
 
+    if (std::abs(error) > 350.0) {
+        error += 360.0;
+    }
+
     return error;
 }
 
@@ -67,6 +71,7 @@ Arm::Arm(
 
     // resets built-up integral and derivative
     pid.reset();
+    encoder.reset_position();
 
     std::cout << "INIT_POS (INITIALIZATION)";
     this->set_pos(INIT_POS);
@@ -179,4 +184,8 @@ void Arm::force() {
 
 void Arm::release_force() {
     target = last_pos;
+}
+
+void Arm::hold() {
+    target = HOLD_POS;
 }
