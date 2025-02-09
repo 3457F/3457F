@@ -180,6 +180,54 @@ void red_rush(){
     chassis.moveToPose(-39.475, -54.537, 342, 1300);
 }
 
+// just a mirror of aarav's auton
+void blue_negative_awp() {
+    chassis.setPose(54.211, 16.319, 270);
+
+    chassis.turnToHeading(315, 600);
+    waitd;
+
+    arm.set_pos(arm.HOLD_POS);
+
+    chassis.moveToPoint(57.25, 9, 600, {.forwards = false});
+    waitd;
+
+    arm.set_pos(arm.ALLIANCE_SCORE);
+    pros::delay(1500);
+
+    chassis.moveToPoint(54.211, 16.319, 1000);
+    waitd;
+
+    arm.set_pos(arm.HOLD_POS);
+    chassis.turnToHeading(270, 750);
+    waitd;
+
+    chassis.moveToPose(24.736, 28.412, 315, 1750, {.maxSpeed=90});
+    waitd;
+    mogo.clamp();
+    pros::delay(250);
+
+    chassis.turnToPoint(9, 38.639, 850, {.forwards=false});
+    waitd;
+    intake.intake();
+    chassis.moveToPoint(15, 38.369, 2000, {.forwards=false});
+    waitd;
+    chassis.moveToPose(16, 63.029, 170, 2000, {.forwards=false, .lead=0.1, .maxSpeed=70});
+    waitd;
+    pros::delay(1000);
+    
+    chassis.moveToPoint(17.877, 32.151, 1200);
+    waitd;
+    chassis.turnToPoint(30.182, 54.73, 750, {.forwards=false});
+    waitd;
+    chassis.moveToPoint(30.182, 54.73, 850, {.forwards=false});
+    waitd;
+    pros::delay(250);
+
+    arm.set_pos(arm.INIT_POS);
+    chassis.moveToPose(20.212, 15.281, 35.5, TO, {.forwards = false});
+    waitd;
+}
 
 void red_negative_awp() {
     chassis.setPose(-54.211, 16.319, 90);
