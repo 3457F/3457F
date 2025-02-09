@@ -1,6 +1,7 @@
 #include "main.h"
 #include "pros/colors.hpp"
 #include "pros/motors.h"
+#include "pros/rtos.h"
 #include "util.hpp"
 
 #include "lemlib/chassis/chassis.hpp"
@@ -353,4 +354,186 @@ void move_forward() {
         , 0
         , 1000
     );
+}
+
+void prog_skills(){
+    chassis.setPose(60,0, 270);
+
+    //scoring alliance stake
+    intake.intake();
+    pros::delay(250);
+    intake.brake();
+
+    //moving to first mogo 
+    chassis.moveToPoint(-47, 0, 400);
+    waitd;
+    chassis.moveToPose(-47, -23.733, 180, 1100, {.forwards = true, .maxSpeed = 70});
+    chassis.waitUntil(21);
+    mogo.toggle();
+    intake.intake();
+    waitd;
+
+    //going to rings
+    turnAndMoveToPoint(-24.306, -25.585, { .moveTO = 1500,.forwards = false });
+    waitd;
+    //going down for the other ring
+    turnAndMoveToPoint(23.678, -47.124, {.moveTO = 2000, .forwards = false });
+    waitd; 
+    arm.set_pos(arm.LOADIN_POS);
+
+    //coming to the wall stake, and grabbing the ring near it
+    chassis.moveToPoint(0, -47.5, 900);
+    waitd;
+    intake.brake();
+    arm.set_pos(arm.DUNK_POS);
+
+    //getting ring and score wall stake (maybe time for odom reset)
+    intake.intake();
+    turnAndMoveToPoint(0, -60, {.forwards = false});
+    waitd;
+    arm.set_pos(arm.SCORE_POS);
+    pros::delay(500); 
+
+    //coming back and aliging to 3 rings
+    chassis.moveToPose(0, -47.5, 90, 1000,{.forwards = false, .minSpeed = 95});
+    waitd;
+    arm.set_pos(arm.START_POS);
+    intake.intake();
+    //getting 3 rings
+    turnAndMoveToPoint(-61.334, -47.5, {.moveTO = 1700, .forwards = false});
+    waitd;
+
+    //going for the other ring near the corner
+    turnAndMoveToPoint(-47.498, -59.3, {.moveTO = 650,.forwards = false});
+    waitd;
+
+    //goes to corner and drops
+    turnAndMoveToPoint(-59, -59.3, {.forwards = true});
+    waitd; 
+    mogo.toggle();
+
+    //neoooooow to the ring all the way down to the field, and to load it inot lb for alliacne stake
+    intake.intake();
+    arm.set_pos(arm.LOADIN_POS);
+    turnAndMoveToPoint(46.242, -47.607, {.moveTO = 2600 , .forwards = false});
+    waitd;
+
+    //gets blue ring mogo 
+    chassis.moveToPose(57.448, -26.559, 22.5, 1350, {.forwards = true, .minSpeed = 70});
+    chassis.waitUntil(21);
+    mogo.toggle();
+    waitd; 
+
+    //clearing corner
+    chassis.moveToPose(57.448, -59.787, 315, 1250,{.forwards = false});
+    intake.brake();
+    chassis.waitUntil(5);
+    doinker.toggle();
+    waitd;
+    //turns to get rings and also place goal into corner
+    chassis.turnToHeading(128, 700);
+    waitd;
+    doinker.toggle();
+    mogo.toggle();
+
+    //aligsn to mogo goal
+    chassis.moveToPose(47, -18.671, 0, 1500, {.forwards = true});
+    waitd;
+    //gets mogo
+    chassis.moveToPoint(47, 0, 1900, {.maxSpeed = 65});
+    chassis.waitUntil(18.5);
+    mogo.toggle();
+
+    //turns to alliance stake 
+    chassis.turnToHeading(270, 670);
+    waitd;
+    arm.set_pos(arm.PREALLIANCE_SCORE);
+
+    //goes to alliance stake (maybe a time to odom reset)
+    chassis.moveToPoint(58.936, 0, 650, {.forwards = false});
+    waitd;
+    arm.set_pos(arm.ALLIANCE_SCORE);
+    pros::delay(150);
+    intake.intake();
+
+    //moves back to reset
+    chassis.moveToPoint(47, 0,650);
+    arm.set_pos(arm.START_POS);
+    waitd;
+
+    //goes to the ring near ladder
+    turnAndMoveToPoint(23.441, -23.831, {.moveTO = 1500, .forwards = false});
+    waitd;
+    pros::delay(200);
+    intake.brake();
+
+    //downnnnnn to the ladder and gets 3 rings
+    chassis.moveToPose(-44.964, 45.256, 130, 3100, {.forwards = false});
+    chassis.waitUntil(63);
+    intake.intake();
+    waitd;
+
+    //gets rings
+    turnAndMoveToPoint(-61.334, 47.01, {.moveTO = 650, .forwards = false});
+    waitd;
+    turnAndMoveToPoint(-47.108, 58.703, {.moveTO = 650, .forwards = false});
+    waitd;
+
+    //drops mogo (time to reset using side distnace?!)
+    turnAndMoveToPoint(-61.919, 60.652, {.forwards = true});
+    waitd;
+    intake.brake();
+    mogo.toggle();
+    arm.set_pos(arm.LOADIN_POS);
+    intake.intake();
+
+    //comes and gets ring to wall stake
+    turnAndMoveToPoint(-17.388, 45.061, {.forwards = false});
+    waitd;
+
+    // neoeowow to mogo
+    chassis.moveToPose(-42.904, 26.714, 52, 2500, {.forwards = true});
+    chassis.waitUntil(29);
+    mogo.toggle();
+    waitd;
+
+    //aligns to wall stake and scores wall satke (maybe odom reset)
+    chassis.moveToPose(0, 45, 180, 1900,{.forwards = false});
+    waitd;
+    arm.set_pos(arm.DUNK_POS);
+    chassis.moveToPoint(0, 60, 1300, {.forwards = false});
+    waitd;
+    arm.set_pos(arm.LOADIN_POS);
+    pros::delay(600);
+    arm.set_pos(arm.START_POS);
+
+    //goes to rings and collects them
+    turnAndMoveToPoint(24, 47.275, {.moveTO = 1400, .forwards = false}) ;
+    waitd;
+    turnAndMoveToPoint(24, 23.624,{.moveTO = 1300, .forwards = false});
+    waitd;
+    turnAndMoveToPoint(46.925, 46.913,{.moveTO = 1300, .forwards = false});
+    waitd;
+    turnAndMoveToPoint(46.925, 58.801, {.forwards = false});
+    waitd;
+    turnAndMoveToPoint(46.535, 40.482, {.forwards = false});
+    waitd;
+    turnAndMoveToPoint(58.618, 47.108,  {.forwards = false});
+    waitd;
+    //clearing corner and dropping mogo
+    pros::delay(350);
+    intake.brake();
+    doinker.toggle();
+    chassis.moveToPose(64.061, 57.924, 200, 1500);
+    waitd;
+    chassis.turnToHeading(45, 750);
+    waitd;
+    mogo.toggle();
+    doinker.toggle();
+
+    //hang
+    arm.set_pos(arm.LOADIN_POS);
+    chassis.moveToPose(9.117, 8.52, 224, 3500, {.forwards = true, .maxSpeed = 85, .minSpeed = 85});
+    waitd;
+    arm.set_pos(arm.START_POS);
 }
