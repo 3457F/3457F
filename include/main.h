@@ -25,6 +25,7 @@
  * not convenient for most student programmers.
  */
 #include "lemlib/chassis/chassis.hpp"
+#include "pros/imu.hpp"
 #define PROS_USE_SIMPLE_NAMES
 
 /**
@@ -60,6 +61,7 @@
 extern pros::MotorGroup left_motors;
 extern pros::MotorGroup right_motors;
 extern pros::Controller controller;
+extern pros::Imu imu;
 
 extern lemlib::Chassis chassis;
 extern MogoMech mogo;

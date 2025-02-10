@@ -26,6 +26,12 @@
 #define INTAKE_PORT 18
 #define FLOATING_PORT 1
 
+// distance sensor ports
+#define DIST_LEFT 1
+#define DIST_RIGHT 1
+#define DIST_FRONT 1
+#define DIST_BACK 1
+
 // pneumatics ports
 #define MOGO_MECH_PORT 'A'
 #define DOINKER_PORT 'B'

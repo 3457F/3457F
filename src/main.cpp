@@ -149,6 +149,9 @@ bool L1_state = false;
 // TODO: shld be ok if the task starts at the beginning...?
 // pros::Task color_sort(&update_sort_auton, &intake);
 
+// chat what are the chances this works
+pros::Task distance_calc(&updateLoop);
+
 /**
  * Runs initialization code. This occurs as soon as the program is started.
  *
