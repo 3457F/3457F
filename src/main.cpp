@@ -91,7 +91,7 @@ lemlib::ControllerSettings angular_controller(DT_ANGULAR_P, // proportional gain
 
 // chnged to positive because tracking wheel is on mogo mech side
 // which is on front of robot!
-lemlib::TrackingWheel horizontal_track(&horizontal, lemlib::Omniwheel::NEW_2, 2.5); // changed from -3
+lemlib::TrackingWheel horizontal_track(&horizontal, lemlib::Omniwheel::NEW_275, 2.5); // changed from -3
 
 lemlib::OdomSensors sensors(
 							// &vertical_track, // vert tracking wheel that kinda doesn't work
@@ -219,7 +219,7 @@ void autonomous() {
 	// blue_neg_awp_redo();
 	// rush_mech_auton();
 	// red_positive_awp_nostack();
-	red_negative_awp();
+	blue_negative_awp();
 
 	/** AUTON SELECTOR RUNNING */
 	// auton_run();                                                                                                                                                                   
