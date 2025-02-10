@@ -1,8 +1,6 @@
 #define EIGEN_DONT_VECTORIZE
 #define EIGEN_DISABLE_UNALIGNED_ARRAY_ASSERT
 #include "Eigen/Dense"
-#include "pros/distance.hpp"
-#include "pros/imu.hpp"
 
 // im ngl i got no clue if this works 
 // this is what chat gutpa gave me
@@ -22,8 +20,8 @@ public:
         P = Eigen::MatrixXd::Identity(3, 3);
         A = Eigen::MatrixXd::Identity(3, 3);  
         H = Eigen::MatrixXd::Identity(3, 3);
-        Q = Eigen::MatrixXd::Identity(3, 3) * q;
-        R = Eigen::MatrixXd::Identity(3, 3) * r;
+        Q = Eigen::MatrixXd::Identity(3, 3) * q; // model uncertainty
+        R = Eigen::MatrixXd::Identity(3, 3) * r; // sensor variance
         I = Eigen::MatrixXd::Identity(3, 3);
 
         X << 0, 0, 0;  // Initial state

@@ -5,7 +5,6 @@
 #include "pros/distance.hpp"
 #include "Eigen/Dense"
 #include <cmath>
-#include <string>
 
 // Define field dimensions
 const double LENGTH = 12.0;
