@@ -31,6 +31,8 @@ std::vector<double> rightReadings(FILTER_SIZE, 0);
 std::vector<double> frontReadings(FILTER_SIZE, 0);
 std::vector<double> backReadings(FILTER_SIZE, 0);
 
+lemlib::Pose calculatedPose = *(new lemlib::Pose(0, 0, 0));
+
 double getFilteredReading(std::vector<double>& readings, double newValue) {
     readings.push_back(newValue);
     if (readings.size() > FILTER_SIZE) {

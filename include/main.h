@@ -53,6 +53,7 @@
 #include "mogo.hpp"
 #include "doinker.hpp"
 #include "rushmech.hpp"
+#include "distance.hpp"
 
 /**
  * NOTE: The mogo mech is the front of the robot, from a driving perspective and an auton perspective
