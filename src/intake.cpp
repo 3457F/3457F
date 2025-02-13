@@ -103,6 +103,37 @@ void throws_ring(void* intakeVoid) {
     intake->state = 0;
 }
 
+// for skills, when ring being intaked while arm at LOADIN_POS
+// meant to be run as a TASK
+void dunk_arm(void* armVoid) {
+    Arm* arm = (Arm*)(armVoid);
+
+    pros::delay(1000);
+    arm->set_pos(arm->LOADIN_POS);
+}
+
+// /** meant to be run as a task, called EVERY 20 MS */
+// void Intake::check_color_sensor() {
+//     // keeps color sensor white LED on, so it can more accurately detect color
+//     color_sensor.set_led_pwm(100);
+
+//     double hue = color_sensor.get_hue();
+
+//     if (within(hue, BLUE_MIN, BLUE_MAX)) {
+//         // rmbr, default is red so if blue, NEED TO CHANGE!!!!
+
+//         if (held_ring != 1) {
+//             printf(
+//                 "DETECTED RING: %d | with hue: %f\n", held_ring, hue
+//             );
+            
+//             held_ring = 1;
+//         }
+//     } else {
+//         printf("we have a %d ring!\n", held_ring);
+//     }
+// }
+
 /** meant to be run as a task, called EVERY 20 MS */
 void Intake::check_color_sensor() {
     // keeps color sensor white LED on, so it can more accurately detect color
@@ -110,18 +141,25 @@ void Intake::check_color_sensor() {
 
     double hue = color_sensor.get_hue();
 
-    if (within(hue, BLUE_MIN, BLUE_MAX)) {
-        // rmbr, default is red so if blue, NEED TO CHANGE!!!!
-
-        if (held_ring != 1) {
-            printf(
-                "DETECTED RING: %d | with hue: %f\n", held_ring, hue
-            );
-            
-            held_ring = 1;
+    // if it is a ring
+    if (within(hue, BLUE_MIN, BLUE_MAX) || within(hue, RED_MIN, RED_MAX)) {
+        if (arm.target == arm.LOADIN_POS) {
+            pros::Task dunk_task(dunk_arm, static_cast<void*>(&arm));
         }
-    } else {
-        printf("we have a %d ring!\n", held_ring);
+        
+        // if (within(hue, BLUE_MIN, BLUE_MAX)) {
+        //     // rmbr, default is red so if blue, NEED TO CHANGE!!!!
+    
+        //     if (held_ring != 1) {
+        //         printf(
+        //             "DETECTED RING: %d | with hue: %f\n", held_ring, hue
+        //         );
+                
+        //         held_ring = 1;
+        //     }
+        // } else {
+        //     printf("we have a %d ring!\n", held_ring);
+        // }
     }
 }
 

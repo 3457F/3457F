@@ -350,7 +350,7 @@ void opcontrol() {
 
 		// FOR COLOR SORT
 		intake.check_color_sensor();
-		intake.check_limit_switch();
+		// intake.check_limit_switch();
 
 		// delay to save system resources
 		pros::delay(DRIVER_TICK);
