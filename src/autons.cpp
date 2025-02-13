@@ -10,6 +10,7 @@
 #include "pros/rtos.hpp"
 
 #include <chrono>
+#include <future>
 #include <set>
 
 // declares pure pursuit files
@@ -182,42 +183,76 @@ void red_rush(){
 
 // just a mirror of aarav's auton
 void blue_negative_awp() {
-    chassis.setPose(54.211, 16.319, 270);
+    chassis.setPose(53.746, 16.9, 270);
 
-    chassis.turnToHeading(315, 600);
-    waitd;
+    // chassis.turnToHeading(315, 600);
+    // waitd;
 
     arm.set_pos(arm.HOLD_POS);
 
-    chassis.moveToPoint(55.012, 11.833, 600, {.forwards = false});
+    chassis.moveToPoint(56.864, 10, 850, {.forwards = false});
+    waitd;
+
+    chassis.turnToPoint(67.85, 0, 600, {.forwards=false});
+    arm.set_pos(arm.ALLIANCE_SCORE);
     waitd;
 
     arm.set_pos(arm.ALLIANCE_SCORE);
-    pros::delay(1500);
+    pros::delay(1150);
 
-    chassis.moveToPoint(54.211, 16.319, 1000);
+    chassis.moveToPoint(35.231, 33.856, TO);
     waitd;
 
     arm.set_pos(arm.HOLD_POS);
-    chassis.turnToHeading(270, 750);
+
+    chassis.turnToPoint(23.733, 29.45, 850);
+    waitd;
+    chassis.moveToPoint(23.733, 29.45, 1350, {.maxSpeed=50});
     waitd;
 
-    chassis.moveToPose(20.323, 26.255, 315, 1450, {.forwards = true, .maxSpeed=90});
-    waitd;
     mogo.clamp();
-    pros::delay(250);
 
-
-    turnAndMoveToPoint(8.63, 39.897, {.moveTO = 1200,.forwards = false, .async = true});
-    pros::delay(700);
-    intake.intake();
-    waitd;
     pros::delay(500);
 
-    chassis.moveToPoint(23.051, 31.127, 1500, {.forwards = true, .minSpeed = 100});
+    chassis.moveToPose(9.799, 39.897, 127, 1900, {.forwards = false, .minSpeed = 89.69});
+    pros::delay(600);
+    intake.intake();
     waitd;
-    chassis.moveToPoint(23.051, 55.488, 1100, {.forwards = false, .minSpeed = 120});
+    // chassis.turnToPoint(8.337, 39.507, 800, {.forwards=false});
+    // waitd;
+    // arm.set_pos(arm.INIT_POS);
+    // intake.intake();
+    // chassis.moveToPoint(8.337, 39.507, 1000, {.forwards=false, .maxSpeed=75});
+    // waitd;
+    // chassis.turnToPoint(4.05, 43.6, 600, {.forwards=false});
+    // waitd;
+
+    pros::delay(1000);
+
+    chassis.moveToPoint(26.831, 29.373, 1300, {.minSpeed = 110});
     waitd;
+    chassis.moveToPose(23.051, 52.954, 180, 1200, {.forwards= false, .minSpeed = 120});
+    waitd;
+    // chassis.turnToPoint(26.733, 28.733, 900);
+    // waitd;
+    // chassis.moveToPoint(26.733, 28.733, TO);
+    // waitd;
+
+    // chassis.turnToPoint(25.375, 51.59, 850, {.forwards=false});
+    // waitd;
+    // chassis.moveToPoint(25.375, 51.59, TO, {.forwards=false});
+    // waitd;
+
+    // pros::delay(500);
+    pros::delay(1000);
+    chassis.turnToPoint(17.692, 17.68, TO, {.forwards=false});
+    waitd;
+    chassis.moveToPoint(17.692, 17.68, TO, {.forwards=false});
+    waitd;
+    arm.set_pos(arm.SCORE_POS);
+
+
+    
     
 }
 
