@@ -25,6 +25,7 @@
  * not convenient for most student programmers.
  */
 #include "lemlib/chassis/chassis.hpp"
+#include "pros/imu.hpp"
 #define PROS_USE_SIMPLE_NAMES
 
 /**
@@ -52,6 +53,7 @@
 #include "mogo.hpp"
 #include "doinker.hpp"
 #include "rushmech.hpp"
+#include "distance.hpp"
 
 /**
  * NOTE: The mogo mech is the front of the robot, from a driving perspective and an auton perspective
@@ -60,6 +62,7 @@
 extern pros::MotorGroup left_motors;
 extern pros::MotorGroup right_motors;
 extern pros::Controller controller;
+extern pros::Imu imu;
 
 extern lemlib::Chassis chassis;
 extern MogoMech mogo;
