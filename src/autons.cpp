@@ -2,6 +2,7 @@
 #include "pros/colors.hpp"
 #include "pros/motors.h"
 #include "pros/rtos.h"
+#include "ui/Auton.hpp"
 #include "util.hpp"
 
 #include "lemlib/chassis/chassis.hpp"
@@ -127,7 +128,7 @@ void red_rush(){
 
     // for some reason drifts time to time, gotta slow it down def, but currently reseraching a way.
     // only running the floating cuz there is not need for hooks
-    intake.intake();
+ 
     chassis.moveToPose(
         -10.645
         , -48.249
@@ -139,7 +140,8 @@ void red_rush(){
             , .minSpeed = 120
         }
     );
-    chassis.waitUntil(5);
+    intake.intake();
+    chassis.waitUntil(3);
     doinker.toggle();
     waitd;
     intake.brake();
@@ -149,18 +151,22 @@ void red_rush(){
     pros::delay(420);
 
     //moving the robot and the goal back!
-    chassis.moveToPose(-46.426, -57.214, 261, 1300, {.forwards = true, .minSpeed = 90});
-    waitd;
-    doinker.toggle();
-
-    chassis.moveToPoint(-54.473, -59, TO);
+    chassis.moveToPose(-30.768, -27.483, 261, 1300, {.forwards = true, .minSpeed = 85});
     waitd;
    
-
-    chassis.moveToPose(-19.453, -55.811, 82, 2000, {.forwards = true, .maxSpeed=60});
     waitd;
-
+    
     mogo.toggle();
+    // doinker.toggle();
+
+    // chassis.moveToPoint(-54.473, -59, TO);
+    // waitd;
+   
+
+    // chassis.moveToPose(-19.453, -55.811, 82, 2000, {.forwards = true, .maxSpeed=60});
+    // waitd;
+
+    // mogo.toggle();
     // chassis.turnToHeading(90, 1400);
     // waitd;
     

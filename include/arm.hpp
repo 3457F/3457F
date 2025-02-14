@@ -21,6 +21,7 @@ class Arm {
         static constexpr double PREALLIANCE_SCORE = 170.0 * 100;
         static constexpr double FORCE_POS = 200.0 * 100;
         static constexpr double HOLD_POS = 90.0 * 100;
+        static constexpr double MOGO_SCORE = 208.0 * 100;
         double last_pos = 0;
 
         pros::Motor arm_motor;
