@@ -1,3 +1,5 @@
+#include "doinker.hpp"
+#include "intake.hpp"
 #include "main.h"
 #include "pros/colors.hpp"
 #include "pros/motors.h"
@@ -151,12 +153,26 @@ void red_rush(){
     pros::delay(420);
 
     //moving the robot and the goal back!
-    chassis.moveToPose(-30.768, -27.483, 261, 1300, {.forwards = true, .minSpeed = 85});
+    chassis.moveToPoint(-45.387, -39.74, TO, {.forwards = true, .maxSpeed = 85});
     waitd;
-   
+    doinker.toggle();
+
+    pros::delay(250);
+
+    chassis.turnToPoint(-33.708, -17.16, TO);
+    waitd;
+    doinker.toggle();
+
+    chassis.moveToPoint(-33.708, -17.16, TO, {.maxSpeed=60});
+    waitd;
+    mogo.clamp();
+
+    chassis.moveToPoint(-58.364, -37.404, TO, {.forwards=false});
+    pros::delay(400);
+    intake.intake();
     waitd;
     
-    mogo.toggle();
+    // mogo.toggle();
     // doinker.toggle();
 
     // chassis.moveToPoint(-54.473, -59, TO);
