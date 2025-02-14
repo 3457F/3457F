@@ -219,7 +219,7 @@ void autonomous() {
 	// blue_neg_awp_redo();
 	// rush_mech_auton();
 	// red_positive_awp_nostack();
-	blue_negative_awp();
+	red_rush();
 
 	/** AUTON SELECTOR RUNNING */
 	// auton_run();                                                                                                                                                                   
@@ -348,8 +348,8 @@ void opcontrol() {
 		// printf("arm current: %d\n", arm.arm_motor.get_current_draw());
 		// intake.hues_debug();
 
-		// FOR COLOR SORT
-		intake.check_color_sensor();
+		// // FOR COLOR SORT
+		// intake.check_color_sensor();
 		// intake.check_limit_switch();
 
 		// delay to save system resources

@@ -129,58 +129,75 @@ void red_rush(){
     // only running the floating cuz there is not need for hooks
     intake.intake();
     chassis.moveToPose(
-        -10.266
-        , -49.733
+        -10.645
+        , -48.249
         , 261
         , 1250
         , {
             .forwards = false
             , .maxSpeed = 127
-            , .minSpeed = 114
+            , .minSpeed = 120
         }
     );
+    chassis.waitUntil(5);
+    doinker.toggle();
     waitd;
     intake.brake();
-
-    //doinker to touch/grab the goal
     doinker.toggle();
+    //doinker to touch/grab the goal
+ 
     pros::delay(420);
 
     //moving the robot and the goal back!
-    chassis.moveToPose(-40.092, -56.182, 261, 1200, {.forwards = true});
+    chassis.moveToPose(-46.426, -57.214, 261, 1300, {.forwards = true, .minSpeed = 90});
     waitd;
     doinker.toggle();
-    
-    //going to clamp mogo
-    chassis.moveToPose(-6.778, -50.238, 270, 1200, {.forwards = true, .minSpeed = 60});
-    waitd;
-    mogo.toggle();
-    intake.intake();
-    pros::delay(450);
 
-    //moves towards our positive corner and drops mogo.
-    turnAndMoveToPoint( -47.985, -61.671, {.forwards =true});
+    chassis.moveToPoint(-54.473, -59, TO);
     waitd;
-    mogo.toggle();
+   
 
-    // chassis.moveToPose(-23.592, -32.826, 0, 1150, {.forwards = true});
+    chassis.moveToPose(-19.453, -55.811, 82, 2000, {.forwards = true, .maxSpeed=60});
+    waitd;
+
+    mogo.toggle();
+    // chassis.turnToHeading(90, 1400);
     // waitd;
-    chassis.moveToPose(-24.592,-27.826 , 0, 2500, {.forwards = true,});
-    waitd; 
-    mogo.toggle();
-
-//     intake.lift(true);
-//     turnAndMoveToPoint(-41.066, -6.291, {.forwards = false, .mvMaxSpeed = 105});
+    
+    // chassis.moveToPoint(-18.596, -55.421, TO);
+    // waitd;
+    // mogo.toggle();
+    
+//     //going to clamp mogo
+//     chassis.moveToPose(-6.778, -50.238, 270, 1200, {.forwards = true, .minSpeed = 60});
 //     waitd;
-//    intake.lift(false);
-//    pros::delay(860);
+//     mogo.toggle();
+//     intake.intake();
+//     pros::delay(450);
 
-    chassis.turnToPoint(-75, 0, 650, {.forwards = false});
-    waitd; 
-    intake.brake();
-    chassis.moveToPose(-39.475, -54.537, 342, 1300);
+//     //moves towards our positive corner and drops mogo.
+//     turnAndMoveToPoint( -47.985, -61.671, {.forwards =true});
+//     waitd;
+//     mogo.toggle();
+
+//     // chassis.moveToPose(-23.592, -32.826, 0, 1150, {.forwards = true});
+//     // waitd;
+//     chassis.moveToPose(-24.592,-27.826 , 0, 2500, {.forwards = true,});
+//     waitd; 
+//     mogo.toggle();
+
+// //     intake.lift(true);
+// //     turnAndMoveToPoint(-41.066, -6.291, {.forwards = false, .mvMaxSpeed = 105});
+// //     waitd;
+// //    intake.lift(false);
+// //    pros::delay(860);
+
+//     chassis.turnToPoint(-75, 0, 650, {.forwards = false});
+//     waitd; 
+//     intake.brake();
+//     chassis.moveToPose(-39.475, -54.537, 342, 1300);
+// 
 }
-
 // just a mirror of aarav's auton
 void blue_negative_awp() {
     chassis.setPose(53.746, 16.9, 270);
