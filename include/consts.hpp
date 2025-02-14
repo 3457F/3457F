@@ -27,10 +27,10 @@
 #define FLOATING_PORT 1
 
 // distance sensor ports
-#define DIST_LEFT 1
-#define DIST_RIGHT 1
-#define DIST_FRONT 1
-#define DIST_BACK 1
+#define DIST_LEFT 13
+#define DIST_RIGHT 14
+#define DIST_FRONT 8
+#define DIST_BACK 7
 
 // pneumatics ports
 #define MOGO_MECH_PORT 'A'
