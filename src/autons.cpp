@@ -153,7 +153,7 @@ void red_rush(){
     pros::delay(420);
 
     //moving the robot and the goal back!
-    chassis.moveToPoint(-45.387, -39.74, TO, {.forwards = true, .maxSpeed = 85});
+    chassis.moveToPoint(-45.387, -39.74, TO, {.forwards = true, .minSpeed = 100});
     waitd;
     doinker.toggle();
 
