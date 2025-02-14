@@ -80,37 +80,37 @@ bool Intake::is_ring_on_top() {
  * used to tune color sensor; prints detected hue values
  * to terminal
  */
-void Intake::hues_debug() {
-    // keeps color sensor white LED on, so it can more accurately detect color
-    color_sensor.set_led_pwm(100);
+// void Intake::hues_debug() {
+//     // keeps color sensor white LED on, so it can more accurately detect color
+//     color_sensor.set_led_pwm(100);
 
-    double hue = color_sensor.get_hue();
+//     double hue = color_sensor.get_hue();
 
-    printf("detecting hue: %f\n", hue);
-}
+//     printf("detecting hue: %f\n", hue);
+// }
 
-// meant to be run as a task, called from `handle_driver_input` when
-// opposite alliance ring finds its way into our intake
-void throws_ring(void* intakeVoid) {
-    Intake* intake = (Intake*)(intakeVoid);
+// // meant to be run as a task, called from `handle_driver_input` when
+// // opposite alliance ring finds its way into our intake
+// void throws_ring(void* intakeVoid) {
+//     Intake* intake = (Intake*)(intakeVoid);
 
-    intake->brake();    
-    pros::delay(75);
+//     intake->brake();    
+//     pros::delay(75);
     
-    // returns back to normal driver control, also
-    // resets ring
-    intake->held_ring = 0;
-    intake->state = 0;
-}
+//     // returns back to normal driver control, also
+//     // resets ring
+//     intake->held_ring = 0;
+//     intake->state = 0;
+// }
 
-// for skills, when ring being intaked while arm at LOADIN_POS
-// meant to be run as a TASK
-void dunk_arm(void* armVoid) {
-    Arm* arm = (Arm*)(armVoid);
+// // for skills, when ring being intaked while arm at LOADIN_POS
+// // meant to be run as a TASK
+// void dunk_arm(void* armVoid) {
+//     Arm* arm = (Arm*)(armVoid);
 
-    pros::delay(1000);
-    arm->set_pos(arm->LOADIN_POS);
-}
+//     pros::delay(1000);
+//     arm->set_pos(arm->LOADIN_POS);
+// }
 
 // /** meant to be run as a task, called EVERY 20 MS */
 // void Intake::check_color_sensor() {
@@ -135,17 +135,17 @@ void dunk_arm(void* armVoid) {
 // }
 
 /** meant to be run as a task, called EVERY 20 MS */
-void Intake::check_color_sensor() {
-    // keeps color sensor white LED on, so it can more accurately detect color
-    color_sensor.set_led_pwm(100);
+// void Intake::check_color_sensor() {
+//     // keeps color sensor white LED on, so it can more accurately detect color
+//     color_sensor.set_led_pwm(100);
 
-    double hue = color_sensor.get_hue();
+//     double hue = color_sensor.get_hue();
 
-    // if it is a ring
-    if (within(hue, BLUE_MIN, BLUE_MAX) || within(hue, RED_MIN, RED_MAX)) {
-        if (arm.target == arm.LOADIN_POS) {
-            pros::Task dunk_task(dunk_arm, static_cast<void*>(&arm));
-        }
+//     // if it is a ring
+//     if (within(hue, BLUE_MIN, BLUE_MAX) || within(hue, RED_MIN, RED_MAX)) {
+//         if (arm.target == arm.LOADIN_POS) {
+//             pros::Task dunk_task(dunk_arm, static_cast<void*>(&arm));
+//         }
         
         // if (within(hue, BLUE_MIN, BLUE_MAX)) {
         //     // rmbr, default is red so if blue, NEED TO CHANGE!!!!
@@ -160,8 +160,8 @@ void Intake::check_color_sensor() {
         // } else {
         //     printf("we have a %d ring!\n", held_ring);
         // }
-    }
-}
+//     }
+// }
 
 /** t h e  r i n g  i s  h e r e  ...  score or throw? */
 void Intake::check_limit_switch() {
