@@ -212,22 +212,17 @@ void competition_initialize() {
  *
  * If the robot is disabled or communications is lost, the autonomous task
  * will be stopped. Re-enabling the robot will restart the task, not re-start it
- * from where it left off.
+ * from where it left off.               
  */
 void autonomous() {
 	chassis.setBrakeMode(pros::motor_brake_mode_e::E_MOTOR_BRAKE_HOLD);
 	
-	/** FOR DEBUGGING */
-	// blue_neg_awp_redo();
-	// rush_mech_auton();
-	// red_positive_awp_nostack();
-	// red_rush();
-	skills();
+	red_negative_elims();
 
 	/** AUTON SELECTOR RUNNING */
 	// auton_run();                                                                                                                                                                   
 };
-
+// set
 /**
  * Runs the operator control code. This function will be started in its *own task*
  * with the default priority and stack size whenever the robot is enabled via
