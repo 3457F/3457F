@@ -16,6 +16,8 @@
 #include <future>
 #include <set>
 
+#define skillsMSpd .maxSpeed=100
+
 // declares pure pursuit files
 
 // red nostack awp
@@ -361,51 +363,72 @@ void red_negative_awp() {
 ASSET(skills_1_txt);
 
 void skills() {
+    intake.intake_brake_mode=pros::E_MOTOR_BRAKE_COAST;
+
     chassis.setPose(-59.142, 0, -90);
+
+    intake.intake();
+    pros::delay(500);
 
     // start of first mogo
 
-    chassis.moveToPoint(-47.982, 0, 850);
+    chassis.moveToPoint(-47.982, 0, 850, {.forwards=false, skillsMSpd});
     waitd;
-    chassis.moveToPose(-47.463, 23.327, 0, TO, {.maxSpeed=90});
+    intake.brake();
+    chassis.moveToPose(-49.463, 23.96, 0, 2000, {.maxSpeed=60});
     waitd;
     mogo.clamp();
     
     pros::delay(150);
 
-    chassis.turnToHeading(-90, 500);
+    // rings 
+    chassis.turnToPoint(-20.396, 20.846, 1000, {.forwards=false, skillsMSpd });
     waitd;
     intake.intake();
-    chassis.follow(skills_1_txt, 5, 6000, false);
+    chassis.moveToPoint(-21.877, 20.846, 1000, {.forwards=false, skillsMSpd});
+    waitd;
+    chassis.turnToPoint(23.908, 40.463, 1000, {.forwards=false, skillsMSpd});
+    waitd;
+    chassis.moveToPoint(23.908, 40.463, 1100, {.forwards=false, skillsMSpd});
+    waitd;
+    chassis.moveToPoint(52.633, 42.166, TO, {.forwards=false, skillsMSpd});
     waitd;
 
     pros::delay(1000);
 
-    chassis.moveToPoint(0, 46.685, TO);
+    // wall stake
+    intake.brake();
+    chassis.moveToPoint(7.5, 37.685, 2000, {.maxSpeed=65});
     waitd;
-    chassis.turnToHeading(-180, 750);
+    pros::delay(100);
+    chassis.turnToHeading(-180, 1000, {skillsMSpd});
     waitd;
+    intake.intake();
     arm.set_pos(arm.LOADIN_POS);
-    chassis.moveToPoint(0, 63.035, 900, {.forwards=false, .maxSpeed=100});
+    chassis.moveToPose(7.5, 63.035, -180, 900, {.forwards=false, .maxSpeed=60});
     waitd;
-    pros::delay(150);
-    arm.set_pos(arm.SCORE_POS);
-    pros::delay(500);
-    arm.set_pos(arm.INIT_POS);
+    pros::delay(1650);
+    intake.brake();
+    arm.set_pos(arm.DUNK_POS);
+    pros::delay(750);
+    arm.set_pos(arm.HOLD_POS);
+    chassis.setPose(0, 62.776, chassis.getPose().theta);
     
-    chassis.moveToPoint(0, 46.685, TO);
+    intake.intake();
+    chassis.moveToPoint(0, 48.685, TO, {skillsMSpd});
     waitd;
-    chassis.turnToHeading(-90, 750);
+    chassis.turnToHeading(90, 750);
     waitd;
-    chassis.moveToPoint(-59.142, 47.204, 2000, {.forwards=false, .maxSpeed=100});
+    chassis.moveToPoint(-59.142, 48.204, 2000, {.forwards=false, skillsMSpd});
     waitd;
     pros::delay(250);
     
-    chassis.moveToPose(-47.204, 58.883, 45, TO, {.forwards=false});
+    chassis.moveToPose(-35.341, 68.149, 135, TO, {.forwards=false});
     waitd;
     pros::delay(150);
-    chassis.moveToPose(-58.104, 58.104, 135, TO, {.forwards=false});
+    chassis.swingToHeading(-75, DriveSide::RIGHT, TO);
     waitd;
+    chassis.moveToPoint(-56.287, 60.18, TO);
     mogo.release();
 
     // end of first mogo

@@ -11,3 +11,4 @@ void red_negative_awp();
 void red_rush();
 // void red_negative_five_ring(); 
 
+void skills();

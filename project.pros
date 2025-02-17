@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "3457F-kalman_test",
+    "project_name": "3457F",
     "target": "v5",
     "templates": {
       "LemLib": {
@@ -320,7 +320,7 @@
       "after": "screen",
       "description": "3457F's OFFICIAL PRODUCTION CODE",
       "icon": "pros",
-      "slot": 4
+      "slot": 1
     },
     "use_early_access": false
   }

@@ -91,7 +91,7 @@ lemlib::ControllerSettings angular_controller(DT_ANGULAR_P, // proportional gain
 
 // chnged to positive because tracking wheel is on mogo mech side
 // which is on front of robot!
-lemlib::TrackingWheel horizontal_track(&horizontal, lemlib::Omniwheel::NEW_275, 2.5); // changed from -3
+lemlib::TrackingWheel horizontal_track(&horizontal, lemlib::Omniwheel::NEW_275, 1.475); // changed from -3
 
 lemlib::OdomSensors sensors(
 							// &vertical_track, // vert tracking wheel that kinda doesn't work
@@ -149,8 +149,6 @@ bool L1_state = false;
 // TODO: shld be ok if the task starts at the beginning...?
 // pros::Task color_sort(&update_sort_auton, &intake);
 
-// chat what are the chances this works
-pros::Task distance_calc(&updateLoop);
 
 /**
  * Runs initialization code. This occurs as soon as the program is started.
@@ -180,6 +178,7 @@ void initialize() {
 		
 	screen_init();
 	
+	// pros::Task distance_calc(updateLoop);
 }
 
 /**
@@ -222,7 +221,8 @@ void autonomous() {
 	// blue_neg_awp_redo();
 	// rush_mech_auton();
 	// red_positive_awp_nostack();
-	red_rush();
+	// red_rush();
+	skills();
 
 	/** AUTON SELECTOR RUNNING */
 	// auton_run();                                                                                                                                                                   
