@@ -153,6 +153,9 @@ void Arm::score_cycle() {
         state = 1;
         intake->intake_motors.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
         std::cout << "LOADIN_POS" << std::endl;
+        intake->intake();
+        pros::delay(100);
+        intake->brake();
         this->set_pos(LOADIN_POS);
      
     }
