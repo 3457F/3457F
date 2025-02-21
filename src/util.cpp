@@ -63,7 +63,7 @@ void turnAndMoveToPoint(
     , float y
     , tamtpParams params
 ) {
-    pros::delay(1000);
+    waitd;
 
     chassis.turnToPoint(
         x
