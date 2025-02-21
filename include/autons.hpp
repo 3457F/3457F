@@ -14,3 +14,4 @@ void red_rush();
 void red_negative_elims();
 
 void skills();
+void blue_rush();

@@ -722,3 +722,16 @@ void prog_skills(){
     waitd;
     arm.set_pos(arm.START_POS);
 }
+
+void blue_rush(){
+    chassis.setPose(54.395,-33.055, 90);
+    
+
+    chassis.moveToPose(15.061, -47.802, 81.8, 1250, {.forwards = false, .minSpeed = 125});
+    intake.intake();
+    chassis.waitUntil(28);
+    doinker.toggle();
+    waitd;
+
+    doinker.toggle();
+}

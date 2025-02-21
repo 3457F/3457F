@@ -23,7 +23,7 @@
 #define COLOR_PORT 15
 
 // intake ports
-#define INTAKE_PORT 18
+#define INTAKE_PORT -6
 #define FLOATING_PORT 1
 
 // distance sensor ports

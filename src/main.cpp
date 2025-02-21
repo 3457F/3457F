@@ -91,7 +91,7 @@ lemlib::ControllerSettings angular_controller(DT_ANGULAR_P, // proportional gain
 
 // chnged to positive because tracking wheel is on mogo mech side
 // which is on front of robot!
-lemlib::TrackingWheel horizontal_track(&horizontal, lemlib::Omniwheel::NEW_275, 1.475); // changed from -3
+lemlib::TrackingWheel horizontal_track(&horizontal, lemlib::Omniwheel::NEW_275, 1.28125); // changed from -3
 
 lemlib::OdomSensors sensors(
 							// &vertical_track, // vert tracking wheel that kinda doesn't work
@@ -217,7 +217,7 @@ void competition_initialize() {
 void autonomous() {
 	chassis.setBrakeMode(pros::motor_brake_mode_e::E_MOTOR_BRAKE_HOLD);
 	
-	red_negative_elims();
+blue_rush();
 
 	/** AUTON SELECTOR RUNNING */
 	// auton_run();                                                                                                                                                                   
