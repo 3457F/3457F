@@ -732,6 +732,14 @@ void blue_rush(){
     chassis.waitUntil(28);
     doinker.toggle();
     waitd;
-
     doinker.toggle();
+
+    chassis.moveToPose(33.867, -34.16, 132, 1200, {.forwards = true});
+    chassis.waitUntil(15);
+    doinker.toggle();
+    waitd;
+
+    chassis.moveToPoint(21.979, -21.882, 1200, {.forwards = true, .maxSpeed = 70});
+
+    
 }
