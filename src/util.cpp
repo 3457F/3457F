@@ -102,7 +102,7 @@ void turnAndMoveToPoint(
             , params.moveTO
             , {
                 .forwards = params.forwards
-                , .maxSpeed = params.mvMaxSpeed
+                , .maxSpeed = params.mvMaxSpeed, .minSpeed = params.mvMinSpeed
                 , .earlyExitRange = params.mvEarlyExitRange
             }
             , params.async

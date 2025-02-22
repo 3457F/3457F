@@ -17,6 +17,7 @@
 
 #define waitd chassis.waitUntilDone()
 #define MAX_SPEED 127.0
+#define MIN_SPEED 127.0
 
 // 1:45 -- https://www.vexrobotics.com/high-stakes-manual#quickreference:~:text=V5RC%20High%20Stakes%3A%20A%20Primer
 const int opcontrol_time = (60 * 1000) + (45 * 1000);
@@ -95,6 +96,7 @@ struct tamtpParams {
 
     float mvMaxSpeed = MAX_SPEED;
 
+    float mvMinSpeed = MIN_SPEED;
     /** runs `chassis.moveToPose()` instead of `chassis.moveToPoint()`
     after turning to the point. it was more of a test on my side to see
     why the robot kept turning arbitrarily right before it reached the point  */
