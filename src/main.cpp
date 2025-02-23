@@ -217,7 +217,7 @@ void competition_initialize() {
 void autonomous() {
 	chassis.setBrakeMode(pros::motor_brake_mode_e::E_MOTOR_BRAKE_HOLD);
 	
-blue_rush();
+skills();
 
 	/** AUTON SELECTOR RUNNING */
 	// auton_run();                                                                                                                                                                   
