@@ -31,6 +31,11 @@ Intake::Intake(
     held_ring = 1;
 }
 
+// config
+void Intake::set_brake_mode(pros::motor_brake_mode_e_t mode) {
+    intake_motors.set_brake_mode_all(mode);
+}
+
 void Intake::floating_intake() {
     floating_motor.move(-127);
 }

@@ -16,7 +16,7 @@
 #include <future>
 #include <set>
 
-#define skillsMSpd .maxSpeed=100
+#define skillsMSpd .maxSpeed = 100
 
 // declares pure pursuit files
 
@@ -411,59 +411,191 @@ void red_negative_elims() {
 ASSET(skills_1_txt);
 
 void skills() {
-    intake.intake_brake_mode=pros::E_MOTOR_BRAKE_COAST;
+    // initializing
+    intake.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+    chassis.setPose(
+        -59.142
+        , 0
+        , -90
+    );
 
-    chassis.setPose(-59.142, 0, -90);
-
+    // scores onto alliance stake
     intake.intake();
     pros::delay(500);
 
-    // start of first mogo
-
-    chassis.moveToPoint(-47.982, 0, 850, {.forwards=false, skillsMSpd});
+    // moves towards mogo & clamps
+    chassis.moveToPoint(
+        // -47.982
+        -47
+        , 0
+        , 1250
+        , {
+            .forwards = false
+            , skillsMSpd
+        }
+    );
     waitd;
     intake.brake();
-    chassis.moveToPose(-49.463, 23.96, 0, 2000, {.maxSpeed=60});
+    chassis.moveToPose(
+        // -49.463
+        -47
+        , 23.96
+        , 0
+        , 2000
+        , {
+            .maxSpeed = 60
+        }
+    );
     waitd;
     mogo.clamp();
-    
     pros::delay(150);
 
-    // rings 
-    chassis.turnToPoint(-20.396, 20.846, 1000, {.forwards=false, skillsMSpd });
-    waitd;
+    // ring #1
+    // chassis.turnToPoint(
+    //     -20.396
+    //     , 20.846
+    //     , 1000
+    //     , {
+    //         .forwards = false
+    //         , skillsMSpd
+    //     }
+    // );
+    // waitd;
+    // intake.intake();
+    // chassis.moveToPoint(
+    //     -21.877
+    //     , 20.846
+    //     , 1000
+    //     , {
+    //         .forwards = false
+    //         , skillsMSpd
+    //     }
+    // );
+    // waitd;
     intake.intake();
-    chassis.moveToPoint(-21.877, 20.846, 1000, {.forwards=false, skillsMSpd});
+
+    turnAndMoveToPoint(
+        -27
+        , 20.846
+        , {
+            .forwards = false
+            , .mvMaxSpeed = 80
+        }
+    );
+
+    // ring #2
+    // chassis.turnToPoint(23.908, 40.463, 1000, {.forwards=false, skillsMSpd});
+    // waitd;
+    // chassis.moveToPoint(23.908, 40.463, 1100, {.forwards=false, skillsMSpd});
+    // waitd;
+    // MIGHT HIT LADDER
+    // turnAndMoveToPoint(
+    //     23.417
+    //     , 43.821
+    //     , {
+    //         .forwards = false
+    //         , .mvMaxSpeed = 60
+    //     }
+    // );
+    chassis.turnToHeading(
+        225
+        , 1000
+    );
     waitd;
-    chassis.turnToPoint(23.908, 40.463, 1000, {.forwards=false, skillsMSpd});
-    waitd;
-    chassis.moveToPoint(23.908, 40.463, 1100, {.forwards=false, skillsMSpd});
-    waitd;
-    chassis.moveToPoint(52.633, 42.166, TO, {.forwards=false, skillsMSpd});
+    chassis.moveToPose(
+        23.417
+        , 43.821
+        , 270
+        , 1000
+        , {
+            .forwards = false
+        }
+    );
     waitd;
 
+    lemlib::Pose get_blue_neg_rings = chassis.getPose();
+
+    // ring #3
+    // chassis.moveToPoint(52.633, 42.166, TO, {.forwards=false, skillsMSpd});
+    chassis.moveToPoint(
+        47.178
+        , get_blue_neg_rings.y
+        , 1000
+        , {
+            .forwards = false
+        }
+    );
+    waitd;
+    // move further, slower for ring #4
+    chassis.moveToPoint(
+        58.806
+        , get_blue_neg_rings.y
+        , 1000
+        , {
+            .forwards = false
+        }
+    );
+    waitd;
+
+    // wait for stuff to properly intake
     pros::delay(1000);
 
-    // wall stake
+    /** scoring on top wall stake (relative to pathjerry) */
+    // move back
     intake.brake();
-    chassis.moveToPoint(7.5, 37.685, 2000, {.maxSpeed=65});
+    // chassis.moveToPoint(7.5, 37.685, 2000, {.maxSpeed=65});
+    // waitd;
+    // pros::delay(100);
+    chassis.moveToPoint(
+        0
+        , 47.107
+        , 1500
+    );
     waitd;
-    pros::delay(100);
-    chassis.turnToHeading(-180, 1000, {skillsMSpd});
+
+    // turn towards the wall stake
+    chassis.turnToHeading(
+        -180
+        , 1000
+        , {skillsMSpd}
+    );
     waitd;
+
+    // ready up to collect top-most middle red ring
     intake.intake();
     arm.set_pos(arm.LOADIN_POS);
-    chassis.moveToPose(7.5, 63.035, -180, 900, {.forwards=false, .maxSpeed=60});
+
+
+    // chassis.moveToPose(7.5, 63.035, -180, 900, {.forwards=false, .maxSpeed=60});
+    chassis.moveToPoint(
+        0
+        , 63.032
+        , 500
+        , {
+            .forwards = false
+        }
+    );
     waitd;
+    
+    // wait for ring to be intaked...
     pros::delay(1650);
     intake.brake();
+    
+    // score ring on wall stake!
     arm.set_pos(arm.DUNK_POS);
     pros::delay(750);
     arm.set_pos(arm.HOLD_POS);
-    chassis.setPose(0, 62.776, chassis.getPose().theta);
+
+    // auton reset but without the distance sensors ;-;
+    // chassis.setPose(0, 62.776, chassis.getPose().theta);
     
-    intake.intake();
-    chassis.moveToPoint(0, 48.685, TO, {skillsMSpd});
+    // move backwards
+    chassis.moveToPoint(
+        0
+        , 47.107
+        , TO
+        , {skillsMSpd}
+    );
     waitd;
     chassis.turnToHeading(90, 750);
     waitd;

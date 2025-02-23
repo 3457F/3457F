@@ -67,6 +67,9 @@ class Intake {
             , bool type
         );
 
+        // config
+        void set_brake_mode(pros::motor_brake_mode_e_t mode);
+
         void intake();
         void intake_auton();
         void floating_intake();
