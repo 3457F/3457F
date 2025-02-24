@@ -77,6 +77,7 @@ class Timer {
 };
 
 struct tamtpParams {
+    // TODO: make this 750ms?
     int turnTO = TO;
 
     /** what direction to turn in, defaults to AUTO */

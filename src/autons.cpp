@@ -39,8 +39,21 @@ void print_robot_pos(void* chassisVoid) {
 				  << " | theta: " << pos.theta
 				  << std::endl;
 
-        pros::delay(20);
+        pros::delay(100);
     } 
+}
+
+void test_auton() {
+    chassis.setPose(0, 0, 0);
+
+    chassis.moveToPoint(0, 24, 1000);
+    waitd;
+
+    chassis.turnToHeading(90, 800);
+    waitd;
+
+    chassis.moveToPoint(chassis.getPose().x, 24, 1000);
+    waitd;
 }
 
 /**
@@ -410,6 +423,7 @@ void red_negative_elims() {
 
 ASSET(skills_1_txt);
 
+// based on: https://www.youtube.com/watch?v=sKWXhcAJLJ4
 void skills() {
     // initializing
     intake.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
@@ -436,6 +450,7 @@ void skills() {
     );
     waitd;
     intake.brake();
+    // TODO: curves unnecssarily, need to fix
     chassis.moveToPose(
         // -49.463
         -47
@@ -446,65 +461,51 @@ void skills() {
             .maxSpeed = 60
         }
     );
+    // lemlib::Pose get_mogo_pose = chassis.getPose();
+    // turnAndMoveToPoint(
+    //     get_mogo_pose.x
+    //     , 23.96
+    //     , {
+    //         .mvMaxSpeed = 60
+    //     }
+    // );
     waitd;
     mogo.clamp();
     pros::delay(150);
 
     // ring #1
-    // chassis.turnToPoint(
-    //     -20.396
-    //     , 20.846
-    //     , 1000
-    //     , {
-    //         .forwards = false
-    //         , skillsMSpd
-    //     }
-    // );
-    // waitd;
-    // intake.intake();
-    // chassis.moveToPoint(
-    //     -21.877
-    //     , 20.846
-    //     , 1000
-    //     , {
-    //         .forwards = false
-    //         , skillsMSpd
-    //     }
-    // );
-    // waitd;
     intake.intake();
-
+    // chassis.turnToHeading(
+    //     270,
+    //     500
+    // );
+    lemlib::Pose get_first_ring = chassis.getPose();
+    // chassis.moveToPoint(
+    //     -32.952
+    //     , get_first_ring.y
+    //     , 1000
+    //     , {
+    //         .forwards = false 
+    //     }
+    // );
     turnAndMoveToPoint(
         -27
-        , 20.846
+        , get_first_ring.y
         , {
             .forwards = false
-            , .mvMaxSpeed = 80
+            , .mvMaxSpeed = 60
         }
     );
 
     // ring #2
-    // chassis.turnToPoint(23.908, 40.463, 1000, {.forwards=false, skillsMSpd});
-    // waitd;
-    // chassis.moveToPoint(23.908, 40.463, 1100, {.forwards=false, skillsMSpd});
-    // waitd;
-    // MIGHT HIT LADDER
-    // turnAndMoveToPoint(
-    //     23.417
-    //     , 43.821
-    //     , {
-    //         .forwards = false
-    //         , .mvMaxSpeed = 60
-    //     }
-    // );
     chassis.turnToHeading(
         225
         , 1000
     );
     waitd;
     chassis.moveToPose(
-        23.417
-        , 43.821
+        22.153
+        , 40.535
         , 270
         , 1000
         , {
@@ -513,46 +514,50 @@ void skills() {
     );
     waitd;
 
-    lemlib::Pose get_blue_neg_rings = chassis.getPose();
+    // set arm up to get ring
+    arm.set_pos(arm.LOADIN_POS);
 
-    // ring #3
-    // chassis.moveToPoint(52.633, 42.166, TO, {.forwards=false, skillsMSpd});
-    chassis.moveToPoint(
-        47.178
-        , get_blue_neg_rings.y
-        , 1000
-        , {
-            .forwards = false
-        }
-    );
-    waitd;
-    // move further, slower for ring #4
-    chassis.moveToPoint(
-        58.806
-        , get_blue_neg_rings.y
-        , 1000
-        , {
-            .forwards = false
-        }
-    );
-    waitd;
+    // lemlib::Pose get_blue_neg_rings = chassis.getPose();
 
-    // wait for stuff to properly intake
-    pros::delay(1000);
+    // // ring #3
+    // // chassis.moveToPoint(52.633, 42.166, TO, {.forwards=false, skillsMSpd});
+    // chassis.moveToPoint(
+    //     47.178
+    //     , get_blue_neg_rings.y
+    //     , 1000
+    //     , {
+    //         .forwards = false
+    //     }
+    // );
+    // waitd;
+    // // move further, slower for ring #4
+    // chassis.moveToPoint(
+    //     58.806
+    //     , get_blue_neg_rings.y
+    //     , 1000
+    //     , {
+    //         .forwards = false
+    //     }
+    // );
+    // waitd;
+
+    // // wait for stuff to properly intake
+    // pros::delay(1000);
+
+    // so ring gets in arm
+    pros::delay(250);
+    // hopefully ring is in arm by now... don't wanna break the motor
+    intake.brake();
 
     /** scoring on top wall stake (relative to pathjerry) */
-    // move back
-    intake.brake();
-    // chassis.moveToPoint(7.5, 37.685, 2000, {.maxSpeed=65});
-    // waitd;
-    // pros::delay(100);
-    chassis.moveToPoint(
-        0
-        , 47.107
-        , 1500
+    // comes back to align with wall stake
+    turnAndMoveToPoint(
+        0, 39.777
+        , {
+            .turnTO = 500
+        }
     );
-    waitd;
-
+    
     // turn towards the wall stake
     chassis.turnToHeading(
         -180
@@ -561,12 +566,14 @@ void skills() {
     );
     waitd;
 
+    return;
+
     // ready up to collect top-most middle red ring
     intake.intake();
-    arm.set_pos(arm.LOADIN_POS);
+    arm.set_pos(arm.HOLD_POS);
 
-
-    // chassis.moveToPose(7.5, 63.035, -180, 900, {.forwards=false, .maxSpeed=60});
+    // move towards alliance stake, hopefully
+    // scoring ring in front
     chassis.moveToPoint(
         0
         , 63.032
@@ -576,10 +583,6 @@ void skills() {
         }
     );
     waitd;
-    
-    // wait for ring to be intaked...
-    pros::delay(1650);
-    intake.brake();
     
     // score ring on wall stake!
     arm.set_pos(arm.DUNK_POS);

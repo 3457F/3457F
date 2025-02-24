@@ -97,7 +97,8 @@ lemlib::OdomSensors sensors(
 							// &vertical_track, // vert tracking wheel that kinda doesn't work
 							nullptr, // vertical tracking wheel 1, set to nullptr as we are using IMEs
                             nullptr, // vertical tracking wheel 2, set to nullptr as we are using IMEs
-                            &horizontal_track, // horizontal tracking wheel 1
+                            nullptr, // horiz nullptr test
+							// &horizontal_track, // horizontal tracking wheel 1
                             nullptr, // horizontal tracking wheel 2, set to nullptr as we don't have a second one
                             &imu // inertial sensor
 );
@@ -200,7 +201,7 @@ void disabled() {
  * starts.
  */
 void competition_initialize() {
-
+	// pros::Task print_pose(print_robot_pos, &chassis);
 };
 
 /**
@@ -217,12 +218,24 @@ void competition_initialize() {
 void autonomous() {
 	chassis.setBrakeMode(pros::motor_brake_mode_e::E_MOTOR_BRAKE_HOLD);
 	
-	skills();
+	test_auton();
 
 	/** AUTON SELECTOR RUNNING */
 	// auton_run();                                                                                                                                                                   
 };
-// set
+
+void opcontrolTask(void* chassisVoid) {
+	lemlib::Chassis* chassis = static_cast<lemlib::Chassis*>(chassisVoid);
+
+	while (true) {
+		// debug
+		lemlib::Pose curr_pose = chassis->getPose();
+		printf("chassis x: %f chassis y: %f, chassis theta: %f\n", curr_pose.x, curr_pose.y, curr_pose.theta);
+
+		pros::delay(1000);
+	}
+}
+
 /**
  * Runs the operator control code. This function will be started in its *own task*
  * with the default priority and stack size whenever the robot is enabled via
@@ -237,6 +250,8 @@ void autonomous() {
  * task, not resume it from where it left off.
  */
 void opcontrol() {
+	// pros::Task poseTask(opcontrolTask, &chassis);
+
 	// brake mode back to coast!
 	chassis.setBrakeMode(pros::motor_brake_mode_e::E_MOTOR_BRAKE_COAST);
 	intake.intake_motors.set_brake_mode_all(pros::motor_brake_mode_e::E_MOTOR_BRAKE_COAST);

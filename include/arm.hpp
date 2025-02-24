@@ -13,7 +13,7 @@ class Arm {
     public:
         static constexpr double INIT_POS = 0.0 * 100;
         static constexpr double START_POS = 18.0 * 100;
-        static constexpr double LOADIN_POS = 25 * 100; // 45 actual; 45 -> 55 -> 50
+        static constexpr double LOADIN_POS = 35 * 100; // 25 originally
         static constexpr double DUNK_POS = 100.0 * 100; 
         static constexpr double SCORE_POS = 140.0 * 100;
         static constexpr double AUTON = 200.0 * 100;

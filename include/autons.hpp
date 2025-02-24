@@ -2,6 +2,8 @@
 
 void print_robot_pos(void* chassisVoid);
 
+void test_auton();
+
 void red_positive_awp_nostack();
 
 void blue_negative_awp();
