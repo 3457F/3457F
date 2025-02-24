@@ -53,7 +53,7 @@ pros::MotorGroup right_motors({
 
 // TODO: get ports
 pros::Rotation horizontal(HORIZ_TRACK_WHEEL);
-
+pros::Rotation vertical(VERTICAL_TRACK_WHEEL);
 /** liblem */
 
 // TODO: verify all config settings
@@ -96,10 +96,11 @@ lemlib::ControllerSettings angular_controller(DT_ANGULAR_P, // proportional gain
 // THEORETICALLY offset is 1.625
 // (my bad offset was -3, sunny's measured offset was 1.28125)
 lemlib::TrackingWheel horizontal_track(&horizontal, lemlib::Omniwheel::NEW_275, 1.625);
+lemlib::TrackingWheel vertical_track(&vertical, lemlib::Omniwheel::NEW_2, 0.568);
 
 lemlib::OdomSensors sensors(
 							// &vertical_track, // vert tracking wheel that kinda doesn't work
-							nullptr, // vertical tracking wheel 1, set to nullptr as we are using IMEs
+							&vertical_track, // vertical tracking wheel 1, set to nullptr as we are using IMEs
                             nullptr, // vertical tracking wheel 2, set to nullptr as we are using IMEs
                             // nullptr, // horiz nullptr test
 							&horizontal_track, // horizontal tracking wheel 1
