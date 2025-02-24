@@ -91,14 +91,18 @@ lemlib::ControllerSettings angular_controller(DT_ANGULAR_P, // proportional gain
 
 // chnged to positive because tracking wheel is on mogo mech side
 // which is on front of robot!
-lemlib::TrackingWheel horizontal_track(&horizontal, lemlib::Omniwheel::NEW_275, 1.28125); // changed from -3
+
+// so tracking wheel is 5 and 3/8ths from one side
+// THEORETICALLY offset is 1.625
+// (my bad offset was -3, sunny's measured offset was 1.28125)
+lemlib::TrackingWheel horizontal_track(&horizontal, lemlib::Omniwheel::NEW_275, 1.625);
 
 lemlib::OdomSensors sensors(
 							// &vertical_track, // vert tracking wheel that kinda doesn't work
 							nullptr, // vertical tracking wheel 1, set to nullptr as we are using IMEs
                             nullptr, // vertical tracking wheel 2, set to nullptr as we are using IMEs
-                            nullptr, // horiz nullptr test
-							// &horizontal_track, // horizontal tracking wheel 1
+                            // nullptr, // horiz nullptr test
+							&horizontal_track, // horizontal tracking wheel 1
                             nullptr, // horizontal tracking wheel 2, set to nullptr as we don't have a second one
                             &imu // inertial sensor
 );
