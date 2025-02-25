@@ -52,7 +52,7 @@ void test_auton() {
     chassis.turnToHeading(90, 800);
     waitd;
 
-    chassis.moveToPoint(chassis.getPose().x, 24, 1000);
+    chassis.moveToPoint(24, 24, 1000);
     waitd;
 }
 
