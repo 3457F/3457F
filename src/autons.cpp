@@ -676,7 +676,7 @@ void move_forward() {
     );
 }
 
-void prog_skills(){
+void aarav_skills(){
     chassis.setPose(60,0, 270);
 
     //scoring alliance stake
@@ -685,7 +685,7 @@ void prog_skills(){
     intake.brake();
 
     //moving to first mogo 
-    chassis.moveToPoint(-47, 0, 400);
+    chassis.moveToPoint(-47, 0, 800, {.forwards = false});
     waitd;
     chassis.moveToPose(-47, -23.733, 180, 1100, {.forwards = true, .maxSpeed = 70});
     chassis.waitUntil(21);
