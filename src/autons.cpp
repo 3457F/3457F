@@ -44,15 +44,12 @@ void print_robot_pos(void* chassisVoid) {
 }
 
 void test_auton() {
-    chassis.setPose(0, 0, 0);
+    chassis.setPose(0,0,0);
 
-    chassis.moveToPoint(0, 24, 1000);
+    chassis.moveToPoint(0, 24, 1000, {.maxSpeed = 80});
     waitd;
 
-    chassis.turnToHeading(90, 800);
-    waitd;
-
-    chassis.moveToPoint(24, 24, 1000);
+    chassis.turnToHeading(90, 1000, {.maxSpeed = 80});
     waitd;
 }
 
@@ -869,12 +866,6 @@ void blue_rush(){
     waitd;
     doinker.toggle();
 
-    chassis.moveToPose(33.867, -34.16, 132, 1200, {.forwards = true});
-    chassis.waitUntil(15);
-    doinker.toggle();
-    waitd;
-
-    chassis.moveToPoint(21.979, -21.882, 1200, {.forwards = true, .maxSpeed = 70});
 
     
 }

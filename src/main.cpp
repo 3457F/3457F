@@ -29,7 +29,6 @@
 // controller definition
 pros::Controller controller(pros::E_CONTROLLER_MASTER);
 
-// TODO: add imu port
 pros::Imu imu(17);
 
 // ---
@@ -96,14 +95,12 @@ lemlib::ControllerSettings angular_controller(DT_ANGULAR_P, // proportional gain
 // THEORETICALLY offset is 1.625
 // (my bad offset was -3, sunny's measured offset was 1.28125)
 lemlib::TrackingWheel horizontal_track(&horizontal, lemlib::Omniwheel::NEW_275, 1.625);
-lemlib::TrackingWheel vertical_track(&vertical, lemlib::Omniwheel::NEW_2, 0.568);
+lemlib::TrackingWheel vertical_track(&vertical, lemlib::Omniwheel::NEW_2, 3.12);
 
 lemlib::OdomSensors sensors(
-							// &vertical_track, // vert tracking wheel that kinda doesn't work
-							&vertical_track, // vertical tracking wheel 1, set to nullptr as we are using IMEs
-                            nullptr, // vertical tracking wheel 2, set to nullptr as we are using IMEs
-                            // nullptr, // horiz nullptr test
-							&horizontal_track, // horizontal tracking wheel 1
+							nullptr, // vert nullptr test
+							nullptr, // vertical tracking wheel 2, set to nullptr as we are using IMEs
+                            nullptr, // horizontal tracking wheel 1
                             nullptr, // horizontal tracking wheel 2, set to nullptr as we don't have a second one
                             &imu // inertial sensor
 );
@@ -151,6 +148,8 @@ RushMech rush_mech = RushMech(RUSH_MECH_PORT);
  */
 
 bool L1_state = false;
+
+// pros::Task print_pose(print_robot_pos, &chassis);
 
 // TODO: shld be ok if the task starts at the beginning...?
 // pros::Task color_sort(&update_sort_auton, &intake);
@@ -205,9 +204,7 @@ void disabled() {
  * This task will exit when the robot is enabled and autonomous or opcontrol
  * starts.
  */
-void competition_initialize() {
-	// pros::Task print_pose(print_robot_pos, &chassis);
-};
+void competition_initialize() {};
 
 /**
  * Runs the user autonomous code. This function will be started in its own task
@@ -223,6 +220,7 @@ void competition_initialize() {
 void autonomous() {
 	chassis.setBrakeMode(pros::motor_brake_mode_e::E_MOTOR_BRAKE_HOLD);
 	
+	// blue_rush();
 	test_auton();
 
 	/** AUTON SELECTOR RUNNING */
