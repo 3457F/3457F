@@ -95,7 +95,7 @@ lemlib::ControllerSettings angular_controller(DT_ANGULAR_P, // proportional gain
 // THEORETICALLY offset is 1.625
 // (my bad offset was -3, sunny's measured offset was 1.28125)
 lemlib::TrackingWheel horizontal_track(&horizontal, lemlib::Omniwheel::NEW_275, 1.625);
-lemlib::TrackingWheel vertical_track(&vertical, lemlib::Omniwheel::NEW_2, -1.2);
+lemlib::TrackingWheel vertical_track(&vertical, 2, -1.2);
 
 lemlib::OdomSensors sensors(
 							&vertical_track
