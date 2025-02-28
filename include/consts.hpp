@@ -13,7 +13,7 @@
 
 // tracking wheel port
 #define HORIZ_TRACK_WHEEL 9
-#define VERTICAL_TRACK_WHEEL 4 
+#define VERTICAL_TRACK_WHEEL -4 
 
 // arm ports
 #define ARM_PORT 12
