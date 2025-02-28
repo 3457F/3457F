@@ -873,3 +873,37 @@ void blue_rush(){
 
     
 }
+
+void red_neg(){
+    chassis.setPose(-57.5, 23.5, 90);
+
+    chassis.moveToPoint(-28, 23.5, 1200, {.forwards = true, .maxSpeed = 90});
+    chassis.waitUntil(24.3);
+    mogo.toggle();
+    waitd;
+
+
+    chassis.turnToHeading(228, 650);
+    waitd;
+
+    chassis.setPose(-28, 23.5, 228);
+    chassis.moveToPoint(-5.987, 39.312, 1700, {.forwards = false});
+    intake.intake();
+    waitd;
+    chassis.setPose(-9.105, 41.261, 228);
+
+    turnAndMoveToPoint(-7.741, 60.165, {.forwards = false});
+    waitd;
+
+    chassis.turnToPoint(-5, 69, 700, {.forwards = false});
+    waitd;
+    chassis.moveToPoint(-14.367, 35.999, 1100, {.forwards = true});
+    waitd;
+
+    chassis.setPose(-14.367, 35.999, 130);
+
+    // turnAndMoveToPoint(-23.527, 47.303, {.forwards = false});
+    // waitd;
+
+
+}

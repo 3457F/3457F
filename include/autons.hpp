@@ -18,3 +18,4 @@ void red_negative_elims();
 void skills();
 void blue_rush();
 void aarav_skills();
+void red_neg();

@@ -95,12 +95,12 @@ lemlib::ControllerSettings angular_controller(DT_ANGULAR_P, // proportional gain
 // THEORETICALLY offset is 1.625
 // (my bad offset was -3, sunny's measured offset was 1.28125)
 lemlib::TrackingWheel horizontal_track(&horizontal, lemlib::Omniwheel::NEW_275, 1.625);
-lemlib::TrackingWheel vertical_track(&vertical, lemlib::Omniwheel::NEW_2, 3.12);
+lemlib::TrackingWheel vertical_track(&vertical, lemlib::Omniwheel::NEW_2, 4.321);
 
 lemlib::OdomSensors sensors(
 							nullptr, // vert nullptr test
 							nullptr, // vertical tracking wheel 2, set to nullptr as we are using IMEs
-                            nullptr, // horizontal tracking wheel 1
+                            &horizontal_track, // horizontal tracking wheel 1
                             nullptr, // horizontal tracking wheel 2, set to nullptr as we don't have a second one
                             &imu // inertial sensor
 );
@@ -221,7 +221,7 @@ void autonomous() {
 	chassis.setBrakeMode(pros::motor_brake_mode_e::E_MOTOR_BRAKE_HOLD);
 	
 	// blue_rush();
-	test_auton();
+	red_neg();
 
 	/** AUTON SELECTOR RUNNING */
 	// auton_run();                                                                                                                                                                   
