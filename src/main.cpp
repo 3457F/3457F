@@ -95,7 +95,7 @@ lemlib::ControllerSettings angular_controller(DT_ANGULAR_P, // proportional gain
 // THEORETICALLY offset is 1.625
 // (my bad offset was -3, sunny's measured offset was 1.28125)
 lemlib::TrackingWheel horizontal_track(&horizontal, lemlib::Omniwheel::NEW_275, 1.625);
-lemlib::TrackingWheel vertical_track(&vertical, 2, -1.2);
+lemlib::TrackingWheel vertical_track(&vertical, 2, -3.5);
 
 lemlib::OdomSensors sensors(
 							&vertical_track
@@ -221,7 +221,6 @@ void competition_initialize() {};
 void autonomous() {
 	chassis.setBrakeMode(pros::motor_brake_mode_e::E_MOTOR_BRAKE_HOLD);
 	
-	// blue_rush();
 	red_neg();
 
 	/** AUTON SELECTOR RUNNING */
@@ -296,6 +295,7 @@ void opcontrol() {
 		// arm
 		bool DOWN_new_press = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN);
 		bool RIGHT_new_press = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT);
+		bool LEFT_new_press = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_LEFT);
 		bool L1_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1);
 		
 		/**
@@ -354,6 +354,13 @@ void opcontrol() {
 
 		if (UP_new_press) {
 			rush_mech.toggle();
+		}
+
+		if (LEFT_new_press){
+			intake.outtake();
+			pros::delay(20);
+			intake.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+			arm.set_pos(arm.DUNK_POS);
 		}
 
 		/**

@@ -9,6 +9,7 @@
 #include "pros/motors.h"
 #include "pros/rtos.hpp"
 #include "util.hpp"
+#include "intake.hpp"
 
 struct LoadInInfo;
 
@@ -146,18 +147,25 @@ void Arm::set_pos(float target_val) {
 //         intake.intake();
 //     }
 // }
+void Arm::dunk_cycle(){
+  
+}
+    
 
 void Arm::score_cycle() {
     // whether at START_POS or SCORE_POS, return to LOADIN_POS
     if (state == 0 || state == 2) {
         state = 1;
-        intake->intake_motors.set_brake_mode(pros::E_MOTOR_BRAKE_BRAKE);
+        intake->intake_motors.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
         std::cout << "LOADIN_POS" << std::endl;
-        intake->outtake();
-        pros::delay(100);
-        intake->brake();
+
+
+        // intake->outtake();
+        // pros::delay(200);
         this->set_pos(LOADIN_POS);
-     
+        intake->intake(); 
+        pros::delay(800);
+        intake->brake();
     }
     
     // when at LOADIN_POS, go to SCORE_POS
@@ -167,7 +175,7 @@ void Arm::score_cycle() {
         // // intake->
         // pros::delay(50);
         // intake->brake();
-        // intake->intake_motors.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+        intake->intake_motors.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
         std::cout << "SCORE_POS" << std::endl;
         this->set_pos(SCORE_POS);
         // pros::delay(1000);

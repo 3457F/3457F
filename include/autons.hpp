@@ -19,3 +19,4 @@ void skills();
 void blue_rush();
 void aarav_skills();
 void red_neg();
+void move_forward();

@@ -24,6 +24,7 @@
 ASSET(mecha_red_pos_awp_corner_3_txt);
 ASSET(mecha_red_pos_awp_mogo_txt);
 ASSET(mecha_red_pos_awp_stake_txt);
+ASSET(two_ring_txt)
 
 void print_robot_pos(void* chassisVoid) {
     lemlib::Chassis* chassis
@@ -664,17 +665,7 @@ void red_negative_five_ring(){
 }
 
 void move_forward() {
-    chassis.setPose(
-        0
-        , 0
-        , 90
-    );
-
-    chassis.moveToPoint(
-        24
-        , 0
-        , 1000
-    );
+  chassis.turnToHeading(90, 650);
 }
 
 void aarav_skills(){
@@ -865,10 +856,16 @@ void blue_rush(){
 
     chassis.moveToPose(15.061, -47.802, 81.8, 1250, {.forwards = false, .minSpeed = 125});
     intake.intake();
-    chassis.waitUntil(28);
+    chassis.waitUntil(23);
     doinker.toggle();
     waitd;
     doinker.toggle();
+
+    turnAndMoveToPoint(41.37, -32.6, {.forwards = true, . async = true});
+    chassis.waitUntil(7);
+    doinker.toggle();
+    waitd;
+
 
 
     
@@ -877,33 +874,44 @@ void blue_rush(){
 void red_neg(){
     chassis.setPose(-57.5, 23.5, 90);
 
-    chassis.moveToPoint(-28, 23.5, 1200, {.forwards = true, .maxSpeed = 90});
-    chassis.waitUntil(24.3);
+    chassis.moveToPoint(-28, 23.5, 1300, {.forwards = true, .maxSpeed = 75});
+    chassis.waitUntil(25);
     mogo.toggle();
     waitd;
 
-
-    chassis.turnToHeading(228, 650);
+    chassis.turnToHeading(225, 650);
     waitd;
-
-    chassis.setPose(-28, 23.5, 228);
-    chassis.moveToPoint(-5.987, 39.312, 1700, {.forwards = false});
+    chassis.setPose(-28, 23.5,225);
+    chassis.moveToPoint(-10.528, 40.481, 1000, {.forwards = false});
     intake.intake();
     waitd;
-    chassis.setPose(-9.105, 41.261, 228);
-
-    turnAndMoveToPoint(-7.741, 60.165, {.forwards = false});
+    pros::delay(500);
+    chassis.turnToHeading(214, 650);
+    waitd;
+    chassis.moveToPoint(-19.751, 44.072, 1200);
     waitd;
 
-    chassis.turnToPoint(-5, 69, 700, {.forwards = false});
-    waitd;
-    chassis.moveToPoint(-14.367, 35.999, 1100, {.forwards = true});
+    // chassis.setPose(-16.40, 42.44,293);
+    turnAndMoveToPoint(-10.692, 49.785, {.forwards = false});
     waitd;
 
-    chassis.setPose(-14.367, 35.999, 130);
 
-    // turnAndMoveToPoint(-23.527, 47.303, {.forwards = false});
+
+    // chassis.turnToHeading(180 , 650);
     // waitd;
+    // chassis.setPose(-7.917, 39.0125,180);
+    // chassis.moveToPoint(-7.427, 58.021, 1000, {.forwards = false});
+    // chassis.turnToHeading(184, 120);
+    
+    
+    // chassis.moveToPoint(-6.669, 58.021, 1000, {.forwards = false});
+    // waitd;
+    // chassis.setPose(-6.669, 58.021,180);
 
+    // chassis.moveToPoint(-6.669, 36.974, 1000);
+    // waitd;
+    // chassis.setPose(-6.669, 36.974,180);
+
+    // turnAndMoveToPoint(-16.241, 45.868, {.forwards= false});
 
 }
