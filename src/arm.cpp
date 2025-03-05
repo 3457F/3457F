@@ -163,9 +163,9 @@ void Arm::score_cycle() {
         // intake->outtake();
         // pros::delay(200);
         this->set_pos(LOADIN_POS);
-        intake->intake(); 
-        pros::delay(800);
-        intake->brake();
+        // intake->intake(); 
+        // pros::delay(800);
+        // intake->brake();
     }
     
     // when at LOADIN_POS, go to SCORE_POS
