@@ -15,8 +15,11 @@ struct LoadInInfo;
 
 // calculates error when max_val = both max_val and 0!
 float calc_error(float curr_val, float expected_val) {
+    // std::cout << "expecting " << expected_val << " but instead got " << curr_val << "...";
+
     float error = expected_val - curr_val;
-    std::cout << error << " balls "  << std::endl;
+
+    // std::cout << " | final error: " << error << std::endl;
 
     return error;
 }
@@ -27,12 +30,18 @@ void update(void* fetchInfoVoid) {
 
     while (true) {
         std::int32_t curr_angle = fetchInfo->encoder->get_position();
-        std::cout << curr_angle << std::endl;
+
+        // float error = calc_error(
+        //     static_cast<float>(*fetchInfo->target)
+        //     , static_cast<float>(curr_angle)
+        // );
 
         float error = calc_error(
-            static_cast<float>(*fetchInfo->target)
-            , static_cast<float>(curr_angle)
+            static_cast<float>(curr_angle)
+            , static_cast<float>(*fetchInfo->target)
         );
+
+        std::cout << "error: " << error;
 
         SetInfo setInfo = {
             fetchInfo->pid
@@ -44,7 +53,9 @@ void update(void* fetchInfoVoid) {
         // float pid_unit = update_info(&setInfo);
         float pid_unit = fetchInfo->pid->update(error);
 
-        // fetchInfo->arm->arm_motor.move_voltage(pid_unit);
+        std::cout << " | resultant pid unit: " << pid_unit << std::endl;
+
+        fetchInfo->arm->arm_motor.move_voltage(-pid_unit);
         
         pros::delay(20);
     }

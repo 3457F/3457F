@@ -2,18 +2,15 @@
 #define EIGEN_DISABLE_UNALIGNED_ARRAY_ASSERT
 #include "Eigen/Dense"
 
-// im ngl i got no clue if this works 
-// this is what chat gutpa gave me
-
 class KalmanFilter {
 public:
-    Eigen::VectorXd X;  // State vector [x, y, theta]
-    Eigen::MatrixXd P;  // Covariance matrix
-    Eigen::MatrixXd A;  // State transition model
-    Eigen::MatrixXd H;  // Observation model
-    Eigen::MatrixXd Q;  // Process noise
-    Eigen::MatrixXd R;  // Measurement noise
-    Eigen::MatrixXd I;  // Identity matrix
+    Eigen::VectorXd X;  // state vector [x, y, theta]
+    Eigen::MatrixXd P;  // covariance matrix
+    Eigen::MatrixXd A;  // state transition model
+    Eigen::MatrixXd H;  // observation model
+    Eigen::MatrixXd Q;  // process noise
+    Eigen::MatrixXd R;  // measurement noise
+    Eigen::MatrixXd I;  // identity matrix
     
     KalmanFilter(double q, double r) {
         X = Eigen::VectorXd(3);  // [x, y, theta]

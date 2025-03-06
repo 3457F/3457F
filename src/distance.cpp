@@ -125,23 +125,24 @@ void updatePose() {
     double x_center = (left < right) ? x_from_left : x_from_right;
     double y_center = (front < back) ? y_from_front : y_from_back;
 
-    // Create measurement vector Z: [x_center, y_center, theta]
+    // get the raw measured pose estimate from the distance sensors
     Eigen::VectorXd Z(3);
     Z << x_center, y_center, theta;
 
-    // Kalman filter update (state assumed to be maintained in global coordinates)
+    // feed this measured pose estimate to the kalman filter, and let the filter
+    // weight this new (possibly uncertain) prediction against previous predictions
     kf.predict();
     kf.update(Z);
 
-    // Retrieve filtered state estimate
+    // we now have a new weighted estimate for our robot's position!
     double filteredX     = kf.X(0);
     double filteredY     = kf.X(1);
     double filteredTheta = kf.X(2);
 
-    // In this approach, the Kalman filter fuses measurements already expressed in global coordinates.
+    // modifies odometry class's pose estimate to use these new values
     calculatedPose.x     = filteredX;
     calculatedPose.y     = filteredY;
-    // Here we continue to use the raw IMU theta; you could also use filteredTheta if desired.
+    // imu is relatively reliable; not using kalman filter logic to update heading
     calculatedPose.theta = theta;
 
     // Print the results (requires C++20)
