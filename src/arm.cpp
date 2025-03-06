@@ -16,10 +16,7 @@ struct LoadInInfo;
 // calculates error when max_val = both max_val and 0!
 float calc_error(float curr_val, float expected_val) {
     float error = expected_val - curr_val;
-
-    if (std::abs(error) > 350.0) {
-        error += 360.0;
-    }
+    std::cout << error << " balls "  << std::endl;
 
     return error;
 }
@@ -30,6 +27,7 @@ void update(void* fetchInfoVoid) {
 
     while (true) {
         std::int32_t curr_angle = fetchInfo->encoder->get_position();
+        std::cout << curr_angle << std::endl;
 
         float error = calc_error(
             static_cast<float>(*fetchInfo->target)
@@ -46,7 +44,7 @@ void update(void* fetchInfoVoid) {
         // float pid_unit = update_info(&setInfo);
         float pid_unit = fetchInfo->pid->update(error);
 
-        fetchInfo->arm->arm_motor.move_voltage(pid_unit);
+        // fetchInfo->arm->arm_motor.move_voltage(pid_unit);
         
         pros::delay(20);
     }
@@ -74,7 +72,7 @@ Arm::Arm(
     pid.reset();
 
     // COMMENT OUT IF ARM WILL NOT ALWAYS START AT INIT_POS
-    // encoder.reset_position();
+    encoder.reset_position();
 
     std::cout << "INIT_POS (INITIALIZATION)";
     this->set_pos(INIT_POS);
