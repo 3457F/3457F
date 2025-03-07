@@ -149,8 +149,9 @@ void red_rush(){
     // only running the floating cuz there is not need for hooks
  
     chassis.moveToPose(
-        -10.645
-        , -48.249
+        -13.465
+        , -48.304
+
         , 261
         , 1250
         , {
@@ -163,6 +164,7 @@ void red_rush(){
     chassis.waitUntil(3);
     doinker.toggle();
     waitd;
+    pros::delay(250);
     intake.brake();
     doinker.toggle();
     //doinker to touch/grab the goal
@@ -170,24 +172,33 @@ void red_rush(){
     pros::delay(420);
 
     //moving the robot and the goal back!
-    chassis.moveToPoint(-45.387, -39.74, TO, {.forwards = true, .minSpeed = 100});
+    chassis.moveToPoint(-34.487, -41.816, TO, {.forwards = true, .minSpeed = 100});
     waitd;
     doinker.toggle();
 
     pros::delay(250);
 
-    chassis.turnToPoint(-33.708, -17.16, TO);
+    chassis.turnToPoint(-22.289, -25.984, TO);
     waitd;
     doinker.toggle();
 
-    chassis.moveToPoint(-33.708, -17.16, TO, {.maxSpeed=60});
+    chassis.moveToPoint(-22.289, -25.984, TO, {.maxSpeed=60});
     waitd;
     mogo.clamp();
 
-    chassis.moveToPoint(-58.364, -37.404, TO, {.forwards=false});
-    pros::delay(400);
+    turnAndMoveToPoint(-57.066, -38.442, {.forwards = false, .async = true});
+    chassis.waitUntil(4);
     intake.intake();
-    waitd;
+    waitd; 
+    pros::delay(800);
+   chassis.turnToHeading(0, 750);
+   waitd;
+//    chassis.moveToPoint(-57.066,-56.609, 1000, {.forwards = false});
+//    waitd;
+//     chassis.waitUntil(4);
+
+
+    
     
     // mogo.toggle();
     // doinker.toggle();
