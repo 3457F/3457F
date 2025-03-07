@@ -149,19 +149,18 @@ void red_rush(){
     // only running the floating cuz there is not need for hooks
  
     chassis.moveToPose(
-        -13.465
-        , -48.304
-
-        , 261
+        -16.757
+        , -47.412
+        , 230
         , 1250
         , {
             .forwards = false
             , .maxSpeed = 127
-            , .minSpeed = 120
+            , .minSpeed = 111
         }
     );
     intake.intake();
-    chassis.waitUntil(3);
+
     doinker.toggle();
     waitd;
     pros::delay(250);
@@ -178,11 +177,11 @@ void red_rush(){
 
     pros::delay(250);
 
-    chassis.turnToPoint(-22.289, -25.984, TO);
+    chassis.turnToPoint(-15.536, -34.354, TO);
     waitd;
     doinker.toggle();
 
-    chassis.moveToPoint(-22.289, -25.984, TO, {.maxSpeed=60});
+    chassis.moveToPoint(-26.84, -36.693, TO, {.maxSpeed=60});
     waitd;
     mogo.clamp();
 
@@ -193,8 +192,17 @@ void red_rush(){
     pros::delay(800);
    chassis.turnToHeading(0, 750);
    waitd;
-//    chassis.moveToPoint(-57.066,-56.609, 1000, {.forwards = false});
-//    waitd;
+   chassis.moveToPoint(-61.724,-59.609, 1000, {.forwards = false});
+   waitd;
+   pros::delay(400);
+   chassis.turnToHeading(13, 600);
+   waitd;
+   doinker.toggle();
+   chassis.moveToPoint(-65.817,-64.757, 600,{.forwards = false});
+   waitd;
+   chassis.turnToHeading(270, 1000);
+   waitd;
+   doinker.toggle();
 //     chassis.waitUntil(4);
 
 
