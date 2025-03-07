@@ -1,10 +1,7 @@
 /**
  * IMPORTS:
 */
-#include <cmath>
-#include <algorithm>
 #include <string>
-#include <map>
 #include <vector>
 
 #include "consts.hpp"
@@ -20,7 +17,6 @@
 	
 #include "pros/rotation.hpp"
 #include "pros/rtos.hpp"
-#include "robodash/api.h"
 
 /**
  * GENERAL STUFF:
@@ -50,12 +46,11 @@ pros::MotorGroup right_motors({
 	, RIGHT_BACK_PORT
 }, pros::MotorGearset::blue);
 
-// TODO: get ports
-pros::Rotation horizontal(HORIZ_TRACK_WHEEL);
-pros::Rotation vertical(VERTICAL_TRACK_WHEEL);
+pros::Rotation horizontal(HORIZ_TRACK_WHEEL_PORT);
+pros::Rotation vertical(VERTICAL_TRACK_WHEEL_PORT);
+
 /** liblem */
 
-// TODO: verify all config settings
 lemlib::Drivetrain drivetrain(
 	&left_motors, &right_motors,
 	11.75,
@@ -142,7 +137,7 @@ Arm arm = Arm(
 // TODO: set port
 Doinker doinker = Doinker(DOINKER_PORT);
 
-RushMech rush_mech = RushMech(RUSH_MECH_PORT);
+// RushMech rush_mech = RushMech(RUSH_MECH_PORT);
 
 /**
  * VARIABLE DEFINITION:
@@ -224,20 +219,8 @@ void autonomous() {
 	blue_negative_awp();
 
 	/** AUTON SELECTOR RUNNING */
-	// auton_run();                                                                                                                                                                   
+	// auton_run();
 };
-
-void opcontrolTask(void* chassisVoid) {
-	lemlib::Chassis* chassis = static_cast<lemlib::Chassis*>(chassisVoid);
-
-	while (true) {
-		// debug
-		lemlib::Pose curr_pose = chassis->getPose();
-		printf("chassis x: %f chassis y: %f, chassis theta: %f\n", curr_pose.x, curr_pose.y, curr_pose.theta);
-
-		pros::delay(1000);
-	}
-}
 
 /**
  * Runs the operator control code. This function will be started in its *own task*
@@ -348,13 +331,13 @@ void opcontrol() {
 			mogo.toggle();
 		}
 
-		/**
-		 * RUSH MECH:
-		 */
+		// /**
+		//  * RUSH MECH:
+		//  */
 
-		if (UP_new_press) {
-			rush_mech.toggle();
-		}
+		// if (UP_new_press) {
+		// 	rush_mech.toggle();
+		// }
 
 		if (LEFT_new_press){
 			intake.outtake();

@@ -12,8 +12,8 @@
 #define RIGHT_FRONT_PORT 10
 
 // tracking wheel port
-#define HORIZ_TRACK_WHEEL 9
-#define VERTICAL_TRACK_WHEEL -4 
+#define HORIZ_TRACK_WHEEL_PORT 9
+#define VERTICAL_TRACK_WHEEL_PORT -4 
 
 // arm ports
 #define ARM_PORT 12

@@ -117,3 +117,17 @@ void turnAndMoveToPoint(
         waitd;
     }
 }
+
+/**
+ * DON'T USE -- FOR SOME REASON IT DISCONNECTS CODE WHENEVER I RUN WITH THIS TASK ENABLED */
+void opcontrolTask(void* chassisVoid) {
+	lemlib::Chassis* chassis = static_cast<lemlib::Chassis*>(chassisVoid);
+
+	while (true) {
+		// debug
+		lemlib::Pose curr_pose = chassis->getPose();
+		printf("chassis x: %f chassis y: %f, chassis theta: %f\n", curr_pose.x, curr_pose.y, curr_pose.theta);
+
+		pros::delay(1000);
+	}
+}
