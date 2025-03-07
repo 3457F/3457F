@@ -221,7 +221,7 @@ void competition_initialize() {};
 void autonomous() {
 	chassis.setBrakeMode(pros::motor_brake_mode_e::E_MOTOR_BRAKE_HOLD);
 	
-	red_neg();
+	blue_negative_awp();
 
 	/** AUTON SELECTOR RUNNING */
 	// auton_run();                                                                                                                                                                   
