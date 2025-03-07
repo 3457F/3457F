@@ -163,9 +163,15 @@ void initialize() {
 	auton_table.auton_populate(
         {
 			// red neg
+			Auton(
+				red_neg, Alliance::RED, Corner::NEGATIVE, "Red Neg Solo AWP", "Scores 4 rings", 4, 0, false
+			)
 			
 			// red pos
-			Auton(red_positive_awp_nostack, Alliance::RED, Corner::POSITIVE, "Red Swap", "No ring stack! + 3 rings", 2, 0, true),
+			// Auton(red_positive_awp_nostack, Alliance::RED, Corner::POSITIVE, "Red Swap", "No ring stack! + 3 rings", 2, 0, true),
+			, Auton(
+				red_rush, Alliance::RED, Corner::POSITIVE, "Red Rush (2 ring)", "Intercepts opponent auton; scores 2 rings", 2, 0, false
+			)
 			// Auton(red_negative_five_ring, RED, NEGATIVE, "Red 5 ring", "5 rings on mogo, WITH RING STACK", 5, 0, true),
 			
 			// blue neg
