@@ -175,6 +175,16 @@ void initialize() {
 			// Auton(red_negative_five_ring, RED, NEGATIVE, "Red 5 ring", "5 rings on mogo, WITH RING STACK", 5, 0, true),
 			
 			// blue neg
+			, Auton(
+				blue_negative_awp
+				, Alliance::BLUE
+				, Corner::NEGATIVE
+				, "Blue Neg"
+				, "Aarav's Function"
+				, 2
+				, 0
+				, false
+			)
 			
 			
 			// blue pos
