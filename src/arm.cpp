@@ -83,7 +83,7 @@ Arm::Arm(
     pid.reset();
 
     // COMMENT OUT IF ARM WILL NOT ALWAYS START AT INIT_POS
-    encoder.reset_position();
+    // encoder.reset_position();
 
     std::cout << "INIT_POS (INITIALIZATION)";
     this->set_pos(INIT_POS);

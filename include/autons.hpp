@@ -19,4 +19,8 @@ void skills();
 void blue_rush();
 void aarav_skills();
 void red_neg();
+void red_neg_2();
 void move_forward();
+void blue_safe();
+void blue_pos_wp();
+void no_auton();

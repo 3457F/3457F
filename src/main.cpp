@@ -225,7 +225,8 @@ void autonomous() {
 	// red_rush();
 
 	/** AUTON SELECTOR RUNNING */
-	auton_run();
+	// blue_pos_wp();
+	red_neg();
 };
 
 /**
