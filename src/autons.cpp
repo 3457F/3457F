@@ -77,6 +77,13 @@ void test_auton() {
  * 
  */
 
+void move_forward() {
+    chassis.setPose(0, 0, 0);
+
+    chassis.moveToPoint(0, 7, 1000);
+    waitd;
+}
+
 void red_positive_awp_nostack() {
     chassis.setPose(
         -54.726
@@ -143,33 +150,53 @@ void red_positive_awp_nostack() {
     // waitd;
 }
 
-void red_rush(){
-    chassis.moveToPose(
+void red_rush() {
+    chassis.setPose(
+        -54.473
+        , -59
+        , 270
+    );  
+
+    // chassis.moveToPose(
+    //     -16.757
+    //     , -47.412
+    //     , 230
+    //     , 1500
+    //     , {
+    //         .forwards = false
+    //         , .maxSpeed = 127
+    //         , .minSpeed = 120
+    //     }
+    // );
+    chassis.moveToPoint(
         -16.757
         , -47.412
-        , 230
-        , 1250
+        , 1500
         , {
             .forwards = false
-            , .maxSpeed = 127
-            , .minSpeed = 111
+            , .earlyExitRange = 10
         }
     );
     intake.intake();
-
+    // extends doinker immediately so we will own goal when we get it
     doinker.toggle();
     waitd;
+
     pros::delay(250);
+    
     intake.brake();
+    // retracts doinker to lock mogo
     doinker.toggle();
     //doinker to touch/grab the goal
  
     pros::delay(420);
 
-    //moving the robot and the goal back!
+    // moving the robot and the goal back, out of reach of the opponents!
     chassis.moveToPoint(-34.487, -41.816, TO, {.forwards = true, .minSpeed = 100});
     waitd;
     doinker.toggle();
+
+    return;
 
     pros::delay(250);
 
@@ -432,6 +459,8 @@ void red_negative_elims() {
  * 
  */
 
+/**
+ * my crazy recoding (not complete) */
 // based on: https://www.youtube.com/watch?v=sKWXhcAJLJ4
 void skills() {
     // initializing
@@ -669,10 +698,6 @@ void red_negative_five_ring(){
     pros::delay(800);
     intake.brake();
 
-}
-
-void move_forward() {
-  chassis.turnToHeading(90, 650);
 }
 
 void aarav_skills(){
@@ -941,6 +966,194 @@ void red_neg(){
     arm.set_pos(arm.HOLD_POS);
 }
 
+// IMPORTANT: **STARTING DELAY 3 SECONDS**
+void red_pos() {
+    chassis.setPose(-60.263, -13.198, 180);
+
+    pros::delay(3000);
+
+    // chassis.turnToHeading(180-31.5, 730);
+    chassis.turnToHeading(180-35, 730);
+    waitd;
+
+    // scores on alliance stake
+    arm.set_pos(arm.ALLIANCE_SCORE);
+    pros::delay(1000);
+
+    // moves out of alliance stake
+    chassis.moveToPoint(
+        chassis.getPose().x + 10
+        , chassis.getPose().y - 10
+        , TO
+    );
+    waitd;
+
+    // waits to get out of alliance stake before reverting
+    arm.set_pos(arm.INIT_POS);
+
+    // turns to mogo and tries getting it
+    chassis.moveToPoint(
+        -23.852
+        , -30.495
+        , 2000
+        , {
+            .maxSpeed = 60
+        }
+    );
+    waitd;
+    mogo.toggle();
+
+    // get ring on field
+    lemlib::Pose ring_on_field = chassis.getPose();
+
+    intake.intake();
+    turnAndMoveToPoint(
+        ring_on_field.x - 4
+        , -51.981
+        , {
+            .forwards = false
+            , .mvMaxSpeed = 80
+        }
+    );
+    // exist
+    pros::delay(500);
+
+    // come back
+    chassis.moveToPoint(
+        -23.852
+        , -32.517
+        , 1000
+    );
+    waitd;
+
+    // turn around
+    chassis.turnToPoint(
+        -15.235
+        , -23.901
+        , 1000
+        , {
+            .forwards = false
+        }
+    );
+    waitd;
+
+    lemlib::Pose go_to_ladder = chassis.getPose();
+
+    // open arm
+    arm.set_pos(arm.ALLIANCE_SCORE);
+
+    // k go
+    chassis.moveToPoint(
+        go_to_ladder.x + 2
+        , go_to_ladder.y + 2
+        , 1000
+        , {
+            .forwards = false
+        }
+    );
+    waitd;
+}
+
+// IMPORTANT: **STARTING DELAY 3 SECONDS**
+void red_pos_with_corner() {
+    chassis.setPose(-60.263, -13.198, 180);
+
+    pros::delay(3000);
+
+    // chassis.turnToHeading(180-31.5, 730);
+    chassis.turnToHeading(180-35, 730);
+    waitd;
+
+    // scores on alliance stake
+    arm.set_pos(arm.ALLIANCE_SCORE);
+    pros::delay(1000);
+
+    // moves out of alliance stake
+    chassis.moveToPoint(
+        chassis.getPose().x + 10
+        , chassis.getPose().y - 10
+        , TO
+    );
+    waitd;
+
+    // waits to get out of alliance stake before reverting
+    arm.set_pos(arm.INIT_POS);
+
+    // turns to mogo and tries getting it
+    chassis.moveToPoint(
+        -23.852
+        , -30.495
+        , 2000
+        , {
+            .maxSpeed = 60
+        }
+    );
+    waitd;
+    mogo.toggle();
+
+    // get ring on field
+    lemlib::Pose ring_on_field = chassis.getPose();
+
+    intake.intake();
+    turnAndMoveToPoint(
+        ring_on_field.x - 4
+        , -51.981
+        , {
+            .forwards = false
+            , .mvMaxSpeed = 80
+        }
+    );
+    // // exist
+    // pros::delay(500);
+
+    // immediately turns and moves towards corner
+    turnAndMoveToPoint(
+        -55.196
+        , -60.07
+        , {
+            .forwards = false
+        }
+    );
+
+    // turns down so doinker yeah
+    chassis.turnToHeading(0, 750);
+
+    // // come back
+    // chassis.moveToPoint(
+    //     -23.852
+    //     , -32.517
+    //     , 1000
+    // );
+    // waitd;
+
+    // // turn around
+    // chassis.turnToPoint(
+    //     -15.235
+    //     , -23.901
+    //     , 1000
+    //     , {
+    //         .forwards = false
+    //     }
+    // );
+    // waitd;
+
+    // lemlib::Pose go_to_ladder = chassis.getPose();
+
+    // // open arm
+    // arm.set_pos(arm.ALLIANCE_SCORE);
+
+    // // k go
+    // chassis.moveToPoint(
+    //     go_to_ladder.x + 2
+    //     , go_to_ladder.y + 2
+    //     , 1000
+    //     , {
+    //         .forwards = false
+    //     }
+    // );
+    // waitd;
+}
+
 void red_neg_2() {
     chassis.setPose(-60.263, 13.198, 0);
 
@@ -988,7 +1201,7 @@ void red_neg_2() {
     // intake.brake();
     arm.set_pos(arm.DUNK_POS);
     waitd;
-    arm.set_pos(arm.DUNK_POS);
+    arm.set_pos(arm.ALLIANCE_SCORE);
 }
 
 void blue_safe(){
@@ -1021,6 +1234,7 @@ void no_auton(){
 void blue_pos_wp(){
     chassis.setPose(53.746,-14.9, 270);
 
+    pros::delay(2000);
 
     arm.set_pos(arm.LOADIN_POS);
     pros::delay(150);
@@ -1036,15 +1250,25 @@ void blue_pos_wp(){
   
     arm.set_pos(arm.SCORE_POS);
     arm.set_pos(arm.ALLIANCE_SCORE);
-    pros::delay(1000);
+
+    // chassis.setPose(57.534, -12.808, 45);
+
+    // pros::delay(1000);
+
+    // chassis.moveToPoint(22.912, -12.808, 1300, {.forwards = true, .maxSpeed = 60});
+    // chassis.waitUntil(26);
+    // mogo.toggle();
+    // waitd;
+
+    pros::delay(750);
 
     chassis.moveToPoint(31.821, -40.883, 1300);
     waitd;
     arm.set_pos(arm.HOLD_POS);
 
-    chassis.turnToPoint(20.733, -33.093, 750);
+    chassis.turnToPoint(24.733, -28.093, 750);
     waitd;
-    chassis.moveToPoint(20.733, -33.093, 1200, {.maxSpeed = 60});
+    chassis.moveToPoint(24.733, -28.093, 1200, {.maxSpeed = 60});
     waitd;
     mogo.clamp();
 
@@ -1054,20 +1278,20 @@ void blue_pos_wp(){
     waitd;
     pros::delay(1000);
 
-    chassis.moveToPoint(35.709, -80.464, 1200, {.forwards=false});
-    intake.brake();
-    waitd;
-    chassis.turnToHeading(270, TO);
-    doinker.toggle();
-    waitd;
-    pros::delay(300);
-    chassis.moveToPoint(chassis.getPose().x+25, chassis.getPose().y-10, TO, {.forwards=false});
-    waitd;
-    chassis.turnToHeading(180, TO);
-    waitd;
-    doinker.toggle();
+    // chassis.moveToPoint(35.709, -80.464, 1200, {.forwards=false});
+    // intake.brake();
+    // waitd;
+    // chassis.turnToHeading(270, TO);
+    // doinker.toggle();
+    // waitd;
+    // pros::delay(300);
+    // chassis.moveToPoint(chassis.getPose().x+25, chassis.getPose().y-10, TO, {.forwards=false});
+    // waitd;
+    // chassis.turnToHeading(180, TO);
+    // waitd;
+    // doinker.toggle();
 
-    intake.outtake();
+    // intake.outtake();
 
     chassis.moveToPoint(0, 0, TO, {.forwards=false});
     waitd;

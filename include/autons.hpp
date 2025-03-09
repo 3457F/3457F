@@ -4,6 +4,12 @@ void print_robot_pos(void* chassisVoid);
 
 void test_auton();
 
+void move_forward();
+
+void red_neg_2();
+void red_pos();
+void red_pos_with_corner();
+
 void red_positive_awp_nostack();
 
 void blue_negative_awp();
@@ -19,8 +25,6 @@ void skills();
 void blue_rush();
 void aarav_skills();
 void red_neg();
-void red_neg_2();
-void move_forward();
 void blue_safe();
 void blue_pos_wp();
 void no_auton();
