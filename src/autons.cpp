@@ -188,7 +188,7 @@ void red_rush() {
     // retracts doinker to lock mogo
     doinker.toggle();
     //doinker to touch/grab the goal
- 
+
     pros::delay(420);
 
     // moving the robot and the goal back, out of reach of the opponents!
@@ -213,19 +213,19 @@ void red_rush() {
     intake.intake();
     waitd; 
     pros::delay(800);
-   chassis.turnToHeading(0, 750);
-   waitd;
-   chassis.moveToPoint(-61.724,-59.609, 1000, {.forwards = false});
-   waitd;
-   pros::delay(400);
-   chassis.turnToHeading(13, 600);
-   waitd;
-   doinker.toggle();
-   chassis.moveToPoint(-65.817,-64.757, 600,{.forwards = false});
-   waitd;
-   chassis.turnToHeading(270, 1000);
-   waitd;
-   doinker.toggle();
+    chassis.turnToHeading(0, 750);
+    waitd;
+    chassis.moveToPoint(-61.724,-59.609, 1000, {.forwards = false});
+    waitd;
+    pros::delay(400);
+    chassis.turnToHeading(13, 600);
+    waitd;
+    doinker.toggle();
+    chassis.moveToPoint(-65.817,-64.757, 600,{.forwards = false});
+    waitd;
+    chassis.turnToHeading(270, 1000);
+    waitd;
+    doinker.toggle();
 //     chassis.waitUntil(4);
 
 

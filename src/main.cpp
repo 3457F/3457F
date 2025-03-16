@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "consts.hpp"
+#include "lemlib/chassis/chassis.hpp"
 #include "util.hpp"
 
 #include "main.h"
@@ -51,11 +52,12 @@ pros::Rotation vertical(VERTICAL_TRACK_WHEEL_PORT);
 
 /** liblem */
 
+// 2.75 600 -> 450 3.25
 lemlib::Drivetrain drivetrain(
 	&left_motors, &right_motors,
 	11.75,
-	lemlib::Omniwheel::NEW_275,
-	600,
+	lemlib::Omniwheel::NEW_325,
+	450,
 	2
 );
 
@@ -86,19 +88,24 @@ lemlib::ControllerSettings angular_controller(DT_ANGULAR_P, // proportional gain
 // chnged to positive because tracking wheel is on mogo mech side
 // which is on front of robot!
 
-// so tracking wheel is 5 and 3/8ths from one side
-// THEORETICALLY offset is 1.625
-// (my bad offset was -3, sunny's measured offset was 1.28125)
-lemlib::TrackingWheel horizontal_track(&horizontal, lemlib::Omniwheel::NEW_275, 1.625);
-lemlib::TrackingWheel vertical_track(&vertical, 2, -3.5);
+// // theoretical actual offset: (1.506000 + 0.864000) / 2 = 1.185
+// // 1.625 -> 1.185
+// lemlib::TrackingWheel horizontal_track(&horizontal, lemlib::Omniwheel::NEW_275, 1.185);
+// ACTUAL measured offset of: vertical track is -11/16ths
+// -3.5 -> -0.6875
+lemlib::TrackingWheel vertical_track(&vertical, 2, -0.6875);
 
 lemlib::OdomSensors sensors(
-							&vertical_track
-							, // vert nullptr test
+							&vertical_track, // vert nullptr test
+
 							nullptr, // vertical tracking wheel 2, set to nullptr as we are using IMEs
-                            &horizontal_track, // horizontal tracking wheel 1
-                            nullptr, // horizontal tracking wheel 2, set to nullptr as we don't have a second one
-                            &imu // inertial sensor
+                            
+							// &horizontal_track, // horizontal tracking wheel 1
+							nullptr,
+                            
+							nullptr, // horizontal tracking wheel 2, set to nullptr as we don't have a second one
+                            
+							&imu // inertial sensor
 );
 
 lemlib::Chassis chassis(drivetrain, // drivetrain settings
@@ -118,7 +125,8 @@ Intake intake = Intake(
 	, pros::E_MOTOR_BRAKE_COAST	// brake mode of intake
 
 	, INTAKE_LIFT_PORT				// intake piston port
-	, COLOR_PORT
+	// , COLOR_PORT
+	, 0
 	, INTAKE_LIM_SWITCH_PORT
 	, 0
 );
@@ -367,7 +375,8 @@ void opcontrol() {
 		/**
 		 * DRIVING:
 		 */
-		arcade();
+		// arcade();
+		tank();
 
 		// printf("arm pos: %d | target: %d\n", arm.encoder.get_position(), arm.target);
 		// printf("arm current: %d\n", arm.arm_motor.get_current_draw());

@@ -21,10 +21,10 @@
                         // reversed the reversion to make it normal!
 
 // color sensor ports
-#define COLOR_PORT 15
+// #define COLOR_PORT 15
 
 // intake ports
-#define INTAKE_PORT -6
+#define INTAKE_PORT -15
 #define FLOATING_PORT 1
 
 // distance sensor ports
@@ -42,11 +42,11 @@
 // ---
 
 // dt PID
-#define DT_LATERAL_P 10
-#define DT_LATERAL_D 3.5
+#define DT_LATERAL_P 10 // 10
+#define DT_LATERAL_D 3 // 3.5
 
-#define DT_ANGULAR_P 7
-#define DT_ANGULAR_D 62
+#define DT_ANGULAR_P 2 // 7
+#define DT_ANGULAR_D 10 // 62
 
 // arm PID
 // 1 15 before
