@@ -120,7 +120,8 @@ lemlib::Chassis chassis(drivetrain, // drivetrain settings
 
 // TODO: set intake piston port + color sensor port
 Intake intake = Intake(
-	{INTAKE_PORT}
+	// was not negative before
+	{-INTAKE_PORT}
 	, FLOATING_PORT
 	, pros::E_MOTOR_BRAKE_COAST	// brake mode of intake
 
@@ -243,7 +244,7 @@ void autonomous() {
 	// red_rush();
 
 	/** AUTON SELECTOR RUNNING */
-	red_rush();
+	test_auton();
 	// red_pos();
 	// move_forward();
 };
@@ -285,6 +286,9 @@ void opcontrol() {
 		// outtake
 		bool R2_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2);
 
+		// force pos
+		bool LEFT_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT);
+
 		// ---
 
 		///// TOGGLE controls
@@ -304,33 +308,43 @@ void opcontrol() {
 		// arm
 		bool DOWN_new_press = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN);
 		bool RIGHT_new_press = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT);
-		bool LEFT_new_press = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_LEFT);
+		// bool LEFT_new_press = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_LEFT);
 		bool L1_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1);
 		
 		/**
 		 * ARM:
 		 */
 
-		// if L1 PRESSED
-		if (L1_pressed) {
-			// "rising edge"; JUST pressed
-			if (L1_state == false) {
-				L1_state = true;
-				arm.force();
-			}
-		} else {
-			// "falling edge"; JUST released
-			if (L1_state == true) {
-				L1_state = false;
-				arm.release_force();
-			}
-
-			if (DOWN_new_press) {
-				arm.score_cycle();
-			} else if (RIGHT_new_press) {
-				arm.start_pos();
-			}
+		if (LEFT_pressed) {
+			arm.set_pos(arm.FORCE_POS);
+		} else if (L1_pressed) {
+			arm.set_pos(arm.SCORE_POS);
+		} else if (DOWN_new_press) {
+			arm.set_pos(arm.LOADIN_POS);
+		} else if (RIGHT_new_press) {
+			arm.set_pos(arm.START_POS);
 		}
+
+		// // if L1 PRESSED
+		// if (L1_pressed) {
+		// 	// "rising edge"; JUST pressed
+		// 	if (L1_state == false) {
+		// 		L1_state = true;
+		// 		arm.force();
+		// 	}
+		// } else {
+		// 	// "falling edge"; JUST released
+		// 	if (L1_state == true) {
+		// 		L1_state = false;
+		// 		arm.release_force();
+		// 	}
+
+		// 	if (DOWN_new_press) {
+		// 		arm.score_cycle();
+		// 	} else if (RIGHT_new_press) {
+		// 		arm.start_pos();
+		// 	}
+		// }
 
 		/**
 		 * DOINKER:
@@ -357,26 +371,17 @@ void opcontrol() {
 			mogo.toggle();
 		}
 
-		// /**
-		//  * RUSH MECH:
-		//  */
-
-		// if (UP_new_press) {
-		// 	rush_mech.toggle();
+		// if (LEFT_new_press){
+		// 	intake.outtake();
+		// 	pros::delay(20);
+		// 	intake.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+		// 	arm.set_pos(arm.DUNK_POS);
 		// }
-
-		if (LEFT_new_press){
-			intake.outtake();
-			pros::delay(20);
-			intake.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
-			arm.set_pos(arm.DUNK_POS);
-		}
 
 		/**
 		 * DRIVING:
 		 */
-		// arcade();
-		tank();
+		arcade();
 
 		// printf("arm pos: %d | target: %d\n", arm.encoder.get_position(), arm.target);
 		// printf("arm current: %d\n", arm.arm_motor.get_current_draw());

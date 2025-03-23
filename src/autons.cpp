@@ -236,7 +236,6 @@ void red_rush() {
 
     // chassis.moveToPoint(-54.473, -59, TO);
     // waitd;
-   
 
     // chassis.moveToPose(-19.453, -55.811, 82, 2000, {.forwards = true, .maxSpeed=60});
     // waitd;

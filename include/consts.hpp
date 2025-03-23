@@ -41,12 +41,19 @@
 #define INTAKE_LIM_SWITCH_PORT 'E'
 // ---
 
-// dt PID
-#define DT_LATERAL_P 10 // 10
-#define DT_LATERAL_D 3 // 3.5
+// dt PID -- 600rpm dt (mecha)
+// #define DT_LATERAL_P 10 // 10
+// #define DT_LATERAL_D 3 // 3.5
 
-#define DT_ANGULAR_P 2 // 7
-#define DT_ANGULAR_D 10 // 62
+// #define DT_ANGULAR_P 2 // 7
+// #define DT_ANGULAR_D 10 // 62
+
+// dt PID -- 450rpm dt (iowa -- taken from budget bot)
+#define DT_LATERAL_P 8
+#define DT_LATERAL_D 21
+
+#define DT_ANGULAR_P 3.25
+#define DT_ANGULAR_D 26
 
 // arm PID
 // 1 15 before
