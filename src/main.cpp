@@ -153,6 +153,7 @@ Doinker doinker = Doinker(DOINKER_PORT);
  * VARIABLE DEFINITION:
  */
 
+bool LEFT_state = false;
 bool L1_state = false;
 
 // pros::Task print_pose(print_robot_pos, &chassis);
@@ -317,11 +318,33 @@ void opcontrol() {
 		 * ARM:
 		 */
 
+		// FORCE POS
 		if (LEFT_pressed) {
-			arm.set_pos(arm.FORCE_POS);
-		} else if (L1_pressed) {
-			arm.set_pos(arm.SCORE_POS);
-		} else if (DOWN_new_press) {
+			// rising edge; JUST pressed
+			if (LEFT_state == false) {
+				LEFT_state = true;
+				arm.force();
+			}
+		// only want to jump in here if both are true,
+		// bc of the else if that only allows one branch to run
+		} else if (!LEFT_pressed && LEFT_state == true) {
+			LEFT_state = false;
+			// falling edge; JUST released
+			arm.release();
+		}
+		
+		// SCORE POS
+		else if (L1_pressed) {
+			if (L1_state == false) {
+				L1_state = true;
+				arm.score();
+			}
+		} else if (!L1_pressed && L1_state == true) {
+			L1_state = false;
+			arm.release();
+		}
+		
+		else if (DOWN_new_press) {
 			arm.set_pos(arm.LOADIN_POS);
 		} else if (RIGHT_new_press) {
 			arm.set_pos(arm.START_POS);

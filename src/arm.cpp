@@ -156,10 +156,6 @@ void Arm::set_pos(float target_val) {
 //         intake.intake();
 //     }
 // }
-void Arm::dunk_cycle(){
-  
-}
-    
 
 void Arm::score_cycle() {
     // whether at START_POS or SCORE_POS, return to LOADIN_POS
@@ -202,13 +198,22 @@ void Arm::start_pos() {
 void Arm::force() {
     last_pos = target;
 
-    target = FORCE_POS;
+    set_pos(FORCE_POS);
 }
 
-void Arm::release_force() {
+void Arm::score() {
+    last_pos = target;
+
+    set_pos(SCORE_POS);
+}
+
+void Arm::release() {
     target = last_pos;
 }
 
+// basically you go here to "prepare" arm for scoring, so it's much faster
+// to go to scoring when u actually get to alliance stake than if you did score
+// pos only when you got there
 void Arm::hold() {
     target = HOLD_POS;
 }

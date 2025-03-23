@@ -77,9 +77,9 @@ class Arm {
 
         void force();
 
-        void release_force();
+        void release();
 
         void hold();
 
-        void dunk_cycle();
+        void score();
 };

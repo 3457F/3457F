@@ -1162,7 +1162,6 @@ void red_neg_2() {
     chassis.turnToHeading(31.5, TO);
     waitd;
     arm.set_pos(arm.ALLIANCE_SCORE);
-
     pros::delay(1000);
 
 
