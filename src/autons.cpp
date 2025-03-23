@@ -55,7 +55,10 @@ void test_auton() {
 
     // chassis.moveToPoint(24, 48, 1000, {.maxSpeed = 80});
 
-    chassis.moveToPose(24, 24, 45, 1250, {.lead = 0.6, .maxSpeed = 80});
+    chassis.moveToPoint(0, 24,1250, {.maxSpeed = 80});
+    waitd;
+    chassis.turnToHeading(90, 650);
+
 }
 
 /**
@@ -1162,45 +1165,94 @@ void red_neg_2() {
 
     pros::delay(1000);
 
-    chassis.moveToPoint(-46.621, 32.491, TO);
+
+    chassis.moveToPoint(-46.913, 23.332, 1000);
+    arm.set_pos(arm.INIT_POS);
     waitd;
 
-    chassis.moveToPoint(-31.809, 27.035, 2000, {.maxSpeed=70});
+    chassis.turnToHeading(90, 650);
+    waitd;
+    chassis.moveToPoint(-28.009, 23.332, 1200);
     waitd;
     mogo.toggle();
 
-    // chassis.turnToPoint(chassis.getPose().x+5.75, 40.481, 540, {.forwards=false});
-    chassis.turnToHeading(212, 700);
-    waitd;
-    arm.set_pos(arm.INIT_POS);
-    chassis.moveToPoint(chassis.getPose().x+11.0, 43.481, 2000, {.forwards = false});
+    chassis.turnToHeading(226, 700);
+    chassis.moveToPoint(-11.054, 38.533, 1200, {.forwards = false});    
     intake.intake();
     waitd;
-    pros::delay(750);
-    chassis.turnToHeading(180, 650);
-    waitd;
-    chassis.moveToPoint(chassis.getPose().x+2.65, 63.997, 1400, {.forwards=false, .maxSpeed=80});
-    waitd;
-
     pros::delay(1000);
 
-    chassis.moveToPoint(chassis.getPose().x, chassis.getPose().y-30, TO);
+    chassis.moveToPose(-9.69, 62.903, 188, 1300, {.forwards = false});
     waitd;
-    chassis.turnToPoint(chassis.getPose().x-7.5, chassis.getPose().y+15.5, 450, {.forwards=false});
-    waitd;
-    intake.intake();
-    chassis.moveToPoint(chassis.getPose().x-7.5, chassis.getPose().y+15.5, TO, {.forwards=false});
-    waitd;
+    pros::delay(1000);
 
-    pros::delay(500);
+    chassis.moveToPoint(-15.147, 34.635, 1400, {.forwards = true});
+    waitd;
+    chassis.turnToHeading(145, 700);
+    waitd;
+    chassis.moveToPoint(-29.568, 55.293, 1000, {.forwards = false});
+    waitd;
+    // chassis.turnToHeading(212, 700);
+    // waitd;
+    // chassis.moveToPoint(chassis.getPose().x+11.0, 43.481, 2000, {.forwards = false});
+    // intake.intake();
+    // waitd;
+    // pros::delay(750);
+    // chassis.turnToHeading(180, 650);
+    // waitd;
+    // chassis.moveToPoint(chassis.getPose().x+2.65, 63.997, 1400, {.forwards=false, .maxSpeed=80});
+    // waitd;
 
-    // chassis.moveToPoint(-56.657, 20.731, TO);
-    waitd;
-    chassis.moveToPoint(0, 0, TO, {.forwards=false});
-    // intake.brake();
-    arm.set_pos(arm.DUNK_POS);
-    waitd;
-    arm.set_pos(arm.ALLIANCE_SCORE);
+    // pros::delay(1000);
+
+    // chassis.moveToPoint(chassis.getPose().x, chassis.getPose().y-30, TO);
+    // waitd;
+    // chassis.turnToPoint(chassis.getPose().x-7.5, chassis.getPose().y+15.5, 450, {.forwards=false});
+    // waitd;
+    // intake.intake();
+    // chassis.moveToPoint(chassis.getPose().x-7.5, chassis.getPose().y+15.5, TO, {.forwards=false});
+    // waitd;
+
+    
+    // chassis.moveToPoint(-46.621, 32.491, TO);
+    // waitd;
+
+    // chassis.moveToPoint(-31.809, 27.035, 2000, {.maxSpeed=70});
+    // waitd;
+    // mogo.toggle();
+
+//     // chassis.turnToPoint(chassis.getPose().x+5.75, 40.481, 540, {.forwards=false});
+//     chassis.turnToHeading(212, 700);
+//     waitd;
+//     arm.set_pos(arm.INIT_POS);
+//     chassis.moveToPoint(chassis.getPose().x+11.0, 43.481, 2000, {.forwards = false});
+//     intake.intake();
+//     waitd;
+//     pros::delay(750);
+//     chassis.turnToHeading(180, 650);
+//     waitd;
+//     chassis.moveToPoint(chassis.getPose().x+2.65, 63.997, 1400, {.forwards=false, .maxSpeed=80});
+//     waitd;
+
+//     pros::delay(1000);
+
+//     chassis.moveToPoint(chassis.getPose().x, chassis.getPose().y-30, TO);
+//     waitd;
+//     chassis.turnToPoint(chassis.getPose().x-7.5, chassis.getPose().y+15.5, 450, {.forwards=false});
+//     waitd;
+//     intake.intake();
+//     chassis.moveToPoint(chassis.getPose().x-7.5, chassis.getPose().y+15.5, TO, {.forwards=false});
+//     waitd;
+
+//     pros::delay(500);
+
+//     // chassis.moveToPoint(-56.657, 20.731, TO);
+//     waitd;
+//     chassis.moveToPoint(0, 0, TO, {.forwards=false});
+//     // intake.brake();
+//     arm.set_pos(arm.DUNK_POS);
+//     waitd;
+//     arm.set_pos(arm.ALLIANCE_SCORE);
 }
 
 void blue_safe(){

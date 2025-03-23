@@ -94,6 +94,7 @@ lemlib::ControllerSettings angular_controller(DT_ANGULAR_P, // proportional gain
 // ACTUAL measured offset of: vertical track is -11/16ths
 // -3.5 -> -0.6875
 lemlib::TrackingWheel vertical_track(&vertical, 2, -0.6875);
+lemlib::TrackingWheel horizontal_track(&horizontal, 2.75,1.85 );
 
 lemlib::OdomSensors sensors(
 							&vertical_track, // vert nullptr test
@@ -244,7 +245,8 @@ void autonomous() {
 	// red_rush();
 
 	/** AUTON SELECTOR RUNNING */
-	test_auton();
+	// test_auton();
+	red_neg_2();
 	// red_pos();
 	// move_forward();
 };
