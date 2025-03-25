@@ -283,21 +283,23 @@ void red_rush() {
 }
 // just a mirror of aarav's auton
 void blue_negative_awp() {
-    chassis.setPose(53.746, 16.9, 270);
 
-    // chassis.turnToHeading(315, 600);
-    // waitd;
+    chassis.setPose(53.746, 16.9, 0);
 
-    arm.set_pos(arm.LOADIN_POS);
-    pros::delay(150);
-    intake.intake();
-    pros::delay(250);
-    intake.intake_brake_mode = pros::E_MOTOR_BRAKE_COAST;
-    intake.brake();
+    chassis.turnToHeading(315, 600);
+    waitd;
+
+    // the commented out code is probs deprecated from when we ran no preload...?
+    // arm.set_pos(arm.LOADIN_POS);
+    // pros::delay(150);
+    // intake.intake();
+    // pros::delay(250);
+    // intake.intake_brake_mode = pros::E_MOTOR_BRAKE_COAST;
+    // intake.brake();
     arm.set_pos(arm.SCORE_POS);
 
-    chassis.moveToPoint(56.864, 9.5, 1000, {.forwards = false});
-    waitd;
+    // chassis.moveToPoint(56.864, 9.5, 1000, {.forwards = false});
+    // waitd;
     chassis.turnToPoint(67.85, 0, 600, {.forwards=false});
     waitd;
 
@@ -308,7 +310,7 @@ void blue_negative_awp() {
     chassis.moveToPoint(36.231, 32.856, TO);
     waitd;
 
-    arm.set_pos(arm.HOLD_POS);
+    arm.set_pos(arm.START_POS);
 
     chassis.turnToPoint(20.15, 26.75, 850);
     waitd;
@@ -1159,7 +1161,8 @@ void red_pos_with_corner() {
 void red_neg_2() {
     chassis.setPose(-60.263, 13.198, 0);
 
-    chassis.turnToHeading(31.5, TO);
+    // chassis.turnToHeading(31.5, TO);
+    chassis.turnToHeading(35, TO);
     waitd;
     arm.set_pos(arm.ALLIANCE_SCORE);
     pros::delay(1000);
@@ -1175,22 +1178,43 @@ void red_neg_2() {
     waitd;
     mogo.toggle();
 
+    // going to middle rings
+    // TODO: seemingly "kicking out" ring cuz turns near end
     chassis.turnToHeading(226, 700);
     chassis.moveToPoint(-11.054, 38.533, 1200, {.forwards = false});    
     intake.intake();
     waitd;
     pros::delay(1000);
 
+    // 
     chassis.moveToPose(-9.69, 62.903, 188, 1300, {.forwards = false});
     waitd;
     pros::delay(1000);
 
     chassis.moveToPoint(-15.147, 34.635, 1400, {.forwards = true});
     waitd;
+
+    // getting the ring in middle of the side
     chassis.turnToHeading(145, 700);
     waitd;
-    chassis.moveToPoint(-29.568, 55.293, 1000, {.forwards = false});
+    chassis.moveToPoint(-29.568, 50.316, 1000, {.forwards = false});
     waitd;
+
+    // going to ladder
+    chassis.moveToPose(
+        -16.893,
+        11.583,
+        315,
+        1500,
+        {
+            .forwards = false
+            , .minSpeed = 120
+        }
+    );
+    chassis.waitUntil(40);
+    arm.set_pos(arm.SCORE_POS);
+    waitd;
+
     // chassis.turnToHeading(212, 700);
     // waitd;
     // chassis.moveToPoint(chassis.getPose().x+11.0, 43.481, 2000, {.forwards = false});
@@ -1284,20 +1308,23 @@ void no_auton(){
 void blue_pos_wp(){
     chassis.setPose(53.746,-14.9, 270);
 
-    pros::delay(2000);
-
     arm.set_pos(arm.LOADIN_POS);
+    // bc ring DOESNT START IN ARM initially
+    // bc initially at states we were using the alg where the arm HAD TO BE DOWN
+    // at the beginning for the rotation sensor to reset
     pros::delay(150);
     intake.intake();
     pros::delay(250);
+
+
     chassis.turnToHeading(234, 650);
-    intake.outtake();
-    pros::delay(40);
-    intake.intake_brake_mode = pros::E_MOTOR_BRAKE_COAST;
-    intake.brake();
+    // intake.outtake();
+    // pros::delay(40);
+    // intake.intake_brake_mode = pros::E_MOTOR_BRAKE_COAST;
+    // intake.brake();
     arm.set_pos(arm.HOLD_POS);
     waitd;
-  
+
     arm.set_pos(arm.SCORE_POS);
     arm.set_pos(arm.ALLIANCE_SCORE);
 
@@ -1312,9 +1339,10 @@ void blue_pos_wp(){
 
     pros::delay(750);
 
+    // kind of spins the mogo when it goes past ;-;
     chassis.moveToPoint(31.821, -40.883, 1300);
     waitd;
-    arm.set_pos(arm.HOLD_POS);
+    arm.set_pos(arm.START_POS);
 
     chassis.turnToPoint(24.733, -28.093, 750);
     waitd;
@@ -1322,11 +1350,30 @@ void blue_pos_wp(){
     waitd;
     mogo.clamp();
 
+    // gets the first blue ring on field (under the red ring)
     chassis.moveToPoint(20.441, -54.915, 1200, {.forwards=false});
     pros::delay(350);
     intake.intake();
     waitd;
     pros::delay(1000);
+
+    // going to corner
+    chassis.moveToPose(
+        54.056,
+        -60.33,
+        280,
+        1500,
+        {
+            .forwards = false,
+            .minSpeed = 120
+        }
+    );
+    waitd;
+    doinker.toggle();
+    pros::delay(500);
+    chassis.turnToHeading(240, 500);
+    waitd;
+    doinker.toggle();
 
     // chassis.moveToPoint(35.709, -80.464, 1200, {.forwards=false});
     // intake.brake();

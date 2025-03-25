@@ -17,9 +17,11 @@ class Arm {
         // 35 -- hella low cuz of slop, so 35 -> 40 -> 44
         static constexpr double LOADIN_POS = 44 * 100; // 25 originally
         static constexpr double DUNK_POS = 87.0 * 100; 
-        static constexpr double SCORE_POS = 140.0 * 100;
+        static constexpr double SCORE_POS = 160.0 * 100; // 140 originally
         static constexpr double AUTON = 200.0 * 100;
-        static constexpr double ALLIANCE_SCORE = 191.0 * 100;
+        // TODO: made it a little bit lower like 197 so that
+        // the ring doesn't get stuck on arm poly
+        static constexpr double ALLIANCE_SCORE = 197.0 * 100;
         static constexpr double PREALLIANCE_SCORE = 170.0 * 100;
         static constexpr double FORCE_POS = 300.0 * 100;
         static constexpr double HOLD_POS = 90.0 * 100;
