@@ -1407,22 +1407,15 @@ void blue_pos_wp(){
     pros::delay(1000);
 
     // going to corner
-    chassis.moveToPose(
-        54.056,
-        -60.33,
-        280,
-        1500,
-        {
-            .forwards = false,
-            .minSpeed = 120
-        }
-    );
-    waitd;
-    doinker.toggle();
-    pros::delay(500);
-    chassis.turnToHeading(240, 500);
-    waitd;
-    doinker.toggle();
+   turnAndMoveToPoint(55.402, -61.054, {.forwards = false, .async = true, .waitUntil = 7});
+   doinker.toggle();
+   waitd;
+   chassis.turnToHeading(250, 700);
+   arm.set_pos(arm.SCORE_POS);
+   waitd;
+   doinker.toggle();  
+
+
 
     // chassis.moveToPoint(35.709, -80.464, 1200, {.forwards=false});
     // intake.brake();
