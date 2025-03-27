@@ -24,7 +24,8 @@
 ASSET(mecha_red_pos_awp_corner_3_txt);
 ASSET(mecha_red_pos_awp_mogo_txt);
 ASSET(mecha_red_pos_awp_stake_txt);
-ASSET(two_ring_txt)
+ASSET(two_ring_txt);
+ASSET(red_pos_steep_corner_txt)
 
 void print_robot_pos(void* chassisVoid) {
     lemlib::Chassis* chassis
@@ -974,87 +975,134 @@ void red_neg(){
 void red_pos() {
     chassis.setPose(-60.263, -13.198, 180);
 
-    pros::delay(3000);
-
     // chassis.turnToHeading(180-31.5, 730);
-    chassis.turnToHeading(180-35, 730);
-    waitd;
-
+    // old angle 180-35, 180-45 overshoot
     // scores on alliance stake
+    chassis.turnToHeading(180-40, 730);
+    pros::delay(450);
     arm.set_pos(arm.ALLIANCE_SCORE);
-    pros::delay(1000);
+    waitd;
 
     // moves out of alliance stake
     chassis.moveToPoint(
         chassis.getPose().x + 10
         , chassis.getPose().y - 10
         , TO
-    );
-    waitd;
-
-    // waits to get out of alliance stake before reverting
-    arm.set_pos(arm.INIT_POS);
-
-    // turns to mogo and tries getting it
-    chassis.moveToPoint(
-        -23.852
-        , -30.495
-        , 2000
         , {
-            .maxSpeed = 60
+            .earlyExitRange = 5
         }
     );
     waitd;
-    mogo.toggle();
 
-    // get ring on field
-    lemlib::Pose ring_on_field = chassis.getPose();
+    // going to mogo
+    chassis.moveToPose(
+        -24.554,
+        -24.248,
+        90,
+        1500,
+        {
+            .minSpeed = 60
+        }
+    );
+    chassis.waitUntil(20);
+    arm.set_pos(arm.HOLD_POS);
+    mogo.clamp();
+    waitd;
 
+    pros::delay(500);
+    
+    // keep arm up for ladder
+
+    // turn towards bottom ring
     intake.intake();
     turnAndMoveToPoint(
-        ring_on_field.x - 4
-        , -51.981
-        , {
-            .forwards = false
-            , .mvMaxSpeed = 80
-        }
-    );
-    // exist
-    pros::delay(500);
-
-    // come back
-    chassis.moveToPoint(
-        -23.852
-        , -32.517
-        , 1000
-    );
-    waitd;
-
-    // turn around
-    chassis.turnToPoint(
-        -15.235
-        , -23.901
-        , 1000
-        , {
+        -23.597,
+        -46.974,
+        {
+            .turnTO = 800,
+            .moveTO = 1500,
             .forwards = false
         }
     );
     waitd;
+    intake.brake();
 
-    lemlib::Pose go_to_ladder = chassis.getPose();
-
-    // open arm
-    arm.set_pos(arm.ALLIANCE_SCORE);
-
-    // k go
-    chassis.moveToPoint(
-        go_to_ladder.x + 2
-        , go_to_ladder.y + 2
-        , 1000
-        , {
+    // aligns so that the robot doinker is in position for the corner
+    chassis.moveToPose(
+        -58.045,
+        -33.817,
+        10,
+        1500,
+        {
             .forwards = false
         }
     );
+    // does this so ring is not flung out
+    // while the robot is turning
+    chassis.waitUntil(7);
+    intake.intake();
+    waitd;
+    doinker.toggle();
+    // chassis.follow(
+    //     red_pos_steep_corner_txt,
+    //     5,
+    //     1000,
+    //     false
+    // );
+    // chassis.waitUntil(7);
+    // intake.intake();
+    // waitd;
+    // doinker.toggle();
+
+    // moves towards corner
+    // -63.069 -54.39
+    turnAndMoveToPoint(
+        // -63.787,
+        -63.069,
+
+        // -56.064,
+        -54.39,
+        {
+            .forwards = false,
+        }
+    );
+    waitd;
+
+    // turns, kicking rings in corner with doinker
+    chassis.turnToHeading(
+        290,
+        800
+    );
+    waitd;
+    // brings up doinker so that it doesn't prevent us from intaking the new
+    // ring
+    doinker.toggle();
+    pros::delay(750);
+
+    // moves into the kicked rings, hopefully getting red
+    // w old angle: (-56.131, -65.394)
+    chassis.moveToPoint(
+        -46.802,
+        -63.002,
+        800,
+        {
+            .forwards = false
+        }
+    );
+    intake.intake();
+    waitd;
+
+    arm.set_pos(arm.SCORE_POS);
+    // turns, moves to ladder (ARM STILL UP!)
+    turnAndMoveToPoint(
+        -20.248,
+        -21.138,
+        {
+            .forwards = false,
+            .mvMaxSpeed = 80
+        }
+    );
+    intake.brake();
     waitd;
 }
 
@@ -1163,9 +1211,10 @@ void red_neg_2() {
 
     // chassis.turnToHeading(31.5, TO);
     chassis.turnToHeading(35, TO);
-    waitd;
+    pros::delay(0);
     arm.set_pos(arm.ALLIANCE_SCORE);
-    pros::delay(1000);
+    waitd;
+
 
 
     chassis.moveToPoint(-46.913, 23.332, 1000);
@@ -1181,13 +1230,13 @@ void red_neg_2() {
     // going to middle rings
     // TODO: seemingly "kicking out" ring cuz turns near end
     chassis.turnToHeading(226, 700);
-    chassis.moveToPoint(-11.054, 38.533, 1200, {.forwards = false});    
+    chassis.moveToPoint(-12.097, 36.515, 1200, {.forwards = false});    
     intake.intake();
     waitd;
-    pros::delay(1000);
+    pros::delay(900);
 
     // 
-    chassis.moveToPose(-9.69, 62.903, 188, 1300, {.forwards = false});
+    chassis.moveToPose(-9.69, 59.903, 188, 1300, {.forwards = false});
     waitd;
     pros::delay(1000);
 

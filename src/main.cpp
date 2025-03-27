@@ -247,7 +247,7 @@ void autonomous() {
 
 	/** AUTON SELECTOR RUNNING */
 	// test_auton();
-	blue_pos_wp();
+	red_pos();
 	// red_pos();
 	// move_forward();
 };
