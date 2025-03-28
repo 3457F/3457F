@@ -52,9 +52,11 @@
 #include "arm.hpp"
 #include "intake.hpp"
 #include "mogo.hpp"
-#include "doinker.hpp"
+#include "doinker.hpp"  
 #include "rushmech.hpp"
 #include "distance.hpp"
+
+void red_rush_barcbots();
 
 /**
  * NOTE: The mogo mech is the front of the robot, from a driving perspective and an auton perspective

@@ -194,20 +194,51 @@ void red_positive_awp_nostack() {
   // waitd;
 }
 
+void turnforrush(){
+  chassis.setPose(-51.5, -59, 270);
+  chassis.turnToHeading(250, 1000);
+}
+
+void red_rush_barcbots() {
+  chassis.setPose(-51.5, -59, 250);
+
+chassis.moveToPoint(-21.535, -46.274  , 1200, {.forwards = false, .minSpeed = 120});
+intake.intake();
+waitd;
+intake.brake();
+doinker.toggle();
+pros::delay(500);
+chassis.moveToPoint(-37.503, -53.761, 1300, {.forwards = true});
+waitd;
+doinker.toggle();
+
+turnAndMoveToPoint(-18.038, -45.712, {.forwards = true, .mvMaxSpeed = 60});
+waitd;
+mogo.toggle();
+pros::delay(50);
+intake.intake();
+
+pros::delay(500);
+
+chassis.turnToHeading(270, 700);
+waitd;
+mogo.toggle();
+
+chassis.turnToHeading(327, 650);
+waitd;
+intake.brake();
+chassis.moveToPoint(-26.273,-20.632, 1200, {.forwards = true, .maxSpeed = 60});;
+waitd;
+mogo.toggle();
+
+
+
+}
+
 void red_rush() {
   chassis.setPose(-51.5, -59, 270);
 
-  // chassis.moveToPose(
-  //     -16.757
-  //     , -47.412
-  //     , 230
-  //     , 1500
-  //     , {
-  //         .forwards = false
-  //         , .maxSpeed = 127
-  //         , .minSpeed = 120
-  //     }
-  // );
+  // go to middle mogo and grab it
   chassis.moveToPose(
     -14.562,
     -47.217,
@@ -215,7 +246,9 @@ void red_rush() {
     1250,
     {
       .forwards = false,
-      .minSpeed = 118
+      // TODO: bc of such a high speed, the turn at the end sometimes drifts
+      // .minSpeed = 118
+      .minSpeed = 110
     }
   );
   intake.intake();
@@ -223,64 +256,52 @@ void red_rush() {
   doinker.toggle();
   waitd;
 
+  // TODO: what is the point of this ;-;
   intake.brake();
+  // releases doinker, hooking properly onto the mogo
   doinker.toggle();
   pros::delay(500);
 
-  chassis.moveToPoint(
-    -51.5,
-    -59,
-    1300
-  );
+  // come back, pulling mogo with it
+  chassis.moveToPoint(-51.5, -59, 1300);
   chassis.waitUntil(3);
+  // "unrelease" doinker, so that mogo is dropped
+  // TODO: might be inconsistent if doinker gets stuck!
   doinker.toggle();
   waitd;
 
-  chassis.turnToHeading(
-    37,
-    700
-  );
+  // turns towards the second mogo
+  chassis.turnToHeading(37, 700);
   doinker.toggle();
   waitd;
 
-  chassis.moveToPoint(
-    -24.988,
-    -27.728,
-    1750,
-    {
-      .forwards = true,
-      .maxSpeed = 70
-    }
-  );
+  // goes and clamps second mogo
+  chassis.moveToPoint(-24.988, -27.728, 1750,
+                      {.forwards = true, .maxSpeed = 70});
   waitd;
 
   mogo.toggle();
   intake.intake();
-  turnAndMoveToPoint(
-    -61.627,
-    -43.319,
-    {
-      .forwards = false
-    }
-  );
+
+  // comes back
+  turnAndMoveToPoint(-61.627, -43.319, {.forwards = false});
   waitd;
 
-  chassis.turnToHeading(
-    0,
-    600
-  );
+  // turns towards corner
+  chassis.turnToHeading(10, 600);
   waitd;
 
-  chassis.moveToPose(
-    -13.685,
-    -60.469,
-    0,
-    1500,
-    {
-      .forwards = false
-    }
-  );
-  waitd;
+  // extend doinker
+  doinker.toggle();
+
+  // turn, clearing corner
+  chassis.turnToHeading(300, 500);
+
+  // turn back, hopefully aligned with a ring
+  chassis.turnToHeading(0, 500);
+
+  // chassis.moveToPose(-13.685, -60.469, 0, 1500, {.forwards = false});
+  // waitd;
   // intake.intake();
   // turnAndMoveToPoint(-58.801,-25.39, {.forwards = false});
   // waitd;
@@ -887,7 +908,8 @@ void red_pos() {
 
   arm.set_pos(arm.SCORE_POS);
   // turns, moves to ladder (ARM STILL UP!)
-  turnAndMoveToPoint(-20.248, -21.138, {.forwards = false, .mvMaxSpeed = 80});
+  turnAndMoveToPoint(-20.248, -21.138, {.forwards = false, .async = true, .mvMaxSpeed = 80,  .waitUntil = 5});
+  mogo.toggle();
   intake.brake();
   waitd;
 }
@@ -972,9 +994,17 @@ void red_pos_with_corner() {
 void red_neg_2() {
   chassis.setPose(-60.263, 13.198, 0);
 
-  // chassis.turnToHeading(31.5, TO);
+  /**
+   * ADDED AT IOWA
+   */
+  // pros::delay(2000);
+
+  /**
+   * REMOVED SCORING ON ALLIANCE STAKE
+   */
+  // // chassis.turnToHeading(31.5, TO);
   chassis.turnToHeading(35, TO);
-  pros::delay(0);
+  pros::delay(500);
   arm.set_pos(arm.ALLIANCE_SCORE);
   waitd;
 
@@ -1106,7 +1136,7 @@ void blue_pos_wp() {
   arm.set_pos(arm.HOLD_POS);
   waitd;
 
-  arm.set_pos(arm.SCORE_POS);
+  // arm.set_pos(arm.SCORE_POS);
   arm.set_pos(arm.ALLIANCE_SCORE);
 
   // chassis.setPose(57.534, -12.808, 45);
@@ -1130,20 +1160,28 @@ void blue_pos_wp() {
   pros::delay(350);
 
   // gets the first blue ring on field (under the red ring)
-  chassis.moveToPoint(chassis.getPose().x, -48.915, 1200, {.forwards = false});
+  chassis.moveToPoint(chassis.getPose().x, -45.915, 1200, {.forwards = false});
   pros::delay(350);
   intake.intake();
   waitd;
   pros::delay(1000);
 
   // going to corner
-  chassis.turnToPoint(66.511, -74.121, TO, {.forwards = false});
+  chassis.turnToPoint(66.511, -71.121, TO, {.forwards = false});
   waitd;
-  chassis.moveToPoint(66.511, -74.121, TO, {.forwards = false});
+  chassis.moveToPoint(66.511, -71.121, TO, {.forwards = false});
   arm.set_pos(arm.HOLD_POS);
   waitd;
 
   pros::delay(1000);
+
+  /** LADDER FIX @ IOWA -- DO NOT REMOVE */
+  intake.brake();
+
+  arm.set_pos(arm.SCORE_POS);
+
+  chassis.moveToPose(0, 0, 150, 5000, {.forwards = false});
+  waitd;
 
   // chassis.moveToPoint(35.709, -80.464, 1200, {.forwards=false});
   // intake.brake();
@@ -1158,9 +1196,5 @@ void blue_pos_wp() {
 
   // intake.outtake();
 
-  chassis.turnToPoint(0, 0, TO);
-  waitd;
-  chassis.moveToPoint(0, 0, 1750);
-  waitd;
-  arm.set_pos(arm.ALLIANCE_SCORE);
+  
 }
