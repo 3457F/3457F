@@ -1,7 +1,5 @@
 #include "main.h"
 
-#include "api.h"
-#include "lemlib/api.hpp"
 #include "util.hpp"
 
 void red_pos_archived() {

@@ -1,9 +1,6 @@
-#include <algorithm>
 #include <cstdint>
 #include "intake.hpp"
 #include "pros/adi.hpp"
-#include "pros/rtos.h"
-#include "util.hpp"
 
 Intake::Intake(
     std::initializer_list<std::int8_t> intake_motor_ports

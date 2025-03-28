@@ -47,6 +47,7 @@
 #include "ui/Selector.hpp"
 
 #include "autons.hpp"
+#include "skills_autons.hpp"
 
 #include "arm.hpp"
 #include "intake.hpp"
