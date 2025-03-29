@@ -210,6 +210,7 @@ doinker.toggle();
 pros::delay(500);
 chassis.moveToPoint(-37.503, -53.761, 1300, {.forwards = true});
 waitd;
+pros::delay(500);
 doinker.toggle();
 
 turnAndMoveToPoint(-18.038, -45.712, {.forwards = true, .mvMaxSpeed = 60});
