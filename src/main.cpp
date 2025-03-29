@@ -247,10 +247,10 @@ void autonomous() {
 
 	/** AUTON SELECTOR RUNNING */
 	// test_auton();
-	// red_neg_2();
+	red_neg_2();
 	// red_rush();
 	// turnforrush();
-	red_rush_barcbots();
+	// red_rush_barcbots();
 	// move_forward();
 };
 

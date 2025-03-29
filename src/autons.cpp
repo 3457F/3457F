@@ -2,6 +2,7 @@
 
 #include "lemlib/chassis/chassis.hpp"
 #include "lemlib/pose.hpp"
+#include "util.hpp"
 
 // declares pure pursuit files
 
@@ -202,13 +203,14 @@ void turnforrush(){
 void red_rush_barcbots() {
   chassis.setPose(-51.5, -59, 250);
 
-chassis.moveToPoint(-21.535, -46.274  , 1200, {.forwards = false, .minSpeed = 120});
+chassis.moveToPoint(-21.535, -46.274  , 975, {.forwards = false, .minSpeed = 120});
 intake.intake();
 waitd;
 intake.brake();
 doinker.toggle();
-pros::delay(500);
-chassis.moveToPoint(-37.503, -53.761, 1300, {.forwards = true});
+pros::delay(350);
+chassis.moveToPoint(-37.503, -53.761, 1100, {.forwards = true, .minSpeed = 100
+});
 waitd;
 pros::delay(500);
 doinker.toggle();
@@ -221,17 +223,23 @@ intake.intake();
 
 pros::delay(500);
 
+turnAndMoveToPoint(-4.641, -27.923, {.forwards = false});
+waitd;
+
 chassis.turnToHeading(270, 700);
 waitd;
 mogo.toggle();
 
-chassis.turnToHeading(327, 650);
-waitd;
-intake.brake();
-chassis.moveToPoint(-26.273,-20.632, 1200, {.forwards = true, .maxSpeed = 60});;
+turnAndMoveToPoint(-25.475, -24.026, {.mvMaxSpeed = 60});
 waitd;
 mogo.toggle();
+pros::delay(100);
+intake.intake();
 
+turnAndMoveToPoint(-31.322, -49.556, {.forwards = false});
+waitd;
+
+turnAndMoveToPoint(-62.36, -63.562, {.forwards = false});
 
 
 }
