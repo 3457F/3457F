@@ -153,8 +153,9 @@ Doinker doinker = Doinker(DOINKER_PORT);
  * VARIABLE DEFINITION:
  */
 
-bool LEFT_state = false;
+// bool LEFT_state = false;
 bool L1_state = false;
+bool B_state = false;
 
 // pros::Task print_pose(print_robot_pos, &chassis);
 
@@ -247,10 +248,11 @@ void autonomous() {
 
 	/** AUTON SELECTOR RUNNING */
 	// test_auton();
-	red_neg_2();
-	// red_rush();
+	// red_neg_2();
 	// turnforrush();
 	// red_rush_barcbots();
+
+	blue_negative_awp();
 	// move_forward();
 };
 
@@ -292,7 +294,8 @@ void opcontrol() {
 		bool R2_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2);
 
 		// force pos
-		bool LEFT_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT);
+		// bool LEFT_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT);
+		bool B_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_B);
 
 		// ---
 
@@ -305,7 +308,7 @@ void opcontrol() {
 		bool Y_new_press = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y);
 
 		// intake lift test
-		bool B_new_press = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B);
+		// bool B_new_press = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B);
 
 		// rush mech test
 		bool UP_new_press = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP);
@@ -321,16 +324,26 @@ void opcontrol() {
 		 */
 
 		// FORCE POS
-		if (LEFT_pressed) {
+		if (B_pressed) {
 			// rising edge; JUST pressed
-			if (LEFT_state == false) {
-				LEFT_state = true;
+			// if (LEFT_state == false) {
+			// 	LEFT_state = true;
+			// 	arm.force();
+			// }
+			if (B_state == false) {
+				B_state = true;
 				arm.force();
 			}
 		// only want to jump in here if both are true,
 		// bc of the else if that only allows one branch to run
-		} else if (!LEFT_pressed && LEFT_state == true) {
-			LEFT_state = false;
+		}
+		// else if (!LEFT_pressed && LEFT_state == true) {
+		// 	LEFT_state = false;
+		// 	// falling edge; JUST released
+		// 	arm.release();
+		// }
+		else if (!B_pressed && B_state == true) {
+			B_state = false;
 			// falling edge; JUST released
 			arm.release();
 		}
@@ -386,9 +399,9 @@ void opcontrol() {
 		// intake.update_sort(R1_pressed, R2_pressed);
 		intake.handle_driver_input(R1_pressed, R2_pressed);
 
-		if (B_new_press) {
-			intake.toggle();
-		}
+		// if (B_new_press) {
+		// 	intake.toggle();
+		// }
 
 		/**
 		 * MOGO:
