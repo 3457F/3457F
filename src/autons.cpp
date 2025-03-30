@@ -2,6 +2,8 @@
 
 #include "lemlib/chassis/chassis.hpp"
 #include "lemlib/pose.hpp"
+#include "pros/rtos.h"
+#include "pros/rtos.hpp"
 #include "util.hpp"
 
 // declares pure pursuit files
@@ -40,6 +42,8 @@ void test_auton() {
   chassis.moveToPoint(0, 24, 1250, {.maxSpeed = 80});
   waitd;
   chassis.turnToHeading(90, 650);
+
+  
 }
 
 /**
@@ -100,8 +104,7 @@ void red_positive_awp_nostack() {
   waitd;
 
   pros::delay(450);
-  chassis.moveToPose(-61.529, -30.524, 15, 2000,
-                     {.forwards = false, .minSpeed = 100});
+  chassis.moveToPose(-61.529, -30.524, 15, 2000, {.forwards = false, .minSpeed = 100});
   waitd;
 
   doinker.toggle();
@@ -545,8 +548,7 @@ void red_negative_five_ring() {
 void blue_rush() {
   chassis.setPose(54.395, -33.055, 90);
 
-  chassis.moveToPose(15.061, -47.802, 81.8, 1250,
-                     {.forwards = false, .minSpeed = 125});
+  chassis.moveToPose(15.061, -47.802, 81.8, 1250, {.forwards = false, .minSpeed = 125});
   intake.intake();
   chassis.waitUntil(23);
   doinker.toggle();
@@ -559,8 +561,7 @@ void blue_rush() {
   waitd;
 }
 
-void moveDist(double x, int timeout, bool forwards = true,
-              float maxSpeed = 127) {
+void moveDist(double x, int timeout, bool forwards = true, float maxSpeed = 127) {
   lemlib::Pose p = chassis.getPose();
   if (!forwards) {
     p.theta += 180;
@@ -932,7 +933,10 @@ void blue_safe() {
   turnAndMoveToPoint(15.451, 22.942, {.forwards = false});
 }
 
-void no_auton() { chassis.setPose(0, 0, 0); }
+void no_auton() { 
+  chassis.setPose(0, 0, 0); 
+}
+
 void blue_pos_wp() {
   chassis.setPose(56.746, -14.9, 270);
 
@@ -990,6 +994,7 @@ void blue_pos_wp() {
 
   chassis.moveToPose(0, 0, 150, 5000, {.forwards = false});
   waitd;
+  
 
   // chassis.moveToPoint(35.709, -80.464, 1200, {.forwards=false});
   // intake.brake();
