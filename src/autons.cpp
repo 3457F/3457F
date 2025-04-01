@@ -207,86 +207,87 @@ void red_pos_wp() {
 
 //Blue Negative Autons
 void blue_negative_elims() {
-  chassis.setPose(53.746, 16.9, 0);
+    chassis.setPose(53.746, 16.9, 0);
 
-  // the commented out code is probs deprecated from when we ran no preload...?
-  // arm.set_pos(arm.LOADIN_POS);
-  // pros::delay(150);
-  // intake.intake();
-  // pros::delay(250);
-  // intake.intake_brake_mode = pros::E_MOTOR_BRAKE_COAST;
-  // intake.brake();
-  arm.set_pos(arm.SCORE_POS);
-
-  // chassis.moveToPoint(56.864, 9.5, 1000, {.forwards = false});
-  // waitd;
-  chassis.turnToPoint(67.85, 0, 375, {.forwards = false});
-  arm.set_pos(arm.ALLIANCE_SCORE);
-  waitd;
-
-  pros::delay(550);
-
-  arm.set_pos(arm.START_POS);
-
-  chassis.moveToPoint(44.683, 26.06, 1100);
-  waitd;
-
-  chassis.turnToPoint(20, 25, 700);
-  waitd;
-
-  chassis.moveToPoint(20, 25, 1000, {.maxSpeed = 90});
-  waitd;
-
-  mogo.clamp(); // mogo end
-  pros::delay(225);
-
-  // fds
-  //  chassis.moveToPose(chassis.getPose().x-20, chassis.getPose().y+18.25, 127,
-  //  1900, {.forwards = false, .minSpeed = 89.69});
-  turnAndMoveToPoint(7.1, 38, {.turnTO = 650, .forwards = false,.async = true});
-  intake.intake();
-  waitd;
-
-  pros::delay(450);
-
-  chassis.turnToHeading(180, 600);
-  waitd;
-
-  chassis.moveToPoint(chassis.getPose().x-1.45, 54.221, 1200, {.forwards = false, .maxSpeed=100});
-  waitd;
-  pros::delay(500);
-
-  chassis.moveToPoint(19.153, 25.475, 900);
-  waitd;
-
-  chassis.moveToPoint(24.22, 48.277, 1000, {.forwards=false, .maxSpeed=110});
-  waitd;
-
-  // corner start
-
-  chassis.moveToPoint(56.571, 44.574, 1000, {.minSpeed=110});
-  waitd;
-
-  chassis.moveToPoint(64.757, 71.079, 1100, {.forwards=false, .minSpeed=110});
-  waitd;
-
-  pros::delay(250);
-
-  chassis.turnToPoint(72.357, 54.513, 800, {.forwards=false});
-  waitd;
-  chassis.moveToPoint(72.357, 54.513, 800, {.forwards=false});
-  waitd;
-
-  // chassis.turnToPoint(17.692, 17.68, TO, {.forwards = false});
-  // waitd;
-
-  // chassis.moveToPoint(17.692, 17.68, TO, {.forwards = false, .maxSpeed = 70});
-  // intake.brake();
-  // waitd;
-
-  // arm.set_pos(arm.SCORE_POS);
-
-  chassis.moveToPoint(64.223, -63.587, 10000);
+    arm.set_pos(arm.SCORE_POS);
+  
+    // chassis.moveToPoint(56.864, 9.5, 1000, {.forwards = false});
+    // waitd;
+    chassis.turnToPoint(67.85, 0, 375, {.forwards = false});
+    arm.set_pos(arm.ALLIANCE_SCORE);
+    waitd;
+  
+    pros::delay(550);
+  
+    arm.set_pos(arm.START_POS);
+  
+    // alliance stake end
+    // mogo start
+  
+    chassis.moveToPoint(44.683, 26.06, 1100);
+    waitd;
+  
+    chassis.turnToPoint(20, 25, 700);
+    waitd;
+  
+    chassis.moveToPoint(20, 25, 1000, {.maxSpeed = 90});
+    waitd;
+  
+    mogo.clamp(); // mogo end
+    pros::delay(225);
+  
+    // middle ring start
+  
+    chassis.turnToPoint(7.1, 38, 650, {.forwards = false});
+    waitd;
+    chassis.moveToPoint(7.1, 38, 900, {.forwards = false});
+    waitd;
+    intake.intake();
+    waitd;
+  
+    pros::delay(200);
+  
+    chassis.turnToHeading(180, 600);
+    waitd;
+  
+    chassis.moveToPoint(chassis.getPose().x - 1.45, 54.221, 900,
+                        {.forwards = false, .maxSpeed = 100});
+    waitd;
+    pros::delay(200);
+  
+    // end of middle rings
+    // start of single stack
+  
+    chassis.moveToPoint(19.153, 25.475, 900);
+    waitd;
+  
+    chassis.moveToPoint(24.22, 48.277, 900, {.forwards = false});
+    waitd;
+  
+    // end of single stack
+    // corner start
+  
+    chassis.moveToPoint(47.785, 47.785, 1000, {.minSpeed = 115});
+    waitd;
+  
+    chassis.moveToPoint(64.757, 71.079, 1000, {.forwards = false, .minSpeed = 115});
+    waitd;
+  
+    pros::delay(100);
+  
+    chassis.moveToPoint(44.411, 14.503, 1100, {.forwards = false});
+    waitd;
+  
+    doinker.toggle();
+    pros::delay(350);
+  
+    chassis.turnToPoint(22.61, 1.267, 500, {.forwards=false});
+    waitd;
+    doinker.toggle();
+    chassis.moveToPoint(22.61, 1.267, TO, {.forwards=false, .maxSpeed=80});
+    waitd;
+  
+  //   chassis.moveToPoint(64.223, -63.587, 10000);
 }
 void blue_negative_wp() {
   chassis.setPose(53.746, 16.9, 0);
