@@ -102,7 +102,7 @@ lemlib::OdomSensors sensors(
 							nullptr, // vertical tracking wheel 2, set to nullptr as we are using IMEs
                             
 							// &horizontal_track, // horizontal tracking wheel 1
-							nullptr,
+							&horizontal_track,
                             
 							nullptr, // horizontal tracking wheel 2, set to nullptr as we don't have a second one
                             
@@ -257,13 +257,12 @@ void autonomous() {
 	//blue neg
 
 	// blue_negative_wp();
-	// blue_negative_elims();
+	blue_negative_elims();
 
 	//blue pos
 	
 	// blue_rush();
 	// blue_pos_wp();
-	blue_negative_elims();
 };
 
 /**
