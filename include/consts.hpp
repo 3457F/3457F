@@ -38,7 +38,7 @@
 #define DOINKER_PORT 'B'
 #define INTAKE_LIFT_PORT 'C'
 #define RUSH_MECH_PORT 'D'
-#define INTAKE_LIM_SWITCH_PORT 'E'
+#define INTAKE_DIST_SENSOR_PORT 'E'
 // ---
 
 // dt PID -- 600rpm dt (mecha)

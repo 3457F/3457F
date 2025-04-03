@@ -126,7 +126,7 @@ Intake intake = Intake(
 	, pros::E_MOTOR_BRAKE_COAST	// brake mode of intake
 	// , COLOR_PORT
 	, 0
-	, INTAKE_LIM_SWITCH_PORT
+	, INTAKE_DIST_SENSOR_PORT
 	, 0
 );
 
@@ -143,8 +143,6 @@ Arm arm = Arm(
 
 // TODO: set port
 Doinker doinker = Doinker(DOINKER_PORT);
-
-// RushMech rush_mech = RushMech(RUSH_MECH_PORT);
 
 /**
  * VARIABLE DEFINITION:
