@@ -528,3 +528,42 @@ void blue_pos_wp() {
 
   // intake.outtake();
 }
+
+//Solo wp
+void red_sawp(){
+  chassis.setPose(-60.263, 13.198, 0);
+
+  chassis.turnToHeading(35, TO);
+  pros::delay(500);
+  arm.set_pos(arm.ALLIANCE_SCORE);
+  waitd;
+
+  chassis.moveToPoint(-46.913, 23.332, 1000);
+  arm.set_pos(arm.INIT_POS);
+  waitd;
+
+  chassis.turnToHeading(90, 650);
+  waitd;
+  chassis.moveToPoint(-28.009, 23.332, 1200);
+  waitd;
+  mogo.toggle();
+
+  chassis.turnToHeading(226, 700);
+  chassis.moveToPoint(-12.097, 36.515, 1200, {.forwards = false});
+  intake.intake();
+  waitd;
+  pros::delay(900);
+
+  chassis.moveToPoint(-24.501, 24.306, 900);
+  waitd;
+
+  chassis.turnToHeading(180, 650);
+  waitd;
+  
+  chassis.moveToPoint(-24.501, 45.744, 1000, {.forwards = false});
+  waitd;
+
+  chassis.moveToPose(-44.769, 4.428, 25, 2000, {.forwards = false});
+  arm.set_pos(arm.INTAKE_LIFT);
+  waitd;
+}
