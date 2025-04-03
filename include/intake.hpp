@@ -2,6 +2,7 @@
 
 #include "api.h"
 #include "pros/colors.hpp"
+#include "pros/distance.hpp"
 #include "pros/motor_group.hpp"
 #include "pros/motors.hpp"
 #include "pros/optical.hpp"
@@ -26,21 +27,15 @@ class Intake {
         pros::MotorGroup intake_motors;
 
         /** defining STUFF that it uses */
-        pros::Motor floating_motor;
-
-        pros::adi::Port intake_piston;
 
         pros::motor_brake_mode_e_t intake_brake_mode;
 
         pros::Optical color_sensor;
 
-        pros::adi::Port limit_switch;
+        pros::Distance distance_sensor;
 
         // 0 -> running freely
         // 1 -> running color sort task
-        int state;
-
-        int color_in_intake;
 
         pros::Task* color_sort_task;
 
@@ -57,13 +52,13 @@ class Intake {
          */
         int held_ring;
 
+        bool sort_next;
+
         Intake(
             std::initializer_list<std::int8_t> intake_motor_ports
-            , std::uint8_t floating_motor_port
             , pros::motor_brake_mode_e_t brake_mode
-            , std::uint8_t intake_piston_port
             , std::uint8_t color_port
-            , std::uint8_t limit_switch_port
+            , std::uint8_t distance_sensor_port
             , bool type
         );
 
@@ -89,11 +84,8 @@ class Intake {
 
         // ------
 
-        void check_color_sensor();
-        void check_limit_switch();
-
-        void hues_debug();
-
-        void handle_driver_input(bool R1_pressed, bool R2_pressed);
-        void update_sort(bool R1_pressed, bool R2_pressed);
+        void check_color();
 };
+
+
+void update(void* intake);

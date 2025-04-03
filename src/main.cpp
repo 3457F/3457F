@@ -123,10 +123,7 @@ lemlib::Chassis chassis(drivetrain, // drivetrain settings
 Intake intake = Intake(
 	// was not negative before
 	{-INTAKE_PORT}
-	, FLOATING_PORT
 	, pros::E_MOTOR_BRAKE_COAST	// brake mode of intake
-
-	, INTAKE_LIFT_PORT				// intake piston port
 	// , COLOR_PORT
 	, 0
 	, INTAKE_LIM_SWITCH_PORT
@@ -160,7 +157,7 @@ bool B_state = false;
 // pros::Task print_pose(print_robot_pos, &chassis);
 
 // TODO: shld be ok if the task starts at the beginning...?
-// pros::Task color_sort(&update_sort_auton, &intake);
+pros::Task color_sort(&update, &intake);
 
 
 /**
@@ -407,7 +404,7 @@ void opcontrol() {
 		 * INTAKE:
 		 */
 		// intake.update_sort(R1_pressed, R2_pressed);
-		intake.handle_driver_input(R1_pressed, R2_pressed);
+		
 
 		// if (B_new_press) {
 		// 	intake.toggle();
