@@ -208,6 +208,7 @@ void red_pos_wp() {
 //Blue Negative Autons
 void blue_negative_elims() {
     chassis.setPose(53.746, 16.9, 0);
+    intake.color = 1;
 
     arm.set_pos(arm.SCORE_POS);
   

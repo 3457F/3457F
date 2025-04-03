@@ -76,6 +76,9 @@ void Intake::check_color() {
 
 void update(Intake* a) {
     while (true) {
+        pros::delay(50);
+        if (arm.target == arm.LOADIN_POS) { continue; }
+
         a->check_color();
 
         if (a->sort_next) {
@@ -89,7 +92,5 @@ void update(Intake* a) {
         if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
             a->outtake();
         }
-
-        pros::delay(50);
     }
 }

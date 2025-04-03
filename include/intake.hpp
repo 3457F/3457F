@@ -12,7 +12,8 @@ void throws_ring(void* intakeVoid);
 
 class Intake {
     public:
-        double STARTING_HUE;
+        const int RED = 0;
+        const int BLUE = 0;
 
         const double RED_MIN = 5.0;
         const double RED_MAX = 15.0;

@@ -158,6 +158,7 @@ bool B_state = false;
 
 // TODO: shld be ok if the task starts at the beginning...?
 pros::Task color_sort(&update, &intake);
+pros::Task arm_task(&arm_update, &arm);
 
 
 /**
@@ -284,9 +285,6 @@ void opcontrol() {
 	intake.intake_motors.set_brake_mode_all(pros::motor_brake_mode_e::E_MOTOR_BRAKE_COAST);
 
 	arm.set_pos(arm.INIT_POS);
-
-	// starting hue tuned based on whatever venue we're at
-	intake.STARTING_HUE = intake.color_sensor.get_hue();
 
 	while (true) {
 		/**

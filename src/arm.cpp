@@ -211,9 +211,22 @@ void Arm::release() {
     target = last_pos;
 }
 
-// basically you go here to "prepare" arm for scoring, so it's much faster
-// to go to scoring when u actually get to alliance stake than if you did score
-// pos only when you got there
 void Arm::hold() {
     target = HOLD_POS;
+}
+
+void arm_update(Arm* a) {
+    if (a->target==a->LOADIN_POS) {
+        if (intake.is_ring_on_top()) {
+            pros::delay(750);
+
+            intake.outtake();
+            pros::delay(50);
+            intake.brake();
+
+            if (a->target==a->LOADIN_POS) {
+                a->set_pos(a->HOLD_POS);
+            }
+        }
+    }
 }
