@@ -252,12 +252,12 @@ void autonomous() {
 	//red pos
 
 	// red_rush();
-	// red_pos_wp();
+	red_pos_wp();
 
 	//blue neg
 
 	// blue_negative_wp();
-	blue_negative_elims();
+	// blue_negative_elims();
 
 	//blue pos
 	

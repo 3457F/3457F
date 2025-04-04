@@ -135,73 +135,29 @@ void red_pos_wp() {
   // going to mogo
   chassis.moveToPose(-24.554, -24.248, 90, 1500, {.minSpeed = 60});
   chassis.waitUntil(20);
-  arm.set_pos(arm.HOLD_POS);
+  arm.set_pos(arm.INIT_POS);
   mogo.clamp();
   waitd;
 
-  pros::delay(500);
-
-  // keep arm up for ladder
-
-  // turn towards bottom ring
-  intake.intake();
-  turnAndMoveToPoint(-23.597, -46.974, {.turnTO = 800, .moveTO = 1500, .forwards = false});
-  waitd;
-  intake.brake();
-
-  // aligns so that the robot doinker is in position for the corner
-  chassis.moveToPose(-58.045, -33.817, 10, 1500, {.forwards = false});
-  // does this so ring is not flung out
-  // while the robot is turning
-  chassis.waitUntil(7);
-  intake.intake();
+  turnAndMoveToPoint(-15.536, -14.281, {.forwards = false});
   waitd;
   doinker.toggle();
-  // chassis.follow(
-  //     red_pos_steep_corner_txt,
-  //     5,
-  //     1000,
-  //     false
-  // );
-  // chassis.waitUntil(7);
-  // intake.intake();
-  // waitd;
-  // doinker.toggle();
-
-  // moves towards corner
-  // -63.069 -54.39
-  turnAndMoveToPoint(
-      // -63.787,
-      -63.069,
-
-      // -56.064,
-      -54.39,
-      {
-          .forwards = false,
-      });
+  waitd;
+  chassis.moveToPoint(-31.322, -29.872, 900);
   waitd;
 
-  // turns, kicking rings in corner with doinker
-  chassis.turnToHeading(290, 800);
-  waitd;
-  // brings up doinker so that it doesn't prevent us from intaking the new
-  // ring
+  chassis.turnToHeading(328, 650);
+  waitd; 
   doinker.toggle();
-  pros::delay(750);
 
-  // moves into the kicked rings, hopefully getting red
-  // w old angle: (-56.131, -65.394)
-  chassis.moveToPoint(-46.802, -63.002, 800, {.forwards = false});
-  intake.intake();
+  chassis.moveToPose(-39.02, -16.2, 84, 1200);
   waitd;
 
-  arm.set_pos(arm.SCORE_POS);
-  // turns, moves to ladder (ARM STILL UP!)
-  turnAndMoveToPoint(
-      -20.248, -21.138,
-      {.forwards = false, .async = true, .mvMaxSpeed = 80, .waitUntil = 5});
-  mogo.toggle();
-  intake.brake();
+  chassis.turnToHeading(353, 500);
+  waitd;
+  doinker.toggle();
+  chassis.moveToPoint(-37.656, -28.898, 800, {.forwards = false});
+  intake.intake();
   waitd;
 }
 
