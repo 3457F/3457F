@@ -125,7 +125,7 @@ Intake intake = Intake(
 	{-INTAKE_PORT}
 	, pros::E_MOTOR_BRAKE_COAST	// brake mode of intake
 	// , COLOR_PORT
-	, 0
+	, INTAKE_COLOR_SENSOR_PORT
 	, INTAKE_DIST_SENSOR_PORT
 	, 0
 );
@@ -155,8 +155,6 @@ bool B_state = false;
 // pros::Task print_pose(print_robot_pos, &chassis);
 
 // TODO: shld be ok if the task starts at the beginning...?
-pros::Task color_sort(&update, &intake);
-pros::Task arm_task(&arm_update, &arm);
 
 
 /**
@@ -203,7 +201,8 @@ void initialize() {
 		
 	screen_init();
 	
-	// pros::Task distance_calc(updateLoop);
+	pros::Task color_sort(update, &intake);
+	pros::Task arm_task(&arm_update, &arm);
 }
 
 /**

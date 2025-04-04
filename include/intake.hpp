@@ -89,4 +89,4 @@ class Intake {
 };
 
 
-void update(void* intake);
+void update(Intake* intake);
