@@ -25,13 +25,7 @@ Intake::Intake(
     state = 0;
     color_sort_task = nullptr;
 
-<<<<<<< HEAD
     held_ring = 1;
-=======
-    held_ring = RED; // 0 --> red, 1 --> blue
-
-    sort_next = false;
->>>>>>> 4c0d46942fb78711251f7ecdebfb81755e4fcfaf
 }
 
 // config
@@ -79,22 +73,10 @@ void Intake::toggle() {
  * limit switch detection
  */
 bool Intake::is_ring_on_top() {
-<<<<<<< HEAD
     return limit_switch.get_value();
 }
 
 // --------
-=======
-    return distance_sensor.get()>5;
-}
-
-void Intake::check_color() {
-    if (color_sensor.get_hue() > 150) {
-        held_ring = 1;
-    } else {
-        held_ring = 0;
-    }
->>>>>>> 4c0d46942fb78711251f7ecdebfb81755e4fcfaf
 
 /**
  * used to tune color sensor; prints detected hue values
@@ -202,7 +184,6 @@ void Intake::check_limit_switch() {
     }
 }
 
-<<<<<<< HEAD
 void Intake::handle_driver_input(bool R1_pressed, bool R2_pressed) {
     // no bad rings! BRRR KEEP GOING DRIVER
     if (state == 0) {
@@ -216,26 +197,5 @@ void Intake::handle_driver_input(bool R1_pressed, bool R2_pressed) {
     // uh oh we are eliminating the bad rings. must wait!
     } else if (state == 1) {
         return;
-=======
-void update_sort(void* b) {
-    Intake* a = ((Intake *) b);
-    while (true) {
-        pros::delay(20);
-        // if (arm.target == arm.LOADIN_POS) { continue; }
-
-        // a->check_color();
-
-        // if (a->sort_next) {
-        //     a->brake();
-        //     pros::delay(250);
-        //     a->sort_next = false;
-        // }
-
-        if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
-            a->intake();
-        } else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
-            a->outtake();
-        } else if (curr) { a->brake(); }
->>>>>>> 4c0d46942fb78711251f7ecdebfb81755e4fcfaf
     }
 }

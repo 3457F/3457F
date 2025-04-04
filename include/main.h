@@ -74,8 +74,6 @@ extern Doinker doinker;
 extern Arm arm;
 extern RushMech rush_mech;
 
-extern bool curr;
-
 /**
  * If you find doing pros::Motor() to be tedious and you'd prefer just to do
  * Motor, you can use the namespace with the following commented out line.

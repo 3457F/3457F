@@ -216,23 +216,4 @@ void Arm::release() {
 // pos only when you got there
 void Arm::hold() {
     target = HOLD_POS;
-<<<<<<< HEAD
-=======
-}
-
-void arm_update(void* b) {
-    Arm* a = (Arm*) b;
-    if (a->target==a->LOADIN_POS) {
-        if (intake.is_ring_on_top()) {
-            pros::delay(750);
-            intake.outtake();
-            pros::delay(50);
-            intake.brake();
-
-            if (a->target==a->LOADIN_POS) {
-                a->set_pos(a->HOLD_POS);
-            }
-        }
-    }
->>>>>>> 4c0d46942fb78711251f7ecdebfb81755e4fcfaf
 }

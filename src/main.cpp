@@ -94,19 +94,15 @@ lemlib::ControllerSettings angular_controller(DT_ANGULAR_P, // proportional gain
 // ACTUAL measured offset of: vertical track is -11/16ths
 // -3.5 -> -0.6875
 lemlib::TrackingWheel vertical_track(&vertical, 2, -0.6875);
-lemlib::TrackingWheel horizontal_track(&horizontal, 2.75,2.4 );
+lemlib::TrackingWheel horizontal_track(&horizontal, 2.75,1.85 );
 
 lemlib::OdomSensors sensors(
 							&vertical_track, // vert nullptr test
 
 							nullptr, // vertical tracking wheel 2, set to nullptr as we are using IMEs
                             
-<<<<<<< HEAD
 							// &horizontal_track, // horizontal tracking wheel 1
 							&horizontal_track,
-=======
-							&horizontal_track, // horizontal tracking wheel 1
->>>>>>> 4c0d46942fb78711251f7ecdebfb81755e4fcfaf
                             
 							nullptr, // horizontal tracking wheel 2, set to nullptr as we don't have a second one
                             
@@ -132,13 +128,8 @@ Intake intake = Intake(
 
 	, INTAKE_LIFT_PORT				// intake piston port
 	// , COLOR_PORT
-<<<<<<< HEAD
 	, 0
 	, INTAKE_LIM_SWITCH_PORT
-=======
-	, INTAKE_COLOR_SENSOR_PORT
-	, INTAKE_DIST_SENSOR_PORT
->>>>>>> 4c0d46942fb78711251f7ecdebfb81755e4fcfaf
 	, 0
 );
 
@@ -169,12 +160,8 @@ bool B_state = false;
 // pros::Task print_pose(print_robot_pos, &chassis);
 
 // TODO: shld be ok if the task starts at the beginning...?
-<<<<<<< HEAD
 // pros::Task color_sort(&update_sort_auton, &intake);
-=======
->>>>>>> 4c0d46942fb78711251f7ecdebfb81755e4fcfaf
 
-bool curr = false;
 
 /**
  * Runs initialization code. This occurs as soon as the program is started.
@@ -220,8 +207,7 @@ void initialize() {
 		
 	screen_init();
 	
-	pros::Task color_sort(&update_sort, &intake);
-	// pros::Task arm_task(&arm_update, &arm);
+	// pros::Task distance_calc(updateLoop);
 }
 
 /**
@@ -258,7 +244,6 @@ void competition_initialize() {};
 void autonomous() {
 	chassis.setBrakeMode(pros::motor_brake_mode_e::E_MOTOR_BRAKE_HOLD);
 	
-	curr = false;
 	//red neg
 	
 	// red_neg_wp();
@@ -302,12 +287,8 @@ void opcontrol() {
 
 	arm.set_pos(arm.INIT_POS);
 
-<<<<<<< HEAD
 	// starting hue tuned based on whatever venue we're at
 	intake.STARTING_HUE = intake.color_sensor.get_hue();
-=======
-	curr = true;
->>>>>>> 4c0d46942fb78711251f7ecdebfb81755e4fcfaf
 
 	while (true) {
 		/**

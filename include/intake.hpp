@@ -97,9 +97,3 @@ class Intake {
         void handle_driver_input(bool R1_pressed, bool R2_pressed);
         void update_sort(bool R1_pressed, bool R2_pressed);
 };
-<<<<<<< HEAD
-=======
-
-
-void update_sort(void* intake);
->>>>>>> 4c0d46942fb78711251f7ecdebfb81755e4fcfaf
