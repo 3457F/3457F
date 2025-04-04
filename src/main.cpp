@@ -94,15 +94,14 @@ lemlib::ControllerSettings angular_controller(DT_ANGULAR_P, // proportional gain
 // ACTUAL measured offset of: vertical track is -11/16ths
 // -3.5 -> -0.6875
 lemlib::TrackingWheel vertical_track(&vertical, 2, -0.6875);
-lemlib::TrackingWheel horizontal_track(&horizontal, 2.75,1.85 );
+lemlib::TrackingWheel horizontal_track(&horizontal, 2.75,2.4 );
 
 lemlib::OdomSensors sensors(
 							&vertical_track, // vert nullptr test
 
 							nullptr, // vertical tracking wheel 2, set to nullptr as we are using IMEs
                             
-							// &horizontal_track, // horizontal tracking wheel 1
-							nullptr,
+							&horizontal_track, // horizontal tracking wheel 1
                             
 							nullptr, // horizontal tracking wheel 2, set to nullptr as we don't have a second one
                             
@@ -156,6 +155,7 @@ bool B_state = false;
 
 // TODO: shld be ok if the task starts at the beginning...?
 
+bool curr = false;
 
 /**
  * Runs initialization code. This occurs as soon as the program is started.
@@ -201,8 +201,8 @@ void initialize() {
 		
 	screen_init();
 	
-	pros::Task color_sort(update, &intake);
-	pros::Task arm_task(&arm_update, &arm);
+	pros::Task color_sort(&update_sort, &intake);
+	// pros::Task arm_task(&arm_update, &arm);
 }
 
 /**
@@ -239,6 +239,7 @@ void competition_initialize() {};
 void autonomous() {
 	chassis.setBrakeMode(pros::motor_brake_mode_e::E_MOTOR_BRAKE_HOLD);
 	
+	curr = false;
 	//red neg
 	
 	// red_neg_wp();
@@ -282,6 +283,8 @@ void opcontrol() {
 	intake.intake_motors.set_brake_mode_all(pros::motor_brake_mode_e::E_MOTOR_BRAKE_COAST);
 
 	arm.set_pos(arm.INIT_POS);
+
+	curr = true;
 
 	while (true) {
 		/**

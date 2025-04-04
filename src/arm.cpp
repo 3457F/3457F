@@ -215,11 +215,11 @@ void Arm::hold() {
     target = HOLD_POS;
 }
 
-void arm_update(Arm* a) {
+void arm_update(void* b) {
+    Arm* a = (Arm*) b;
     if (a->target==a->LOADIN_POS) {
         if (intake.is_ring_on_top()) {
             pros::delay(750);
-
             intake.outtake();
             pros::delay(50);
             intake.brake();

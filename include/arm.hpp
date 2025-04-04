@@ -87,4 +87,4 @@ class Arm {
         void score();
 };
 
-void arm_update(Arm* a);
+void arm_update(void* a);

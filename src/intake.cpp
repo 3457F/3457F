@@ -21,7 +21,7 @@ Intake::Intake(
 
     color_sort_task = nullptr;
 
-    held_ring = 0; // 0 --> red, 1 --> blue
+    held_ring = RED; // 0 --> red, 1 --> blue
 
     sort_next = false;
 }
@@ -59,11 +59,11 @@ void Intake::brake_auton() {
  * limit switch detection
  */
 bool Intake::is_ring_on_top() {
-    return distance_sensor.get()<35;
+    return distance_sensor.get()>5;
 }
 
 void Intake::check_color() {
-    if (color_sensor.get_hue() > 30) {
+    if (color_sensor.get_hue() > 150) {
         held_ring = 1;
     } else {
         held_ring = 0;
@@ -74,23 +74,24 @@ void Intake::check_color() {
     }
 }
 
-void update(Intake* a) {
+void update_sort(void* b) {
+    Intake* a = ((Intake *) b);
     while (true) {
-        pros::delay(50);
-        if (arm.target == arm.LOADIN_POS) { continue; }
+        pros::delay(20);
+        // if (arm.target == arm.LOADIN_POS) { continue; }
 
-        a->check_color();
+        // a->check_color();
 
-        if (a->sort_next) {
-            a->brake();
-            pros::delay(250);
-        }
+        // if (a->sort_next) {
+        //     a->brake();
+        //     pros::delay(250);
+        //     a->sort_next = false;
+        // }
 
         if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
             a->intake();
-        }
-        if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
+        } else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
             a->outtake();
-        }
+        } else if (curr) { a->brake(); }
     }
 }

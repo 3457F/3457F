@@ -89,4 +89,4 @@ class Intake {
 };
 
 
-void update(Intake* intake);
+void update_sort(void* intake);
