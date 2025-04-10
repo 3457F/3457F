@@ -5,7 +5,6 @@
 #include "arm.hpp"
 #include "lemlib/pid.hpp"
 #include "main.h"
-#include "pros/abstract_motor.hpp"
 #include "pros/motors.h"
 #include "pros/rtos.hpp"
 #include "util.hpp"
@@ -216,4 +215,24 @@ void Arm::release() {
 // pos only when you got there
 void Arm::hold() {
     target = HOLD_POS;
+}
+
+void arm_update(void* armVoid) {
+    Arm* arm = (Arm*) armVoid;
+
+    // if arm has a ring, automatically get arm out of the way of the intake
+    if ((arm->target == arm->LOADIN_POS) && (intake.is_ring_on_top())) {
+        pros::delay(750);
+        
+        // TODO: is this necessary?
+        // move hooks slightly so ring doesn't get stuck on it
+        intake.outtake();
+        pros::delay(50);
+        intake.brake();
+
+        // if driver has not moved arm out yet, do it for them!
+        if (arm->target == arm->LOADIN_POS) {
+            arm->set_pos(arm->HOLD_POS);
+        }
+    }
 }

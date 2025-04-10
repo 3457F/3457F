@@ -74,6 +74,9 @@ extern Doinker doinker;
 extern Arm arm;
 extern RushMech rush_mech;
 
+// whether the bot is in driver control (true) or autonomous (false)
+extern bool in_driver_control;
+
 /**
  * If you find doing pros::Motor() to be tedious and you'd prefer just to do
  * Motor, you can use the namespace with the following commented out line.

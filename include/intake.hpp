@@ -1,11 +1,8 @@
 #pragma once
 
-#include "api.h"
-#include "pros/colors.hpp"
+#include "pros/distance.hpp"
 #include "pros/motor_group.hpp"
-#include "pros/motors.hpp"
 #include "pros/optical.hpp"
-#include <vector>
 
 void throws_ring(void* intakeVoid);
 
@@ -26,25 +23,16 @@ class Intake {
         pros::MotorGroup intake_motors;
 
         /** defining STUFF that it uses */
-        pros::Motor floating_motor;
-
-        pros::adi::Port intake_piston;
 
         pros::motor_brake_mode_e_t intake_brake_mode;
 
         pros::Optical color_sensor;
 
-        pros::adi::Port limit_switch;
-
-        // 0 -> running freely
-        // 1 -> running color sort task
-        int state;
-
-        int color_in_intake;
+        pros::Distance distance_sensor;
 
         pros::Task* color_sort_task;
 
-        bool color;
+        bool alliance_color;
 
         // 0 -> not running (CONTINUALLY BRAKING)
         // 1 -> intaking
@@ -55,15 +43,15 @@ class Intake {
          * 0 - red (DEFAULT)
          * 1 - blue
          */
-        int held_ring;
+        int held_ring_color;
+
+        bool sort_next_ring;
 
         Intake(
             std::initializer_list<std::int8_t> intake_motor_ports
-            , std::uint8_t floating_motor_port
             , pros::motor_brake_mode_e_t brake_mode
-            , std::uint8_t intake_piston_port
             , std::uint8_t color_port
-            , std::uint8_t limit_switch_port
+            , std::uint8_t distance_sensor_port
             , bool type
         );
 
@@ -81,19 +69,11 @@ class Intake {
 
         void brake_auton();
 
-        void lift(bool set);
-
-        void toggle();
-
         bool is_ring_on_top();
 
         // ------
 
-        void check_color_sensor();
-        void check_limit_switch();
-
-        void hues_debug();
-
-        void handle_driver_input(bool R1_pressed, bool R2_pressed);
-        void update_sort(bool R1_pressed, bool R2_pressed);
+        void check_color();
 };
+
+void update_sort(void* intake);

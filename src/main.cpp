@@ -1,8 +1,6 @@
 /**
  * IMPORTS:
 */
-#include <string>
-#include <vector>
 
 #include "consts.hpp"
 #include "lemlib/chassis/chassis.hpp"
@@ -123,13 +121,10 @@ lemlib::Chassis chassis(drivetrain, // drivetrain settings
 Intake intake = Intake(
 	// was not negative before
 	{-INTAKE_PORT}
-	, FLOATING_PORT
 	, pros::E_MOTOR_BRAKE_COAST	// brake mode of intake
-
-	, INTAKE_LIFT_PORT				// intake piston port
 	// , COLOR_PORT
 	, 0
-	, INTAKE_LIM_SWITCH_PORT
+	, INTAKE_DIST_SENSOR_PORT
 	, 0
 );
 
@@ -208,6 +203,10 @@ void initialize() {
 	screen_init();
 	
 	// pros::Task distance_calc(updateLoop);
+
+	// set up color sort and auto-arm alg
+	pros::Task color_sort(&update_sort, &intake);
+	pros::Task arm_task(&arm_update, &arm);
 }
 
 /**
@@ -337,11 +336,6 @@ void opcontrol() {
 
 		// FORCE POS
 		if (B_pressed) {
-			// rising edge; JUST pressed
-			// if (LEFT_state == false) {
-			// 	LEFT_state = true;
-			// 	arm.force();
-			// }
 			if (B_state == false) {
 				B_state = true;
 				arm.force();
@@ -349,11 +343,6 @@ void opcontrol() {
 		// only want to jump in here if both are true,
 		// bc of the else if that only allows one branch to run
 		}
-		// else if (!LEFT_pressed && LEFT_state == true) {
-		// 	LEFT_state = false;
-		// 	// falling edge; JUST released
-		// 	arm.release();
-		// }
 		else if (!B_pressed && B_state == true) {
 			B_state = false;
 			// falling edge; JUST released
@@ -377,27 +366,6 @@ void opcontrol() {
 			arm.set_pos(arm.START_POS);
 		}
 
-		// // if L1 PRESSED
-		// if (L1_pressed) {
-		// 	// "rising edge"; JUST pressed
-		// 	if (L1_state == false) {
-		// 		L1_state = true;
-		// 		arm.force();
-		// 	}
-		// } else {
-		// 	// "falling edge"; JUST released
-		// 	if (L1_state == true) {
-		// 		L1_state = false;
-		// 		arm.release_force();
-		// 	}
-
-		// 	if (DOWN_new_press) {
-		// 		arm.score_cycle();
-		// 	} else if (RIGHT_new_press) {
-		// 		arm.start_pos();
-		// 	}
-		// }
-
 		/**
 		 * DOINKER:
 	     */
@@ -408,12 +376,7 @@ void opcontrol() {
 		/**
 		 * INTAKE:
 		 */
-		// intake.update_sort(R1_pressed, R2_pressed);
-		intake.handle_driver_input(R1_pressed, R2_pressed);
-
-		// if (B_new_press) {
-		// 	intake.toggle();
-		// }
+		// handled by a task!
 
 		/**
 		 * MOGO:
@@ -438,10 +401,6 @@ void opcontrol() {
 		// printf("arm pos: %d | target: %d\n", arm.encoder.get_position(), arm.target);
 		// printf("arm current: %d\n", arm.arm_motor.get_current_draw());
 		// intake.hues_debug();
-
-		// // FOR COLOR SORT
-		// intake.check_color_sensor();
-		// intake.check_limit_switch();
 
 		// delay to save system resources
 		pros::delay(DRIVER_TICK);

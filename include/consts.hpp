@@ -24,6 +24,8 @@
 // #define COLOR_PORT 15
 
 // intake ports
+#define INTAKE_COLOR_SENSOR_PORT 13
+#define INTAKE_DIST_SENSOR_PORT 5
 #define INTAKE_PORT -15
 #define FLOATING_PORT 1
 
@@ -38,7 +40,6 @@
 #define DOINKER_PORT 'B'
 #define INTAKE_LIFT_PORT 'C'
 #define RUSH_MECH_PORT 'D'
-#define INTAKE_LIM_SWITCH_PORT 'E'
 // ---
 
 // dt PID -- 600rpm dt (mecha)

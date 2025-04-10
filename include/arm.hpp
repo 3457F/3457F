@@ -1,6 +1,5 @@
 #pragma once
 
-#include "api.h"
 #include "lemlib/pid.hpp"
 #include "pros/rotation.hpp"
 
@@ -86,3 +85,5 @@ class Arm {
 
         void score();
 };
+
+void arm_update(void* armVoid);
