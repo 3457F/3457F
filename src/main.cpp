@@ -145,7 +145,7 @@ Arm arm = Arm(
 );
 
 // TODO: set port
-Doinker doinker = Doinker(DOINKER_PORT);
+Doinker doinker = Doinker(LEFT_DOINKER_PORT, RIGHT_DOINKER_PORT);
 
 // RushMech rush_mech = RushMech(RUSH_MECH_PORT);
 
