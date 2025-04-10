@@ -501,27 +501,26 @@ void blue_pos_wp() {
 void red_sawp(){
   chassis.setPose(-60.263, 13.198, 0);
 
-  chassis.turnToHeading(35, 400);
-  pros::delay(500);
+  chassis.turnToHeading(35, 900);
+  pros::delay(100);
   arm.set_pos(arm.ALLIANCE_SCORE);
   waitd;
+ 
 
-  chassis.moveToPoint(-46.913, 24, 1000);
+  chassis.moveToPoint(-37.266, 30.64, 800);
   arm.set_pos(arm.INIT_POS);
   waitd;
 
-  chassis.turnToHeading(90, 650);
+  turnAndMoveToPoint(-27.327, 26.352, {.mvMaxSpeed=  70});
   waitd;
-  chassis.moveToPoint(-25, 24, 1100, {.maxSpeed = 80});
-  chassis.waitUntil(22);
   mogo.toggle();
-  waitd;
 
-  chassis.turnToHeading(226, 650);
-  chassis.moveToPoint(-9.495, 38.923, 1000, {.forwards = false});
+  chassis.turnToPoint(-11.541, 37.851,650, {.forwards = false});
+  waitd;
+  chassis.moveToPoint(-11.541, 37.851, 1000, {.forwards = false});
   intake.intake();
   waitd;
-  pros::delay(300);
+  pros::delay(200);
 
   chassis.moveToPoint(-24.501, 24.306, 900);
   waitd;
@@ -532,34 +531,26 @@ void red_sawp(){
   chassis.moveToPoint(-23.916, 49.446, 900, {.forwards = false});
   waitd;
 
-  chassis.moveToPose(-43.795  , -0.834, 18, 1800, {.forwards = false, .minSpeed = 127});
-  chassis.waitUntil(14);
-  arm.set_pos(arm.INTAKE_LIFT);
-  intake.intake();
-  chassis.waitUntil(29);
-  mogo.toggle();
-  waitd;
   
 
-  // chassis.moveToPose(-44.769, 4.428, 25, 2000, {.forwards = false});
-  // arm.set_pos(arm.INTAKE_LIFT);
+  // chassis.moveToPose(-44.769, 4.428, 25, 2000, {.forwards = false, .minSpeed = 127});
   // waitd;
 
-  turnAndMoveToPoint(-23.234, -13.209, {.mvMaxSpeed = 90});
-  waitd;
-  mogo.toggle();
-  pros::delay(50);
+  // turnAndMoveToPoint(-23.234, -13.209, {.mvMaxSpeed = 90});
+  // waitd;
+  // mogo.toggle();
+  // pros::delay(50);
 
-  chassis.turnToHeading(0, 400);
-  intake.intake();
-  waitd;
+  // chassis.turnToHeading(0, 400);
+  // intake.intake();
+  // waitd;
 
-  chassis.moveToPoint(-23.234, -32.048, 700, {.forwards = false, .minSpeed = 100});
-  arm.set_pos(arm.SCORE_POS);
-  waitd;
+  // chassis.moveToPoint(-23.234, -32.048, 700, {.forwards = false, .minSpeed = 100});
+  // arm.set_pos(arm.SCORE_POS);
+  // waitd;
 
-  chassis.moveToPose(-8.715, -24.22, 224,1200, {.forwards = false, .minSpeed = 127});
-  waitd;
+  // chassis.moveToPose(-8.715, -24.22, 224,1200, {.forwards = false, .minSpeed = 127});
+  // waitd;
 
 
 }
