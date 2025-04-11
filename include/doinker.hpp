@@ -13,5 +13,11 @@ class Doinker {
             std::uint8_t right_doinker_piston_port
         );
 
+        /** toggles both doinkers */
         void toggle();
+
+        /** only toggles left doinker */
+        void left_toggle();
+        /** only toggles right doinker */
+        void right_toggle();
 };
