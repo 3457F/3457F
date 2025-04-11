@@ -7,7 +7,6 @@ Intake::Intake(
     , pros::motor_brake_mode_e_t brake_mode
     , std::uint8_t color_port
     , std::uint8_t distance_sensor_port
-    // TODO: fix
     , bool type
 ) : intake_motors(intake_motor_ports)
     , color_sensor(color_port)
@@ -58,16 +57,17 @@ void Intake::brake_auton() {
  * - about to be scored onto the mogo
  */
 bool Intake::is_ring_on_top() {
-    // TODO: test, might have to refine if distance value is measured
-    // as 0
+    // TODO: test, might have to refine if distance value defaults to 0
     return distance_sensor.get() < 35;
 }
 
 void Intake::check_color() {
-    // TODO: tune hue
+    // Blue hue is about 220-230.
     if (color_sensor.get_hue() > 150) {
         held_ring_color = 0;
-    } else {
+    }
+    // Red hue is about 10-20.
+    else {
         held_ring_color = 1;
     }
 

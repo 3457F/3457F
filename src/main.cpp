@@ -117,7 +117,6 @@ lemlib::Chassis chassis(drivetrain, // drivetrain settings
  * SUBSYSTEM INITIALIZATION:
 */
 
-// TODO: set intake piston port + color sensor port
 Intake intake = Intake(
 	// was not negative before
 	{-INTAKE_PORT}
@@ -128,10 +127,8 @@ Intake intake = Intake(
 	, 0
 );
 
-// TODO: set ports
 MogoMech mogo = MogoMech(MOGO_MECH_PORT);
 
-// TODO: set ports
 Arm arm = Arm(
 	ARM_PORT
 	, pros::E_MOTOR_BRAKE_HOLD
@@ -139,7 +136,6 @@ Arm arm = Arm(
 	, &intake
 );
 
-// TODO: set port
 Doinker doinker = Doinker(DOINKER_PORT);
 
 // RushMech rush_mech = RushMech(RUSH_MECH_PORT);
@@ -152,10 +148,9 @@ Doinker doinker = Doinker(DOINKER_PORT);
 bool L1_state = false;
 bool B_state = false;
 
-// pros::Task print_pose(print_robot_pos, &chassis);
+bool in_driver_control = false;
 
-// TODO: shld be ok if the task starts at the beginning...?
-// pros::Task color_sort(&update_sort_auton, &intake);
+// pros::Task print_pose(print_robot_pos, &chassis);
 
 
 /**
@@ -263,6 +258,7 @@ void autonomous() {
 	// blue_rush();
 	// blue_pos_wp();
 
+	intake.alliance_color = 0;
 
 	red_sawp();
 };
@@ -282,6 +278,8 @@ void autonomous() {
  */
 void opcontrol() {
 	// pros::Task poseTask(opcontrolTask, &chassis);
+
+	in_driver_control = true;
 
 	// brake mode back to coast!
 	chassis.setBrakeMode(pros::motor_brake_mode_e::E_MOTOR_BRAKE_COAST);
