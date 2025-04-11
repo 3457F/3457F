@@ -26,7 +26,7 @@ void blue_rush();
 void blue_pos_wp();
 
 void red_sawp();
-
+void turnforRedrush();
 
 //erm old autons!
 /** OLD AUTON -- DON'T USE */

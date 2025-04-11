@@ -251,7 +251,7 @@ void autonomous() {
 
 	//red pos
 
-	// red_rush();
+	red_rush();
 	// red_pos_wp();
 
 	//blue neg
@@ -265,7 +265,7 @@ void autonomous() {
 	// blue_pos_wp();
 
 
-	red_sawp();
+	// red_sawp();
 };
 
 /**
@@ -402,7 +402,7 @@ void opcontrol() {
 		 * DOINKER:
 	     */
 		if (Y_new_press) {
-			doinker.toggle();
+			doinker.right_toggle();
 		}
 	
 		/**

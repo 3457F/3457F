@@ -5,6 +5,7 @@
 #include "pros/rtos.h"
 #include "pros/rtos.hpp"
 #include "util.hpp"
+#include <numbers>
 
 // declares pure pursuit files
 
@@ -75,46 +76,56 @@ void turnforRedrush() {
 void red_rush() {
   chassis.setPose(-51.5, -59, 250);
 
-  chassis.moveToPoint(-21.535, -46.274, 975,
-                      {.forwards = false, .minSpeed = 120});
+  chassis.moveToPoint(-21.535, -46.274, 850,
+                      {.forwards = false, .minSpeed = 127, .earlyExitRange=std::numbers::pi-1});
   intake.intake();
   waitd;
   intake.brake();
-  doinker.toggle();
+  doinker.left_toggle();
   pros::delay(350);
-  chassis.moveToPoint(-37.503, -53.761, 900,
-                      {.forwards = true, .minSpeed = 100});
+  chassis.moveToPoint(-37.503, -53.761, 900, {.forwards = true, .minSpeed = 100});
   waitd;
-  doinker.toggle();
-
-  turnAndMoveToPoint(-18.038, -45.712, {.forwards = true, .mvMaxSpeed = 60});
+  doinker.left_toggle();
+  
+  chassis.turnToPoint(-18.038, -52.869, 750);
+  waitd;
+  chassis.moveToPoint(-18.038, -52.869, TO, {.forwards = true, .maxSpeed=70});
   waitd;
   mogo.toggle();
-  pros::delay(50);
+
+  pros::delay(150);
+
   intake.intake();
 
-  pros::delay(500);
+  pros::delay(350);
 
-  turnAndMoveToPoint(-45.641, -27.923, {.forwards = false});
+  chassis.moveToPoint(-45.641, -27.923, TO, {.forwards = false});
   waitd;
 
   chassis.turnToHeading(270, 700);
   waitd;
   mogo.toggle();
 
-  turnAndMoveToPoint(-25.475, -24.026, {.mvMaxSpeed = 60});
+  chassis.turnToPoint(-25.475, -24.026, 750);
+  waitd;
+  chassis.moveToPoint(-25.475, -24.026, TO, {.maxSpeed=70});
   waitd;
   mogo.toggle();
+  intake.brake();
+    // zed
+  chassis.turnToPoint(-10.079,-9.409, 800, {.forwards = false});
+  waitd;
+  chassis.moveToPoint(-10.079,-9.409, 1300, {.forwards = false, .maxSpeed= 90});
+  waitd;
+  chassis.turnToHeading(220, 200);
+  waitd;
+  doinker.left_toggle();
+  pros::delay(350);
 
-  turnAndMoveToPoint(-50.616, -35.524, {.forwards = false, .async = true});
-  intake.intake();
+  chassis.moveToPose(-1.505, -3.368, 264, 800, {.forwards = false});
   waitd;
-
-  chassis.turnToHeading(32, 650);
-  waitd;
-  chassis.moveToPoint(-59.97, -48.971, 1200, {.forwards = false});
-  intake.intake();
-  waitd;
+  doinker.right_toggle();
+  
 }
 void red_pos_wp() {
   chassis.setPose(-60.263, -13.198, 180);
@@ -167,7 +178,7 @@ void red_pos_wp() {
   chassis.moveToPose(-11.541, -22.466, 216, 1300, {.forwards = false});
   arm.set_pos(arm.SCORE_POS);
   waitd;
-  doinker.toggle();
+  
 
 
   
