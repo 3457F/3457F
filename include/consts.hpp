@@ -26,10 +26,10 @@
 // intake ports
 #define INTAKE_COLOR_SENSOR_PORT 13
 #define INTAKE_DIST_SENSOR_PORT 5
-#define INTAKE_PORT -15
+#define INTAKE_PORT -7
 #define FLOATING_PORT 1
 
-// distance sensor ports
+// distance sensor ports -- ALL REMOVED
 #define DIST_LEFT 8
 #define DIST_RIGHT 14
 #define DIST_FRONT 7

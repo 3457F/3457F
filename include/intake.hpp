@@ -32,12 +32,15 @@ class Intake {
 
         pros::Task* color_sort_task;
 
-        bool alliance_color;
+        int alliance_color;
 
         // 0 -> not running (CONTINUALLY BRAKING)
         // 1 -> intaking
         // 2 -> outtaking
         int auton_running;
+
+        const int RED = 0;
+        const int BLUE = 1;
 
         /**
          * 0 - red (DEFAULT)

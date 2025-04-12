@@ -4,6 +4,7 @@
 
 #include "consts.hpp"
 #include "lemlib/chassis/chassis.hpp"
+#include "ui/Auton.hpp"
 #include "util.hpp"
 
 #include "main.h"
@@ -122,9 +123,9 @@ Intake intake = Intake(
 	{-INTAKE_PORT}
 	, pros::E_MOTOR_BRAKE_COAST	// brake mode of intake
 	// , COLOR_PORT
-	, 0
+	, INTAKE_COLOR_SENSOR_PORT
 	, INTAKE_DIST_SENSOR_PORT
-	, 0
+	, 1
 );
 
 MogoMech mogo = MogoMech(MOGO_MECH_PORT);
@@ -257,8 +258,6 @@ void autonomous() {
 	
 	// blue_rush();
 	// blue_pos_wp();
-
-	intake.alliance_color = 0;
 
 	red_sawp();
 };

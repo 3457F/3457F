@@ -64,11 +64,11 @@ bool Intake::is_ring_on_top() {
 void Intake::check_color() {
     // Blue hue is about 220-230.
     if (color_sensor.get_hue() > 150) {
-        held_ring_color = 0;
+        held_ring_color = BLUE;
     }
     // Red hue is about 10-20.
-    else {
-        held_ring_color = 1;
+    else if (color_sensor.get_hue() < 50) {
+        held_ring_color = RED;
     }
 
     if (alliance_color != held_ring_color) {
@@ -84,26 +84,49 @@ void update_sort(void* intakeVoid) {
         // leave before checking color sort criteria
         pros::delay(20);
 
+        intake->color_sensor.set_led_pwm(100);
+
+        // Handle normal driver control.
+        if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
+            // printf("intaking!\n");
+            intake->intake();
+        } else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
+            // printf("outtaking!\n");
+            intake->outtake();
+        } else if (in_driver_control) {
+            // printf("braking!\n");
+            intake->brake();
+        }
+
         // If the ring is supposed to go in the arm, don't color sort.
         if (arm.target == arm.LOADIN_POS) continue;
 
         // periodically update held_ring_color, and whether to sort next ring
         intake->check_color();
 
+        // printf("detected hue: %d (%.2f)\n", intake->held_ring_color, intake->color_sensor.get_hue());
+        printf("color: %s | hue: %f | next: %s | ", 
+            intake->alliance_color == RED ? "RED" : "BLUE",
+            intake->color_sensor.get_hue(),
+            intake->sort_next_ring == true ? "TRUE" : "FALSE"
+        );
+        if (intake->held_ring_color == intake->BLUE) {
+            printf("detected blue... grrr\n");
+        }
+        if (intake->held_ring_color == intake->RED) {
+            printf("detected red... grrr\n");
+        }
+
         // Runs color sorting algorithm.
         if (intake->sort_next_ring && intake->is_ring_on_top()) {
+            printf("sorting ring!\n");
+
+            // TODO: tune a delay before this
             intake->brake();
             pros::delay(250);
 
             // Ring has left the intake -- doesn't need to be sorted any more.
             intake->sort_next_ring = false;
         }
-
-        // Handle normal driver control.
-        if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
-            intake->intake();
-        } else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
-            intake->outtake();
-        } else if (in_driver_control) { intake->brake(); }
     }
 }

@@ -40,7 +40,7 @@ void update(void* fetchInfoVoid) {
             , static_cast<float>(*fetchInfo->target)
         );
 
-        std::cout << "error: " << error;
+        // std::cout << "error: " << error << std::endl;
 
         SetInfo setInfo = {
             fetchInfo->pid
@@ -52,7 +52,7 @@ void update(void* fetchInfoVoid) {
         // float pid_unit = update_info(&setInfo);
         float pid_unit = fetchInfo->pid->update(error);
 
-        std::cout << " | resultant pid unit: " << pid_unit << std::endl;
+        // std::cout << " | resultant pid unit: " << pid_unit << std::endl;
 
         fetchInfo->arm->arm_motor.move_voltage(-pid_unit);
         
