@@ -359,6 +359,8 @@ void blue_negative_wp() {
 
 //Red Negative Autons
 void red_neg_wp() {
+  pros::delay(1500);
+
   chassis.setPose(-60.263, 13.198, 0);
 
   /**
