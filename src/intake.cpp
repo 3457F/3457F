@@ -20,6 +20,7 @@ Intake::Intake(
     color_sort_task = nullptr;
 
     held_ring_color = 0;
+    has_been_blue = false;
 }
 
 // config
@@ -65,10 +66,17 @@ void Intake::check_color() {
     // Blue hue is about 220-230.
     if (color_sensor.get_hue() > 150) {
         held_ring_color = BLUE;
+        has_been_blue = true;
     }
     // Red hue is about 10-20.
     else if (color_sensor.get_hue() < 50) {
         held_ring_color = RED;
+    }
+
+    // don't succumb... don't succumb to the temptation... don't think it's
+    // a red ring... please no... PLEASE NOOOOO
+    if ((alliance_color == BLUE) && has_been_blue) {
+        return;
     }
 
     if (alliance_color != held_ring_color) {
@@ -125,6 +133,9 @@ void update_sort(void* intakeVoid) {
             intake->brake();
             pros::delay(250);
 
+            // now that the ring is gone, we don't know anything about
+            // new rings
+            intake->has_been_blue = false;
             // Ring has left the intake -- doesn't need to be sorted any more.
             intake->sort_next_ring = false;
         }
