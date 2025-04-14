@@ -8,7 +8,7 @@ Doinker::Doinker(
 
 void Doinker::toggle() {
     left_doinker_piston.set_value(!left_doinker_piston.get_value());
-    right_doinker_piston.set_value(!right_doinker_piston.get_value());
+    // right_doinker_piston.set_value(!right_doinker_piston.get_value());
 }
 
 void Doinker::left_toggle() {

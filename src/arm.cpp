@@ -5,7 +5,6 @@
 #include "arm.hpp"
 #include "lemlib/pid.hpp"
 #include "main.h"
-#include "pros/abstract_motor.hpp"
 #include "pros/motors.h"
 #include "pros/rtos.hpp"
 #include "util.hpp"
@@ -41,7 +40,7 @@ void update(void* fetchInfoVoid) {
             , static_cast<float>(*fetchInfo->target)
         );
 
-        std::cout << "error: " << error;
+        // std::cout << "error: " << error << std::endl;
 
         SetInfo setInfo = {
             fetchInfo->pid
@@ -53,7 +52,7 @@ void update(void* fetchInfoVoid) {
         // float pid_unit = update_info(&setInfo);
         float pid_unit = fetchInfo->pid->update(error);
 
-        std::cout << " | resultant pid unit: " << pid_unit << std::endl;
+        // std::cout << " | resultant pid unit: " << pid_unit << std::endl;
 
         fetchInfo->arm->arm_motor.move_voltage(-pid_unit);
         
@@ -208,7 +207,7 @@ void Arm::score() {
 }
 
 void Arm::release() {
-    target = last_pos;
+    target = LOADIN_POS;
 }
 
 // basically you go here to "prepare" arm for scoring, so it's much faster
@@ -216,4 +215,28 @@ void Arm::release() {
 // pos only when you got there
 void Arm::hold() {
     target = HOLD_POS;
+}
+
+void arm_update(void* armVoid) {
+    Arm* arm = (Arm*) armVoid;
+
+    while(true) {
+        // if arm has a ring, automatically get arm out of the way of the intake
+        if ((arm->target == arm->LOADIN_POS) && intake.is_ring_on_top()) {
+            pros::delay(400);
+            
+            // TODO: is this necessary?
+            // move hooks slightly so ring doesn't get stuck on it
+            intake.outtake();
+            pros::delay(100);
+            intake.brake();
+
+            // if driver has not moved arm out yet, do it for them!
+            if (arm->target == arm->LOADIN_POS) {
+                arm->set_pos(arm->HOLD_POS);
+            }
+        }
+
+        pros::delay(35);
+    }
 }

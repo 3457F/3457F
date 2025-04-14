@@ -12,102 +12,105 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#ifndef _PROS_MAIN_H_
-#define _PROS_MAIN_H_
-
-/**
- * If defined, some commonly used enums will have preprocessor macros which give
- * a shorter, more convenient naming pattern. If this isn't desired, simply
- * comment the following line out.
- *
- * For instance, E_CONTROLLER_MASTER has a shorter name: CONTROLLER_MASTER.
- * E_CONTROLLER_MASTER is pedantically correct within the PROS styleguide, but
- * not convenient for most student programmers.
- */
-#include "lemlib/chassis/chassis.hpp"
-#include "pros/imu.hpp"
-#define PROS_USE_SIMPLE_NAMES
-
-/**
- * If defined, C++ literals will be available for use. All literals are in the
- * pros::literals namespace.
- *
- * For instance, you can do `4_mtr = 50` to set motor 4's target velocity to 50
- */
-#define PROS_USE_LITERALS
-
-/**
- * track width (dist btwn centers of left and right wheels): ~11.75in (cad says 11.878 for some reason)
- */
-
-#include "api.h"
-#include "lemlib/api.hpp"
-
-// #include "ui/filesystem.h"
-#include "ui/Selector.hpp"
-
-#include "autons.hpp"
-#include "skills_autons.hpp"
-
-#include "arm.hpp"
-#include "intake.hpp"
-#include "mogo.hpp"
-#include "doinker.hpp"  
-#include "rushmech.hpp"
-#include "distance.hpp"
-
-void red_rush_barcbots();
-
-/**
- * NOTE: The mogo mech is the front of the robot, from a driving perspective and an auton perspective
- */
-
-extern pros::MotorGroup left_motors;
-extern pros::MotorGroup right_motors;
-extern pros::Controller controller;
-extern pros::Imu imu;
-
-extern lemlib::Chassis chassis;
-extern MogoMech mogo;
-extern Intake intake;
-extern Doinker doinker;
-extern Arm arm;
-extern RushMech rush_mech;
-
-/**
- * If you find doing pros::Motor() to be tedious and you'd prefer just to do
- * Motor, you can use the namespace with the following commented out line.
- *
- * IMPORTANT: Only the okapi or pros namespace may be used, not both
- * concurrently! The okapi namespace will export all symbols inside the pros
- * namespace.
- */
-// using namespace pros;
-// using namespace pros::literals;
-// using namespace okapi;
-
-/**
- * Prototypes for the competition control tasks are redefined here to ensure
- * that they can be called from user code (i.e. calling autonomous from a
- * button press in opcontrol() for testing purposes).
- */
-#ifdef __cplusplus
-extern "C" {
-#endif
-void autonomous(void);
-void initialize(void);
-void disabled(void);
-void competition_initialize(void);
-void opcontrol(void);
-#ifdef __cplusplus
-}
-#endif
-
-#ifdef __cplusplus
-/**
- * You can add C++-only headers here
- */
-//#include <iostream>
-#endif
-
-#endif  // _PROS_MAIN_H_
+ #ifndef _PROS_MAIN_H_
+ #define _PROS_MAIN_H_
+ 
+ /**
+  * If defined, some commonly used enums will have preprocessor macros which give
+  * a shorter, more convenient naming pattern. If this isn't desired, simply
+  * comment the following line out.
+  *
+  * For instance, E_CONTROLLER_MASTER has a shorter name: CONTROLLER_MASTER.
+  * E_CONTROLLER_MASTER is pedantically correct within the PROS styleguide, but
+  * not convenient for most student programmers.
+  */
+ #include "lemlib/chassis/chassis.hpp"
+ #include "pros/imu.hpp"
+ #define PROS_USE_SIMPLE_NAMES
+ 
+ /**
+  * If defined, C++ literals will be available for use. All literals are in the
+  * pros::literals namespace.
+  *
+  * For instance, you can do `4_mtr = 50` to set motor 4's target velocity to 50
+  */
+ #define PROS_USE_LITERALS
+ 
+ /**
+  * track width (dist btwn centers of left and right wheels): ~11.75in (cad says 11.878 for some reason)
+  */
+ 
+ #include "api.h"
+ #include "lemlib/api.hpp"
+ 
+ // #include "ui/filesystem.h"
+ #include "ui/Selector.hpp"
+ 
+ #include "autons.hpp"
+ #include "skills_autons.hpp"
+ 
+ #include "arm.hpp"
+ #include "intake.hpp"
+ #include "mogo.hpp"
+ #include "doinker.hpp"  
+ #include "rushmech.hpp"
+ #include "distance.hpp"
+ 
+ void red_rush_barcbots();
+ 
+ /**
+  * NOTE: The mogo mech is the front of the robot, from a driving perspective and an auton perspective
+  */
+ 
+ extern pros::MotorGroup left_motors;
+ extern pros::MotorGroup right_motors;
+ extern pros::Controller controller;
+ extern pros::Imu imu;
+ 
+ extern lemlib::Chassis chassis;
+ extern MogoMech mogo;
+ extern Intake intake;
+ extern Doinker doinker;
+ extern Arm arm;
+ extern RushMech rush_mech;
+ 
+ // whether the bot is in driver control (true) or autonomous (false)
+ extern bool in_driver_control;
+ 
+ /**
+  * If you find doing pros::Motor() to be tedious and you'd prefer just to do
+  * Motor, you can use the namespace with the following commented out line.
+  *
+  * IMPORTANT: Only the okapi or pros namespace may be used, not both
+  * concurrently! The okapi namespace will export all symbols inside the pros
+  * namespace.
+  */
+ // using namespace pros;
+ // using namespace pros::literals;
+ // using namespace okapi;
+ 
+ /**
+  * Prototypes for the competition control tasks are redefined here to ensure
+  * that they can be called from user code (i.e. calling autonomous from a
+  * button press in opcontrol() for testing purposes).
+  */
+ #ifdef __cplusplus
+ extern "C" {
+ #endif
+ void autonomous(void);
+ void initialize(void);
+ void disabled(void);
+ void competition_initialize(void);
+ void opcontrol(void);
+ #ifdef __cplusplus
+ }
+ #endif
+ 
+ #ifdef __cplusplus
+ /**
+  * You can add C++-only headers here
+  */
+ //#include <iostream>
+ #endif
+ 
+ #endif  // _PROS_MAIN_H_

@@ -1,6 +1,5 @@
 #pragma once
 
-#include "api.h"
 #include "lemlib/pid.hpp"
 #include "pros/rotation.hpp"
 
@@ -15,13 +14,12 @@ class Arm {
         static constexpr double START_POS = 18.0 * 100;
         // 25 originally; comp update went from 30 -> 35
         // 35 -- hella low cuz of slop, so 35 -> 40 -> 44
-        static constexpr double LOADIN_POS = 49 * 100; // 25 originally
+        static constexpr double LOADIN_POS = 49.314 * 100; // 25 originally
         static constexpr double DUNK_POS = 87.0 * 100; 
-        static constexpr double SCORE_POS = 168.0 * 100; // 140 originally
+        static constexpr double SCORE_POS = 169.0 * 100; // 140 originally
         static constexpr double AUTON = 200.0 * 100;
-        // TODO: made it a little bit lower like 197 so that
         // the ring doesn't get stuck on arm poly
-        static constexpr double ALLIANCE_SCORE = 236.0 * 100;
+        static constexpr double ALLIANCE_SCORE = 197.0 * 100;
         static constexpr double INTAKE_LIFT = 238.0 * 100;
         static constexpr double PREALLIANCE_SCORE = 170.0 * 100;
         static constexpr double FORCE_POS = 300.0 * 100;
@@ -86,3 +84,5 @@ class Arm {
 
         void score();
 };
+
+void arm_update(void* armVoid);

@@ -1,40 +1,33 @@
 #include <cstdint>
 #include "intake.hpp"
-#include "pros/adi.hpp"
+#include "main.h"
 
 Intake::Intake(
     std::initializer_list<std::int8_t> intake_motor_ports
-    , std::uint8_t floating_motor_port
     , pros::motor_brake_mode_e_t brake_mode
-    , std::uint8_t intake_piston_port
     , std::uint8_t color_port
-    , std::uint8_t limit_switch_port
-    // TODO: fix
+    , std::uint8_t distance_sensor_port
     , bool type
 ) : intake_motors(intake_motor_ports)
-    , floating_motor(floating_motor_port)
-    , intake_piston(intake_piston_port, pros::E_ADI_DIGITAL_OUT)
     , color_sensor(color_port)
-    , limit_switch(limit_switch_port, pros::E_ADI_DIGITAL_IN)
+    , distance_sensor(distance_sensor_port)
 {
     intake_brake_mode = brake_mode;
-    color = type;
+    alliance_color = type;
 
     intake_motors.set_brake_mode_all(brake_mode);
+    color_sensor.set_led_pwm(100);
+    color_sensor.set_integration_time(3);
 
-    state = 0;
     color_sort_task = nullptr;
 
-    held_ring = 1;
+    held_ring_color = 0;
+    has_been_blue = false;
 }
 
 // config
 void Intake::set_brake_mode(pros::motor_brake_mode_e_t mode) {
     intake_motors.set_brake_mode_all(mode);
-}
-
-void Intake::floating_intake() {
-    floating_motor.move(-127);
 }
 
 void Intake::intake() {
@@ -61,141 +54,79 @@ void Intake::brake_auton() {
     auton_running = 0;
 }
 
-void Intake::lift(bool set) {
-    intake_piston.set_value(set);
-}
-
-void Intake::toggle() {
-    intake_piston.set_value(!intake_piston.get_value());
-}
-
 /**
- * limit switch detection
+ * whether a ring is either...
+ * - in the arm, or
+ * - about to be scored onto the mogo
  */
 bool Intake::is_ring_on_top() {
-    return limit_switch.get_value();
+    // TODO: test, might have to refine if distance value defaults to 0
+    return distance_sensor.get() < 35;
 }
 
-// --------
+void Intake::check_color() {
+    // Blue hue is about 220-230.
+    if (color_sensor.get_hue() > 150) {
+        held_ring_color = BLUE;
+        has_been_blue = true;
+    }
+    // Red hue is about 10-20.
+    if (color_sensor.get_hue() < 50) {
+        held_ring_color = RED;
+    } 
 
-/**
- * used to tune color sensor; prints detected hue values
- * to terminal
- */
-// void Intake::hues_debug() {
-//     // keeps color sensor white LED on, so it can more accurately detect color
-//     color_sensor.set_led_pwm(100);
-
-//     double hue = color_sensor.get_hue();
-
-//     printf("detecting hue: %f\n", hue);
-// }
-
-// // meant to be run as a task, called from `handle_driver_input` when
-// // opposite alliance ring finds its way into our intake
-// void throws_ring(void* intakeVoid) {
-//     Intake* intake = (Intake*)(intakeVoid);
-
-//     intake->brake();    
-//     pros::delay(75);
-    
-//     // returns back to normal driver control, also
-//     // resets ring
-//     intake->held_ring = 0;
-//     intake->state = 0;
-// }
-
-// // for skills, when ring being intaked while arm at LOADIN_POS
-// // meant to be run as a TASK
-// void dunk_arm(void* armVoid) {
-//     Arm* arm = (Arm*)(armVoid);
-
-//     pros::delay(1000);
-//     arm->set_pos(arm->LOADIN_POS);
-// }
-
-// /** meant to be run as a task, called EVERY 20 MS */
-// void Intake::check_color_sensor() {
-//     // keeps color sensor white LED on, so it can more accurately detect color
-//     color_sensor.set_led_pwm(100);
-
-//     double hue = color_sensor.get_hue();
-
-//     if (within(hue, BLUE_MIN, BLUE_MAX)) {
-//         // rmbr, default is red so if blue, NEED TO CHANGE!!!!
-
-//         if (held_ring != 1) {
-//             printf(
-//                 "DETECTED RING: %d | with hue: %f\n", held_ring, hue
-//             );
-            
-//             held_ring = 1;
-//         }
-//     } else {
-//         printf("we have a %d ring!\n", held_ring);
-//     }
-// }
-
-/** meant to be run as a task, called EVERY 20 MS */
-// void Intake::check_color_sensor() {
-//     // keeps color sensor white LED on, so it can more accurately detect color
-//     color_sensor.set_led_pwm(100);
-
-//     double hue = color_sensor.get_hue();
-
-//     // if it is a ring
-//     if (within(hue, BLUE_MIN, BLUE_MAX) || within(hue, RED_MIN, RED_MAX)) {
-//         if (arm.target == arm.LOADIN_POS) {
-//             pros::Task dunk_task(dunk_arm, static_cast<void*>(&arm));
-//         }
-        
-        // if (within(hue, BLUE_MIN, BLUE_MAX)) {
-        //     // rmbr, default is red so if blue, NEED TO CHANGE!!!!
-    
-        //     if (held_ring != 1) {
-        //         printf(
-        //             "DETECTED RING: %d | with hue: %f\n", held_ring, hue
-        //         );
-                
-        //         held_ring = 1;
-        //     }
-        // } else {
-        //     printf("we have a %d ring!\n", held_ring);
-        // }
-//     }
-// }
-
-/** t h e  r i n g  i s  h e r e  ...  score or throw? */
-void Intake::check_limit_switch() {
-    // if bad then throw
-    if (
-        is_ring_on_top() // if it's a ring
-        && (held_ring == !color) // AND it's the opposing ring
-    ) {
-        printf(
-            // "THROWING OUT RING (held ring: %s | vs alliance: %s)\n"
-            // , held_ring == 1 ? "red" : "blue"
-            // , color == 1 ? "red" : "blue"
-            "THROWING OUT RING (held ring: %d | vs alliance: %d)\n"
-            , held_ring
-            , color
-        );
-        color_sort_task = new pros::Task(&throws_ring, this);
+    if (alliance_color != held_ring_color) {
+        sort_next_ring = true;
     }
 }
 
-void Intake::handle_driver_input(bool R1_pressed, bool R2_pressed) {
-    // no bad rings! BRRR KEEP GOING DRIVER
-    if (state == 0) {
-        if (R1_pressed == R2_pressed) {
-            brake();
-        } else if (R1_pressed) {
-            intake();
-        } else if (R2_pressed) {
-            outtake();
+void update_sort(void* intakeVoid) {
+    Intake* intake = (Intake*) intakeVoid;
+
+    while (true) {
+        // in case arm is "moving out" of the loadin position, give it time to
+        // leave before checking color sort criteria
+        pros::delay(20);
+
+        intake->color_sensor.set_led_pwm(100);
+
+        // Handle normal driver control.
+        if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
+            // printf("intaking!\n");
+            intake->intake();
+        } else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
+            // printf("outtaking!\n");
+            intake->outtake();
+        } else if (in_driver_control) {
+            // printf("braking!\n");
+            intake->brake();
         }
-    // uh oh we are eliminating the bad rings. must wait!
-    } else if (state == 1) {
-        return;
+
+        // If the ring is supposed to go in the arm, don't color sort.
+        if (arm.target == arm.LOADIN_POS) continue;
+        // if (in_driver_control) continue;
+
+        // periodically update held_ring_color, and whether to sort next ring
+
+        // Runs color sorting algorithm.
+        if (intake->is_ring_on_top()) {
+            printf("sorting ring!\n");
+
+            {if (intake->color_sensor.get_rgb().blue>15) {
+                intake->held_ring_color = intake->BLUE;
+            } else if (intake->color_sensor.get_rgb().red>35) {
+                intake->held_ring_color = intake->RED;
+            }}
+
+            std::cout << "b, r:" << intake->color_sensor.get_rgb().blue << ", " << intake->color_sensor.get_rgb().red << std::endl;
+
+            if ((intake->alliance_color != intake->held_ring_color)) {
+                pros::delay(20);
+                intake->brake();
+                pros::delay(150);
+            }
+
+            intake->intake();
+        }
     }
 }
