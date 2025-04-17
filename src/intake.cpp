@@ -84,8 +84,6 @@ void update_sort(void* intakeVoid) {
     Intake* intake = (Intake*) intakeVoid;
 
     while (true) {
-        // in case arm is "moving out" of the loadin position, give it time to
-        // leave before checking color sort criteria
         pros::delay(20);
 
         intake->color_sensor.set_led_pwm(100);
@@ -104,21 +102,24 @@ void update_sort(void* intakeVoid) {
 
         // If the ring is supposed to go in the arm, don't color sort.
         if (arm.target == arm.LOADIN_POS) continue;
-        // if (in_driver_control) continue;
 
-        // periodically update held_ring_color, and whether to sort next ring
+        // Periodically check whether to sort the ring currently in the intake.
+        intake->check_color();
 
         // Runs color sorting algorithm.
-        if (intake->is_ring_on_top()) {
+        if (intake->is_ring_on_top() && color_sorting) {
             printf("sorting ring!\n");
 
-            {if (intake->color_sensor.get_rgb().blue>15) {
+            if (intake->color_sensor.get_rgb().blue>15) {
                 intake->held_ring_color = intake->BLUE;
             } else if (intake->color_sensor.get_rgb().red>35) {
                 intake->held_ring_color = intake->RED;
-            }}
+            }
 
-            std::cout << "b, r:" << intake->color_sensor.get_rgb().blue << ", " << intake->color_sensor.get_rgb().red << std::endl;
+            std::cout << "b, r:"
+                      << intake->color_sensor.get_rgb().blue
+                      << ", " << intake->color_sensor.get_rgb().red
+                      << std::endl;
 
             if ((intake->alliance_color != intake->held_ring_color)) {
                 pros::delay(20);
@@ -126,6 +127,7 @@ void update_sort(void* intakeVoid) {
                 pros::delay(150);
             }
 
+            // start intake again after color sorting
             intake->intake();
         }
     }

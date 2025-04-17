@@ -76,6 +76,8 @@
  
  // whether the bot is in driver control (true) or autonomous (false)
  extern bool in_driver_control;
+ // IF `in_driver_control` is true... whether the robot should color sort!
+ extern bool color_sorting;
  
  /**
   * If you find doing pros::Motor() to be tedious and you'd prefer just to do

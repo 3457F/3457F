@@ -4,7 +4,6 @@
 
 #include "consts.hpp"
 #include "lemlib/chassis/chassis.hpp"
-#include "ui/Auton.hpp"
 #include "util.hpp"
 
 #include "main.h"
@@ -26,6 +25,9 @@
 pros::Controller controller(pros::E_CONTROLLER_MASTER);
 
 pros::Imu imu(17);
+
+bool in_driver_control = false;
+bool color_sorting = true;
 
 // ---
 
@@ -148,8 +150,6 @@ Doinker doinker = Doinker(LEFT_DOINKER_PORT, RIGHT_DOINKER_PORT);
 // bool LEFT_state = false;
 bool L1_state = false;
 bool B_state = false;
-
-bool in_driver_control = false;
 
 // pros::Task print_pose(print_robot_pos, &chassis);
 
@@ -302,31 +302,24 @@ void opcontrol() {
 		bool R2_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2);
 
 		// force pos
-		// bool LEFT_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT);
 		bool B_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_B);
 
 		// ---
 
 		///// TOGGLE controls
-
 		// mogo mech
 		bool L2_new_press = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2);
-		
 		// doinker
 		bool Y_new_press = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y);
-
-		// intake lift test
-		// bool B_new_press = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B);
-
-		// rush mech test
-		bool UP_new_press = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP);
-
-		// arm
+		// toggle color sort
+        bool A_new_press = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A);
+        // arm -- loadin
 		bool DOWN_new_press = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN);
-		bool RIGHT_new_press = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT);
-		// bool LEFT_new_press = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_LEFT);
+		// arm -- start pos
+        bool RIGHT_new_press = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT);
+		// arm -- cycle score 
 		bool L1_pressed = controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1);
-		
+        
 		/**
 		 * ARM:
 		 */
@@ -362,6 +355,25 @@ void opcontrol() {
 		} else if (RIGHT_new_press) {
 			arm.set_pos(arm.START_POS);
 		}
+
+        /**
+         * TOGGLE COLOR SORT:
+         */
+        if (A_new_press) {
+            // Enabling.
+            if (color_sorting == false) {
+                color_sorting = true;
+                controller.rumble("- - ");
+            }
+            // Disabling.
+            else if (color_sorting == true) {
+                color_sorting = false;
+                controller.rumble(". . ");
+            }
+        }
+        // show color sort status
+        controller.clear_line(0);
+        controller.set_text(0, 0, color_sorting ? "ENABLED" : "DISABLED");
 
 		/**
 		 * DOINKER:

@@ -74,7 +74,6 @@ class Intake {
         void outtake_auton();
 
         void brake();
-
         void brake_auton();
 
         bool is_ring_on_top();
