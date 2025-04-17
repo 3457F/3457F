@@ -245,7 +245,7 @@ void autonomous() {
 
 	//red pos
 
-	// red_rush();
+	red_rush();
 	// red_pos_wp();
 
 	//blue neg

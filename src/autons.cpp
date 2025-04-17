@@ -74,10 +74,10 @@ void turnforRedrush() {
 
 // Red Positive Autons
 void red_rush() {
+  arm.set_pos(arm.DUNK_POS);
   chassis.setPose(-51.5, -59, 250);
 
-  chassis.moveToPoint(-21.535, -46.274, 800,
-                      {.forwards = false, .minSpeed = 127, .earlyExitRange=std::numbers::pi-1});
+  chassis.moveToPoint(-21.535, -46.274, 840, {.forwards = false, .minSpeed = 127});
   intake.intake();
   waitd;
   intake.brake();
@@ -95,27 +95,34 @@ void red_rush() {
 
   pros::delay(150);
 
+  chassis.moveToPose(-4.818, -64.638, 307, 1850, {.forwards = false});
+  pros::delay(700);
   intake.intake();
+  waitd;
+  arm.set_pos(arm.SCORE_POS);
+  pros::delay(200);
 
-  chassis.moveToPoint(-45.641, -27.923, TO, {.forwards = false});
+  chassis.moveToPoint(-45.641, -27.923, 1300, {.forwards = true});
   waitd;
 
   chassis.turnToHeading(270, 700);
+  arm.set_pos(arm.INIT_POS);
   waitd;
   mogo.toggle();
 
-  chassis.turnToPoint(-25.475, -24.026, 770);
+  chassis.turnToPoint(-24.306, -32.795, 770);
   waitd;
-  chassis.moveToPoint(-25.475, -24.026, TO, {.maxSpeed=70});
+  intake.brake();
+  chassis.moveToPoint(-24.306, -32.795, TO, {.maxSpeed=70});
   waitd;
   mogo.toggle();
-  intake.brake();
+
     // zed
-  chassis.turnToPoint(-7.3,-10.248, 800, {.forwards = false});
+  chassis.turnToPoint(-12.418, -14.866, 800, {.forwards = false});
   waitd;
-  chassis.moveToPoint(-7.3,-10.248, 1300, {.forwards = false, .maxSpeed= 90});
+  chassis.moveToPoint(-12.418, -14.866, 1300, {.forwards = false, .maxSpeed= 90});
   waitd;
-  chassis.turnToHeading(220, 200);
+  chassis.turnToHeading(212, 200);
   waitd;
   doinker.left_toggle();
   pros::delay(350);
@@ -129,7 +136,9 @@ void red_rush() {
   pros::delay(50); 
 
   intake.intake();
-  chassis.moveToPoint(-21.487,-54.623, 1000, {.forwards = false});
+  chassis.turnToPoint(-29.178, -53.843,200, {.forwards = false});
+  
+  chassis.moveToPoint(-29.178, -53.843, 1000, {.forwards = false});
   waitd;
   
 }
