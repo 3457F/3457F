@@ -73,7 +73,7 @@ void turnforRedrush() {
 }
 
 // Red Positive Autons
-void red_rush() {
+void red_rush() { 
   arm.set_pos(arm.DUNK_POS);
   chassis.setPose(-51.5, -59, 250);
 
@@ -95,7 +95,7 @@ void red_rush() {
 
   pros::delay(150);
 
-  chassis.moveToPose(-4.818, -64.638, 307, 1850, {.forwards = false});
+  chassis.moveToPose(-4.818, -64.638, 304.7, 1850, {.forwards = false});
   pros::delay(700);
   intake.intake();
   waitd;
@@ -118,11 +118,11 @@ void red_rush() {
   mogo.toggle();
 
     // zed
-  chassis.turnToPoint(-12.418, -14.866, 800, {.forwards = false});
+  chassis.turnToPoint(-17.680, -19.543, 500, {.forwards = false});
   waitd;
-  chassis.moveToPoint(-12.418, -14.866, 1300, {.forwards = false, .maxSpeed= 90});
+  chassis.moveToPoint(-17.680, -19.543, 1000, {.forwards = false});
   waitd;
-  chassis.turnToHeading(212, 200);
+  chassis.turnToHeading(230, 400);
   waitd;
   doinker.left_toggle();
   pros::delay(350);
@@ -143,6 +143,8 @@ void red_rush() {
   
 }
 void red_pos_wp() {
+  intake.alliance_color = intake.RED;
+
   chassis.setPose(-60.263, -13.198, 180);
 
   // chassis.turnToHeading(180-31.5, 730);
@@ -152,6 +154,7 @@ void red_pos_wp() {
   pros::delay(450);
   arm.set_pos(arm.ALLIANCE_SCORE);
   waitd;
+  pros::delay(200);
 
   // moves out of alliance stake
   chassis.moveToPoint(chassis.getPose().x + 10, chassis.getPose().y - 10, TO,
@@ -190,7 +193,7 @@ void red_pos_wp() {
   waitd;
   intake.intake();
 
-  chassis.moveToPose(-11.541, -22.466, 216, 1300, {.forwards = false});
+  chassis.moveToPose(-11.541, -20.466, 216, 1300, {.forwards = false});
   arm.set_pos(arm.SCORE_POS);
   waitd;
   
@@ -397,33 +400,26 @@ void blue_negative_wp() {
 }
 //Red Negative Autons
 void red_neg_wp() {
-  pros::delay(1500);
 
   chassis.setPose(-60.263, 13.198, 0);
 
-  /**
-   * ADDED AT IOWA
-   */
-  // pros::delay(2000);
-
-  /**
-   * REMOVED SCORING ON ALLIANCE STAKE
-   */
-  // // chassis.turnToHeading(31.5, TO);
   chassis.turnToHeading(35, TO);
-  pros::delay(500);
+  pros::delay(300);
   arm.set_pos(arm.ALLIANCE_SCORE);
   waitd;
+  pros::delay(100);
 
   chassis.moveToPoint(-46.913, 23.332, 1000);
-  arm.set_pos(arm.INIT_POS);
   waitd;
+  arm.set_pos(arm.INIT_POS);
 
   chassis.turnToHeading(90, 650);
   waitd;
   chassis.moveToPoint(-28.009, 23.332, 1200);
-  waitd;
+  chassis.waitUntil(15.6);
   mogo.toggle();
+  waitd;
+
 
   // going to middle rings
   // TODO: seemingly "kicking out" ring cuz turns near end
@@ -446,6 +442,7 @@ void red_neg_wp() {
   waitd;
   chassis.moveToPoint(-29.568, 50.316, 1000, {.forwards = false});
   waitd;
+  pros::delay(800);
 
   // going to ladder
   chassis.moveToPose(-16.893, 11.583, 315, 1500, {.forwards = false, .minSpeed = 120});
@@ -521,16 +518,25 @@ void blue_pos_wp() {
 
   chassis.turnToPoint(17.497, -52.966, 300, {.forwards = false});
   waitd;
-  chassis.moveToPoint(17.497, -52.966, 1300, {.forwards = false, .maxSpeed = 90});
+  chassis.moveToPoint(17.497, -52.966, 1900, {.forwards = false, .maxSpeed = 70});
   intake.intake();
   waitd;
-  pros::delay(1000);
+  pros::delay(1200);
 
-  chassis.turnToPoint(15.743, -21.395, 600, {.forwards = false});
+  chassis.turnToPoint(36.596, -36.985, 400);
   waitd;
-  chassis.moveToPoint(15.743, -21.395,1000, {.forwards = false});
-  arm.set_pos(Arm::SCORE_POS);
+  chassis.moveToPoint(36.596, -36.985, 1000);
   waitd;
+
+  chassis.turnToPoint(14.379, -19.446, 600 , {.forwards = false});
+  arm.set_pos(arm.SCORE_POS);
+  waitd;
+
+  chassis.moveToPoint(14.379, -19.446, 900, {.forwards = false});
+
+  waitd;
+
+
 
 }
 
