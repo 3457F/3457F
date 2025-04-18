@@ -19,7 +19,7 @@ class Arm {
         static constexpr double SCORE_POS = 169.0 * 100; // 140 originally
         static constexpr double AUTON = 200.0 * 100;
         // the ring doesn't get stuck on arm poly
-        static constexpr double ALLIANCE_SCORE = 197.0 * 100;
+        static constexpr double ALLIANCE_SCORE = 220.69 * 100;
         static constexpr double INTAKE_LIFT = 238.0 * 100;
         static constexpr double PREALLIANCE_SCORE = 170.0 * 100;
         static constexpr double FORCE_POS = 300.0 * 100;
