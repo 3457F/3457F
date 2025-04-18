@@ -1,5 +1,6 @@
 #pragma once
 
+#include "pros/adi.hpp"
 #include "pros/distance.hpp"
 #include "pros/motor_group.hpp"
 #include "pros/optical.hpp"
@@ -21,6 +22,9 @@ class Intake {
         const double BLUE_MAX = 240.0;
 
         pros::MotorGroup intake_motors;
+
+        pros::adi::Port intake_piston;
+        bool intake_lifted;
 
         /** defining STUFF that it uses */
 
@@ -57,6 +61,7 @@ class Intake {
 
         Intake(
             std::initializer_list<std::int8_t> intake_motor_ports
+            , std::uint8_t intake_piston_port
             , pros::motor_brake_mode_e_t brake_mode
             , std::uint8_t color_port
             , std::uint8_t distance_sensor_port
@@ -66,6 +71,10 @@ class Intake {
         // config
         void set_brake_mode(pros::motor_brake_mode_e_t mode);
 
+        // intake lift functions
+        void lift(bool value);
+
+        // intake functions
         void intake();
         void intake_auton();
         void floating_intake();
@@ -76,9 +85,8 @@ class Intake {
         void brake();
         void brake_auton();
 
+        // color sort functions
         bool is_ring_on_top();
-
-        // ------
 
         void check_color();
 };

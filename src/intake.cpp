@@ -4,21 +4,29 @@
 
 Intake::Intake(
     std::initializer_list<std::int8_t> intake_motor_ports
+    , std::uint8_t intake_piston_port
     , pros::motor_brake_mode_e_t brake_mode
     , std::uint8_t color_port
     , std::uint8_t distance_sensor_port
     , bool type
 ) : intake_motors(intake_motor_ports)
+    , intake_piston(intake_piston_port)
     , color_sensor(color_port)
     , distance_sensor(distance_sensor_port)
 {
+    // init intake motors
     intake_brake_mode = brake_mode;
-    alliance_color = type;
-
     intake_motors.set_brake_mode_all(brake_mode);
+
+    // init intake piston
+    intake_lifted = false;
+    intake_piston.set_value(intake_lifted);
+    
+    // init color sort
+    alliance_color = type;
     color_sensor.set_led_pwm(100);
     color_sensor.set_integration_time(3);
-
+    
     color_sort_task = nullptr;
 
     held_ring_color = 0;
@@ -30,6 +38,13 @@ void Intake::set_brake_mode(pros::motor_brake_mode_e_t mode) {
     intake_motors.set_brake_mode_all(mode);
 }
 
+// intake lift functions
+void Intake::lift(bool value) {
+    intake_lifted = value;
+    intake_piston.set_value(intake_lifted);
+}
+
+// intake functions
 void Intake::intake() {
     intake_motors.move(-127);
 }
@@ -53,6 +68,8 @@ void Intake::brake() {
 void Intake::brake_auton() {
     auton_running = 0;
 }
+
+// color sort functions
 
 /**
  * whether a ring is either...

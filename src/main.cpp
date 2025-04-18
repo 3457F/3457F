@@ -123,6 +123,7 @@ lemlib::Chassis chassis(drivetrain, // drivetrain settings
 Intake intake = Intake(
 	// was not negative before
 	{-INTAKE_PORT}
+    , INTAKE_LIFT_PORT
 	, pros::E_MOTOR_BRAKE_COAST	// brake mode of intake
 	// , COLOR_PORT
 	, INTAKE_COLOR_SENSOR_PORT
