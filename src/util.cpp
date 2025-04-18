@@ -1,6 +1,7 @@
 #include "main.h"
 #include "mogo.hpp"
 #include "util.hpp"
+#include "consts.hpp"
 
 #include <functional>
 #include <cmath>
@@ -67,7 +68,9 @@ void disable_color_sort(void* color_sorting) {
     timer.start();
 
     // waits for one minute of driver control
-    while (timer.getElapsedTimeSecs() < 60) { pros::delay(20); };
+    while (timer.getElapsedTimeSecs() < (DISABLE_COLOR_SORT_AFTER)) {
+        pros::delay(20); 
+    }
 
     // THEN disables color sorting!
     *static_cast<bool*>(color_sorting) = false;
@@ -85,7 +88,9 @@ void unclamp_mogo(void* mogoVoid) {
     timer.start();
 
     // 60 + 45 represents the 1:45 duration of driver control!
-    while (timer.getElapsedTimeSecs() < (60 + 45)) { pros::delay(20); }
+    while (timer.getElapsedTimeSecs() < (UNCLAMP_MOGO_AFTER)) {
+        pros::delay(20);
+    }
 
     mogo->release();
     printf("RELEASED mogo!\n");

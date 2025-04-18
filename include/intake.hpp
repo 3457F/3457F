@@ -52,11 +52,6 @@ class Intake {
          */
         int held_ring_color;
 
-        /** since the color sensor defaults to red, after a blue ring leaves,
-          * the robot goes back to detecting red. there has to be some way for
-          * the robot to "remember" that it saw a blue ring */
-        bool has_been_blue;
-
         bool sort_next_ring;
 
         Intake(

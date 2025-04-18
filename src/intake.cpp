@@ -30,7 +30,6 @@ Intake::Intake(
     color_sort_task = nullptr;
 
     held_ring_color = 0;
-    has_been_blue = false;
 }
 
 // config
@@ -85,12 +84,21 @@ void Intake::check_color() {
     // Blue hue is about 220-230.
     if (color_sensor.get_hue() > 150) {
         held_ring_color = BLUE;
-        has_been_blue = true;
+
+        // If the robot was sitting in the default state of "RED" beforehand,
+        // make sure to correct this misconception.
+        if (alliance_color == BLUE) {
+            sort_next_ring = false;
+        }
     }
+
     // Red hue is about 10-20.
     if (color_sensor.get_hue() < 50) {
+        // If the ring has been blue, don't "overwrite" it with red.
+        if (held_ring_color == BLUE) return;
+        
         held_ring_color = RED;
-    } 
+    }
 
     if (alliance_color != held_ring_color) {
         sort_next_ring = true;
@@ -142,6 +150,9 @@ void update_sort(void* intakeVoid) {
                 pros::delay(20);
                 intake->brake();
                 pros::delay(150);
+
+                // reset held ring color
+                intake->held_ring_color = RED;
             }
 
             // start intake again after color sorting

@@ -1,4 +1,19 @@
 /**
+ * TIME-SPECIFIC VARS
+ */
+
+/**
+ * color sort turns off after 75 seconds! (on for LAST 30 SECONDS of driver
+ * control)
+ */
+#define DISABLE_COLOR_SORT_AFTER 60 + 15
+
+/**
+ * mogo unclamps after 1:45 (60 + 45) seconds of driver control!
+ */
+#define UNCLAMP_MOGO_AFTER 60 + 45
+
+/**
  * PORTS
  */
 
