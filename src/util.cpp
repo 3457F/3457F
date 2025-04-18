@@ -1,4 +1,5 @@
 #include "main.h"
+#include "mogo.hpp"
 #include "util.hpp"
 
 #include <functional>
@@ -59,7 +60,8 @@ uint32_t timer(std::function<void()> func) {
 }
 
 /**
- * A pros::Task that DISABLES color sort one minute into driver control! */
+ * A pros::Task that DISABLES color sort one minute into driver control!
+ */
 void disable_color_sort(void* color_sorting) {
     Timer timer;
     timer.start();
@@ -69,7 +71,23 @@ void disable_color_sort(void* color_sorting) {
 
     // THEN disables color sorting!
     *static_cast<bool*>(color_sorting) = false;
-    printf("DISABLED color sort one minute in!\n");
+    printf("DISABLED color sort one minute into driver control!\n");
+}
+
+/**
+ * A pros::Task that UNCLAMPS the mogo at the end of the match (1:45 into
+ * driver control)
+ */
+void unclamp_mogo(void* mogoVoid) {
+    MogoMech* mogo = static_cast<MogoMech*>(mogoVoid);
+
+    Timer timer;
+    timer.start();
+
+    while (timer.getElapsedTimeSecs() < 60) { pros::delay(20); }
+
+    mogo->release();
+    printf("RELEASED mogo!\n");
 }
 
 /**

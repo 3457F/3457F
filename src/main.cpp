@@ -281,6 +281,7 @@ void opcontrol() {
 	in_driver_control = true;
 
     pros::Task disableColorSort(disable_color_sort, &color_sorting);
+    pros::Task unclampMogo(unclamp_mogo, &mogo);
 
 	// brake mode back to coast!
 	chassis.setBrakeMode(pros::motor_brake_mode_e::E_MOTOR_BRAKE_COAST);

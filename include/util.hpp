@@ -78,6 +78,7 @@ class Timer {
 };
 
 void disable_color_sort(void* color_sorting);
+void unclamp_mogo(void* mogoVoid);
 
 struct tamtpParams {
     // TODO: make this 750ms?
