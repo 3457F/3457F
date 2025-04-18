@@ -39,9 +39,8 @@
 #define MOGO_MECH_PORT 'A'
 // TODO: probs need to swap so in intake perspective
 #define LEFT_DOINKER_PORT 'B'
-// TODO: remove
-#define INTAKE_LIFT_PORT 'Z'
 #define RIGHT_DOINKER_PORT 'C'
+#define INTAKE_LIFT_PORT 'D'
 // ---
 
 // dt PID -- 600rpm dt (mecha)

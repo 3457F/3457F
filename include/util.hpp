@@ -74,7 +74,10 @@ class Timer {
         void start();
 
         uint32_t getElapsedTime();
+        uint32_t getElapsedTimeSecs();
 };
+
+void disable_color_sort(void* color_sorting);
 
 struct tamtpParams {
     // TODO: make this 750ms?

@@ -279,6 +279,8 @@ void opcontrol() {
 
 	in_driver_control = true;
 
+    pros::Task disableColorSort(disable_color_sort, &color_sorting);
+
 	// brake mode back to coast!
 	chassis.setBrakeMode(pros::motor_brake_mode_e::E_MOTOR_BRAKE_COAST);
 	intake.intake_motors.set_brake_mode_all(pros::motor_brake_mode_e::E_MOTOR_BRAKE_COAST);
@@ -356,24 +358,29 @@ void opcontrol() {
 			arm.set_pos(arm.START_POS);
 		}
 
-        /**
-         * TOGGLE COLOR SORT:
-         */
-        if (A_new_press) {
-            // Enabling.
-            if (color_sorting == false) {
-                color_sorting = true;
-                controller.rumble("- - ");
-            }
-            // Disabling.
-            else if (color_sorting == true) {
-                color_sorting = false;
-                controller.rumble(". . ");
-            }
-        }
+        // /**
+        //  * TOGGLE COLOR SORT:
+        //  */
+        // if (A_new_press) {
+        //     printf("A new press!\n");
+        //     // Enabling.
+        //     if (color_sorting == false) {
+        //         // printf("ENABLING color sort\n");
+        //         color_sorting = true;
+        //         controller.rumble("--");
+        //     }
+        //     // Disabling.
+        //     else if (color_sorting == true) {
+        //         // printf("DISABLING color sort\n");
+        //         color_sorting = false;
+        //         controller.rumble("...");
+        //     }
+        // }
+        // // controller.clear_line(0);
         // show color sort status
-        controller.clear_line(0);
-        controller.set_text(0, 0, color_sorting ? "ENABLED" : "DISABLED");
+        controller.set_text(0, 0, color_sorting ? "ENABLED  " : "DISABLED  ");
+        // // in case controller sucks
+        // // printf("Color Sort %s\n", color_sorting ? "ENABLED" : "DISABLED");
 
 		/**
 		 * DOINKER:

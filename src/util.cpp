@@ -43,6 +43,10 @@ uint32_t Timer::getElapsedTime() {
     return pros::millis() - start_time;
 }
 
+uint32_t Timer::getElapsedTimeSecs() {
+    return getElapsedTime() / 1000;
+}
+
 // ---
 
 uint32_t timer(std::function<void()> func) {
@@ -52,6 +56,20 @@ uint32_t timer(std::function<void()> func) {
     func();
 
     return timer.getElapsedTime();
+}
+
+/**
+ * A pros::Task that DISABLES color sort one minute into driver control! */
+void disable_color_sort(void* color_sorting) {
+    Timer timer;
+    timer.start();
+
+    // waits for one minute of driver control
+    while (timer.getElapsedTimeSecs() < 60) { pros::delay(20); };
+
+    // THEN disables color sorting!
+    *static_cast<bool*>(color_sorting) = false;
+    printf("DISABLED color sort one minute in!\n");
 }
 
 /**
