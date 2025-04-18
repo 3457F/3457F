@@ -84,7 +84,8 @@ void unclamp_mogo(void* mogoVoid) {
     Timer timer;
     timer.start();
 
-    while (timer.getElapsedTimeSecs() < 60) { pros::delay(20); }
+    // 60 + 45 represents the 1:45 duration of driver control!
+    while (timer.getElapsedTimeSecs() < (60 + 45)) { pros::delay(20); }
 
     mogo->release();
     printf("RELEASED mogo!\n");
