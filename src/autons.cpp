@@ -71,6 +71,10 @@ void turnforRedrush() {
   chassis.setPose(-51.5, -59, 270);
   chassis.turnToHeading(250, 1000);
 }
+void exit_condition(lemlib::Pose target, double exitDist){
+  chassis.waitUntil(fabs(chassis.getPose().distance(target)) - exitDist);
+  chassis.cancelMotion();
+}
 
 // Red Positive Autons
 void red_rush() { 
@@ -398,10 +402,7 @@ void blue_negative_wp() {
 
 
 }
-void exit_condition(lemlib::Pose target, double exitDist){
-  chassis.waitUntil(fabs(chassis.getPose().distance(target)) - exitDist);
-  chassis.cancelMotion();
-}
+
 //Red Negative Autons
 void red_neg_wp() {
 
