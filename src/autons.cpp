@@ -205,116 +205,116 @@ void red_pos_wp() {
 //Blue Negative Autons
 void blue_negative_elims() {
     intake.alliance_color = intake.BLUE;
-intake.intake();
-  //   chassis.setPose(53.746, 16.9, 0);
 
-  //   arm.set_pos(arm.SCORE_POS);
-  
-  //   // chassis.moveToPoint(56.864, 9.5, 1000, {.forwards = false});
-  //   // waitd;
-  //   chassis.turnToPoint(67.85, 0, 375, {.forwards = false});
-  //   arm.set_pos(arm.ALLIANCE_SCORE);
-  //   waitd;
-  
-  //   pros::delay(200);
-  
-  //   // alliance stake end
-  //   // // alliance ring start
+    chassis.setPose(53.746, 16.9, 0);
 
-  //   // chassis.moveToPoint(44.683, 26.06, 1400);
-  //   // waitd;
+    arm.set_pos(arm.SCORE_POS);
+  
+    // chassis.moveToPoint(56.864, 9.5, 1000, {.forwards = false});
+    // waitd;
+    chassis.turnToPoint(67.85, 0, 375, {.forwards = false});
+    arm.set_pos(arm.ALLIANCE_SCORE);
+    waitd;
+  
+    pros::delay(200);
+  
+    // alliance stake end
+    // // alliance ring start
 
-  //   // arm.set_pos(arm.INTAKE_LIFT);
+    // chassis.moveToPoint(44.683, 26.06, 1400);
+    // waitd;
 
-  //   // chassis.moveToPoint(42.735, 9.495, 1000, {.forwards=false, .maxSpeed=80});
-  //   // waitd;
+    // arm.set_pos(arm.INTAKE_LIFT);
 
-  //   // arm.set_pos(arm.START_POS);
-  //   // intake.intake();
-  //   // pros::delay(540);
-  //   // intake.brake();
+    // chassis.moveToPoint(42.735, 9.495, 1000, {.forwards=false, .maxSpeed=80});
+    // waitd;
 
-  //   // // alliance ring end
-  //   // mogo start
-  
-  //   chassis.moveToPoint(44.683, 26.06, 850);
-  //   waitd;
+    // arm.set_pos(arm.START_POS);
+    // intake.intake();
+    // pros::delay(540);
+    // intake.brake();
 
-  //   arm.set_pos(arm.START_POS);
+    // // alliance ring end
+    // mogo start
   
-  //   chassis.moveToPoint(14.281, 26.645, 1200, {.maxSpeed = 70});
-  //   waitd;
-  
-  //   mogo.clamp(); 
+    chassis.moveToPoint(44.683, 26.06, 850);
+    waitd;
 
-  //   // mogo end
+    arm.set_pos(arm.START_POS);
+  
+    chassis.moveToPoint(14.281, 26.645, 1200, {.maxSpeed = 70});
+    waitd;
+  
+    mogo.clamp(); 
 
-  //   pros::delay(225);
-  
-  //   // mid doinker ring start
+    // mogo end
 
-  //   chassis.moveToPoint(9.3, 10.271, 800, {.forwards=false});
-  //   waitd;
-  //   chassis.turnToHeading(73.25, 800);
-  //   pros::delay(150);
-  //   doinker.left_toggle();
-  //   pros::delay(250);
+    pros::delay(225);
+  
+    // mid doinker ring start
 
-  //   chassis.moveToPoint(14.281, 26.645, 1200);
-  //   waitd;
-  //   chassis.turnToHeading(90+17.5, 800);
-  //   pros::delay(350);
-  //   doinker.left_toggle();
-  //   waitd;
+    chassis.moveToPoint(9.3, 10.271, 800, {.forwards=false});
+    waitd;
+    chassis.turnToHeading(73.25, 800);
+    pros::delay(150);
+    doinker.left_toggle();
+    pros::delay(250);
 
-  //   // middle ring start
-  
-  //   chassis.turnToPoint(3.5, 43, 200, {.forwards = false});
-  //   waitd;
-  //   intake.intake();
-  //   chassis.moveToPoint(3.5, 43, 1400, {.forwards = false});
-  //   waitd;
-  
-  //   pros::delay(200);
-  
-  //   chassis.turnToHeading(180, 600);
-  //   waitd;
-  
-  //   chassis.moveToPoint(chassis.getPose().x - 2.25, 60.221, 1100,
-  //                       {.forwards = false, .maxSpeed = 100});
-  //   waitd;
-  //   pros::delay(400);
-  
-  //   // end of middle rings
-  //   // start of single stack
-  
-  //   chassis.moveToPoint(13.307, 33.076, 900);
-  //   waitd;
-  
-  //   chassis.moveToPoint(26.364, 57.826, 1200, {.forwards = false});
-  //   waitd;
-  
-  //   // end of single stack
-  //   // corner start
-  //   waitd;
-  
-  //   chassis.moveToPose(73.307, 91.323, 180+45, 1200, {.forwards = false, .minSpeed = 115});
-  //   waitd;
-  
-  //   pros::delay(400);
-  
-  //   chassis.turnToPoint(44.411, 14.503, 600, {.forwards=false});
-  //   waitd;
+    chassis.moveToPoint(14.281, 26.645, 1200);
+    waitd;
+    chassis.turnToHeading(90+17.5, 800);
+    pros::delay(350);
+    doinker.left_toggle();
+    waitd;
 
-  //   chassis.moveToPoint(99.544, 57.826, 800, {.forwards=false});
-  //   waitd;
-
-  //   chassis.turnToPoint(22.61, 1.267, 800);
-  //   waitd;
-  //   chassis.moveToPoint(22.61, 1.267, TO, {.maxSpeed=80});
-  //   waitd;
+    // middle ring start
   
-  // //   chassis.moveToPoint(64.223, -63.587, 10000);
+    chassis.turnToPoint(3.5, 43, 200, {.forwards = false});
+    waitd;
+    intake.intake();
+    chassis.moveToPoint(3.5, 43, 1400, {.forwards = false});
+    waitd;
+  
+    pros::delay(200);
+  
+    chassis.turnToHeading(180, 600);
+    waitd;
+  
+    chassis.moveToPoint(chassis.getPose().x - 2.25, 60.221, 1100,
+                        {.forwards = false, .maxSpeed = 100});
+    waitd;
+    pros::delay(400);
+  
+    // end of middle rings
+    // start of single stack
+  
+    chassis.moveToPoint(13.307, 33.076, 900);
+    waitd;
+  
+    chassis.moveToPoint(26.364, 57.826, 1200, {.forwards = false});
+    waitd;
+  
+    // end of single stack
+    // corner start
+    waitd;
+  
+    chassis.moveToPose(73.307, 91.323, 180+45, 1200, {.forwards = false, .minSpeed = 115});
+    waitd;
+  
+    pros::delay(400);
+  
+    chassis.turnToPoint(44.411, 14.503, 600, {.forwards=false});
+    waitd;
+
+    chassis.moveToPoint(99.544, 57.826, 800, {.forwards=false});
+    waitd;
+
+    chassis.turnToPoint(22.61, 1.267, 800);
+    waitd;
+    chassis.moveToPoint(22.61, 1.267, TO, {.maxSpeed=80});
+    waitd;
+  
+  //   chassis.moveToPoint(64.223, -63.587, 10000);
 }
 void blue_negative_wp() {
   chassis.setPose(53.746, 16.9, 0);
@@ -398,24 +398,28 @@ void blue_negative_wp() {
 
 
 }
+void exit_condition(lemlib::Pose target, double exitDist){
+  chassis.waitUntil(fabs(chassis.getPose().distance(target)) - exitDist);
+  chassis.cancelMotion();
+}
 //Red Negative Autons
 void red_neg_wp() {
 
   chassis.setPose(-60.263, 13.198, 0);
 
-  chassis.turnToHeading(35, TO);
-  pros::delay(300);
+  chassis.turnToHeading(35, 700);
+  pros::delay(200);
   arm.set_pos(arm.ALLIANCE_SCORE);
   waitd;
-  pros::delay(100);
-
-  chassis.moveToPoint(-46.913, 23.332, 1000);
-  waitd;
+  
+  chassis.moveToPoint(-46.913, 23.332, 900);
+  exit_condition(lemlib::Pose(-46, 23), 4);
   arm.set_pos(arm.INIT_POS);
 
   chassis.turnToHeading(90, 650);
   waitd;
   chassis.moveToPoint(-28.009, 23.332, 1200);
+  exit_condition(lemlib::Pose(-28, 23), 0.5);
   chassis.waitUntil(15.6);
   mogo.toggle();
   waitd;
@@ -425,30 +429,40 @@ void red_neg_wp() {
   // TODO: seemingly "kicking out" ring cuz turns near end
   chassis.turnToHeading(226, 700);
   chassis.moveToPoint(-12.097, 36.515, 1200, {.forwards = false});
+  exit_condition(lemlib::Pose(-12, 36), 2.5);
   intake.intake();
-  waitd;
-  pros::delay(900);
+  pros::delay(300);
 
   //
   chassis.moveToPose(-9.69, 59.903, 188, 1300, {.forwards = false});
-  waitd;
-  pros::delay(1000);
+  exit_condition(lemlib::Pose(-9, 59), std::numbers::e);
+  pros::delay(750);
 
   chassis.moveToPoint(-15.147, 34.635, 1400, {.forwards = true});
-  waitd;
+  exit_condition(lemlib::Pose(-15.147, 34.635), std::numbers::e);
 
   // getting the ring in middle of the side
   chassis.turnToHeading(145, 700);
   waitd;
   chassis.moveToPoint(-29.568, 50.316, 1000, {.forwards = false});
-  waitd;
+  exit_condition(lemlib::Pose(-29.568, 50.316), std::numbers::e);
   pros::delay(800);
 
-  // going to ladder
-  chassis.moveToPose(-16.893, 11.583, 315, 1500, {.forwards = false, .minSpeed = 120});
-  chassis.waitUntil(40);
-  arm.set_pos(arm.SCORE_POS);
+  chassis.moveToPoint(-29.86, 26.645, 800);
+  exit_condition(lemlib::Pose(-29.86, 33.271), std::numbers::e);
+
+  // chassis.turnToPoint(-58.314, 66.114, 450, {.forwards = false});
+  // waitd;
+
+  chassis.moveToPoint(-61.314, 63.114, 1200, {.forwards = false, .minSpeed=127});
   waitd;
+
+
+  // // going to ladder
+  // chassis.moveToPose(-16.893, 11.583, 315, 1500, {.forwards = false, .minSpeed = 120});
+  // chassis.waitUntil(40);
+  // arm.set_pos(arm.SCORE_POS);
+  // waitd;
 
 }
 //TODO: rewrite this mirror with blue negative_elims

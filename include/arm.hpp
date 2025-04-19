@@ -14,7 +14,7 @@ class Arm {
         static constexpr double START_POS = 2.0 * 100;
         // 25 originally; comp update went from 30 -> 35
         // 35 -- hella low cuz of slop, so 35 -> 40 -> 44
-        static constexpr double LOADIN_POS = 35.69 * 100; // 25 originally
+        static constexpr double LOADIN_POS = 39.69 * 100; // 25 originally
         static constexpr double DUNK_POS = 87.0 * 100; 
         static constexpr double SCORE_POS = 162.0 * 100; // 169 originally
         static constexpr double AUTON = 200.0 * 100;
