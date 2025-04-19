@@ -341,8 +341,15 @@ void screen_init() {
     lv_obj_move_foreground(auton_select_up);
     lv_obj_move_foreground(auton_select_down);
 
+    #ifdef __cplusplus
+        #pragma GCC diagnostic push
+        #pragma GCC diagnostic ignored "-Wdeprecated-enum-enum-conversion"
+    #endif
     lv_obj_add_style(red_blu, &style_switch, LV_PART_INDICATOR | LV_STATE_DEFAULT);
     lv_obj_add_style(red_blu, &style_switch, LV_PART_INDICATOR | LV_STATE_CHECKED);
+    #ifdef __cplusplus
+        #pragma GCC diagnostic pop
+    #endif
     lv_obj_add_style(red_blu, &style_switch, LV_PART_KNOB);
     lv_obj_set_style_pad_all(red_blu, 0, LV_PART_KNOB);
     lv_obj_set_style_pad_hor(red_blu, 2, LV_PART_KNOB);
@@ -353,8 +360,15 @@ void screen_init() {
     lv_obj_set_pos(red_blu, 62, 10);
     lv_obj_move_foreground(red_blu);
 
+    #ifdef __cplusplus
+        #pragma GCC diagnostic push
+        #pragma GCC diagnostic ignored "-Wdeprecated-enum-enum-conversion"
+    #endif
     lv_obj_add_style(pos_neg, &style_switch, LV_PART_INDICATOR | LV_STATE_DEFAULT);
     lv_obj_add_style(pos_neg, &style_switch, LV_PART_INDICATOR | LV_STATE_CHECKED);
+    #ifdef __cplusplus
+        #pragma GCC diagnostic pop
+    #endif
     lv_obj_add_style(pos_neg, &style_switch, LV_PART_KNOB);
     lv_obj_set_style_pad_all(pos_neg, 0, LV_PART_KNOB);
     lv_obj_set_style_pad_hor(pos_neg, 2, LV_PART_KNOB);

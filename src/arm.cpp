@@ -233,6 +233,7 @@ void arm_update(void* armVoid) {
 
             // if driver has not moved arm out yet, do it for them!
             if (arm->target == arm->LOADIN_POS) {
+                pros::delay(300);
                 arm->set_pos(arm->HOLD_POS);
             }
         }
