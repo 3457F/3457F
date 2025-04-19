@@ -84,19 +84,10 @@ void Intake::check_color() {
     // Blue hue is about 220-230.
     if (color_sensor.get_hue() > 150) {
         held_ring_color = BLUE;
-
-        // If the robot was sitting in the default state of "RED" beforehand,
-        // make sure to correct this misconception.
-        if (alliance_color == BLUE) {
-            sort_next_ring = false;
-        }
     }
 
     // Red hue is about 10-20.
     if (color_sensor.get_hue() < 50) {
-        // If the ring has been blue, don't "overwrite" it with red.
-        if (held_ring_color == BLUE) return;
-        
         held_ring_color = RED;
     }
 
@@ -114,27 +105,26 @@ void update_sort(void* intakeVoid) {
         intake->color_sensor.set_led_pwm(100);
 
         // Handle normal driver control.
-        if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
-            // printf("intaking!\n");
-            intake->intake();
-        } else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
-            // printf("outtaking!\n");
-            intake->outtake();
-        } else if (in_driver_control) {
-            // printf("braking!\n");
-            intake->brake();
+        if (in_driver_control) {
+            if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
+                // printf("intaking!\n");
+                intake->intake();
+            } else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
+                // printf("outtaking!\n");
+                intake->outtake();
+            } else {
+                // printf("braking!\n");
+                intake->brake();
+            }
         }
 
         // If the ring is supposed to go in the arm, don't color sort.
         if (arm.target == arm.LOADIN_POS) continue;
 
-        // Periodically check whether to sort the ring currently in the intake.
-        intake->check_color();
+        // TODO: temporarily not using `intake.check_color()`
 
         // Runs color sorting algorithm.
         if (intake->is_ring_on_top() && color_sorting) {
-            printf("sorting ring!\n");
-
             if (intake->color_sensor.get_rgb().blue>15) {
                 intake->held_ring_color = intake->BLUE;
             } else if (intake->color_sensor.get_rgb().red>35) {
@@ -147,12 +137,13 @@ void update_sort(void* intakeVoid) {
                       << std::endl;
 
             if ((intake->alliance_color != intake->held_ring_color)) {
-                pros::delay(20);
+                printf("sorting ring!\n");
+
+                pros::delay(50);
                 intake->brake();
                 pros::delay(150);
 
-                // reset held ring color
-                intake->held_ring_color = RED;
+                // intake->sort_next_ring = false;
             }
 
             // start intake again after color sorting
