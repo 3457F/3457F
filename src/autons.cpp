@@ -454,8 +454,20 @@ void red_neg_wp() {
   // chassis.turnToPoint(-58.314, 66.114, 450, {.forwards = false});
   // waitd;
 
-  chassis.moveToPoint(-61.314, 63.114, 1200, {.forwards = false, .minSpeed=127});
+  chassis.turnToPoint(-66.207, 66.012, 400, {.forwards = false});
   waitd;
+  chassis.moveToPoint(-66.207, 66.012, 1000, {.forwards = false, .minSpeed=110});
+  exit_condition(lemlib::Pose (-66.207, 66.012), std::numbers::e);
+  pros::delay(300);
+
+  chassis.moveToPose(-47.692, 2.089, 344, 1200, {.forwards = false, .minSpeed=110});
+  chassis.waitUntil(29);
+  intake.lift(true);
+  exit_condition(lemlib::Pose(-47.692, 2.089), std::numbers::e);
+  intake.lift(false);
+  pros::delay(300);
+  arm.set_pos(arm.SCORE_POS);
+  
 
 
   // // going to ladder
