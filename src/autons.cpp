@@ -428,16 +428,17 @@ void red_neg_wp() {
 
   // going to middle rings
   // TODO: seemingly "kicking out" ring cuz turns near end
-  chassis.turnToHeading(226, 700);
-  chassis.moveToPoint(-12.097, 36.515, 1200, {.forwards = false});
+  chassis.turnToHeading(226, 650);
+  intake.intake();
+  waitd;
+  chassis.moveToPoint(-12.097, 36.515, 1000, {.forwards = false, .minSpeed = 93});
   exit_condition(lemlib::Pose(-12, 36), 2.5);
   intake.intake();
   pros::delay(300);
-
   //
-  chassis.moveToPose(-9.69, 59.903, 188, 1300, {.forwards = false});
+  chassis.moveToPose(-9.69, 59.903, 188, 1000, {.forwards = false, .minSpeed = 80});
   exit_condition(lemlib::Pose(-9, 59), std::numbers::e);
-  pros::delay(750);
+  pros::delay(550);
 
   chassis.moveToPoint(-15.147, 34.635, 1400, {.forwards = true});
   exit_condition(lemlib::Pose(-15.147, 34.635), std::numbers::e);
