@@ -10,11 +10,8 @@
 // declares pure pursuit files
 
 // red nostack awp
-ASSET(mecha_red_pos_awp_corner_3_txt);
-ASSET(mecha_red_pos_awp_mogo_txt);
-ASSET(mecha_red_pos_awp_stake_txt);
-ASSET(two_ring_txt);
-ASSET(red_pos_steep_corner_txt)
+ASSET(red_neg_txt);
+
 
 void print_robot_pos(void *chassisVoid) {
   lemlib::Chassis *chassis = static_cast<lemlib::Chassis *>(chassisVoid);
@@ -419,68 +416,138 @@ void red_neg_wp() {
 
   chassis.turnToHeading(90, 650);
   waitd;
-  chassis.moveToPoint(-28.009, 23.332, 1200);
+  chassis.moveToPoint(-28.009, 23.332, 1200,{.maxSpeed=70});
   exit_condition(lemlib::Pose(-28, 23), 0.5);
-  chassis.waitUntil(15.6);
+  chassis.waitUntil(15.65);
   mogo.toggle();
   waitd;
 
-
-  // going to middle rings
-  // TODO: seemingly "kicking out" ring cuz turns near end
-  chassis.turnToHeading(226, 650);
+  chassis.turnToPoint(-10.368, 35.792, 600, {.forwards = false});
   intake.intake();
   waitd;
-  chassis.moveToPoint(-12.097, 36.515, 1000, {.forwards = false, .minSpeed = 93});
-  exit_condition(lemlib::Pose(-12, 36), 2.5);
   intake.intake();
+  chassis.moveToPoint(-10.368, 35.792, 1000, {.forwards = false});
+  exit_condition(lemlib::Pose(-10.368, 35.792), 6+1.314);
   pros::delay(300);
-  //
-  chassis.moveToPose(-9.69, 59.903, 188, 1000, {.forwards = false, .minSpeed = 80});
-  exit_condition(lemlib::Pose(-9, 59), std::numbers::e);
-  pros::delay(550);
 
-  chassis.moveToPoint(-15.147, 34.635, 1400, {.forwards = true});
-  exit_condition(lemlib::Pose(-15.147, 34.635), std::numbers::e);
-
-  // getting the ring in middle of the side
-  chassis.turnToHeading(145, 700);
+  chassis.turnToPoint(-9.368, 59.005, 300, {.forwards = false});
   waitd;
-  chassis.moveToPoint(-29.568, 50.316, 1000, {.forwards = false});
-  exit_condition(lemlib::Pose(-29.568, 50.316), std::numbers::e);
-  pros::delay(800);
+  chassis.moveToPoint(-9.368, 59.005, 1000, {.forwards = false});
+  exit_condition(lemlib::Pose(-9.368, 59.005), std::numbers::pi);
+  pros::delay(300);
 
-  chassis.moveToPoint(-29.86, 26.645, 800);
-  exit_condition(lemlib::Pose(-29.86, 33.271), std::numbers::e);
-
-  // chassis.turnToPoint(-58.314, 66.114, 450, {.forwards = false});
-  // waitd;
-
-  chassis.turnToPoint(-66.207, 66.012, 400, {.forwards = false});
+  chassis.moveToPose(-23.633, 23.449, 215, 1200, {.forwards = true, .lead = .5 });
   waitd;
-  chassis.moveToPoint(-66.207, 66.012, 1000, {.forwards = false, .minSpeed=110});
-  exit_condition(lemlib::Pose (-66.207, 66.012), std::numbers::e);
-  pros::delay(300);
 
-  chassis.moveToPose(-47.692, 2.089, 344, 1200, {.forwards = false, .minSpeed=110});
-  chassis.waitUntil(29);
-  intake.lift(true);
-  exit_condition(lemlib::Pose(-47.692, 2.089), std::numbers::e);
-  intake.lift(false);
-  pros::delay(300);
-  arm.set_pos(arm.SCORE_POS);
   
+  chassis.turnToPoint(-23.449, 47.214, 500, {.forwards = false});
+  waitd;
+  chassis.moveToPoint(-23.449, 47.214, 1000, {.forwards = false});
+  exit_condition(lemlib::Pose(-23.449, 47.214), std::numbers::e);
+  pros::delay(300);
 
+ 
 
-  // // going to ladder
-  // chassis.moveToPose(-16.893, 11.583, 315, 1500, {.forwards = false, .minSpeed = 120});
-  // chassis.waitUntil(40);
-  // arm.set_pos(arm.SCORE_POS);
-  // waitd;
+//  chassis.moveToPoint(-8.895, 33.765, 1000);
+//   exit_condition(lemlib::Pose(-11.658, 35.792), std::numbers::e);
+//   chassis.turnToPoint(-27.317, 50.715, 500, {.forwards = false});
+//   waitd;
+//   chassis.moveToPoint(-27.317, 50.715, 1000, {.forwards = false});
+//   exit_condition(lemlib::Pose(-24.001, 51.451), std::numbers::e);
+//   pros::delay(300);
+
+  //stack
+  chassis.turnToPoint(-43.161, -0.685, 550);
+  waitd;
+  chassis.moveToPoint(-43.161, -0.685, 2000, {.forwards = false, .minSpeed = 100});
+  pros::delay(500);
+  intake.lift(true);
+  exit_condition(lemlib::Pose(-43.161, -0.685), std::numbers::e);
+  intake.lift(false);
+  pros::delay(400);
+
+  //ladder
+  chassis.turnToPoint(-30.818, 0.604, 700, {.forwards = false});
+  waitd;
+
+  chassis.moveToPoint(-31.765, -0.685, 1000, {.forwards = false, .minSpeed = 110});
+  waitd;
+  arm.set_pos(arm.LADDER_POS);
+  pros::delay(200);
+  intake.brake();
+
+  
 
 }
 //TODO: rewrite this mirror with blue negative_elims
 void red_negative_elims() {
+  chassis.setPose(-60.263, 13.198, 0);
+
+  chassis.turnToHeading(35, 700);
+  pros::delay(200);
+  arm.set_pos(arm.ALLIANCE_SCORE);
+  waitd;
+  
+  chassis.moveToPoint(-46.913, 23.332, 900);
+  exit_condition(lemlib::Pose(-46, 23), 4);
+  arm.set_pos(arm.INIT_POS);
+
+  chassis.turnToHeading(90, 650);
+  waitd;
+  chassis.moveToPoint(-28.009, 23.332, 1200,{.maxSpeed=70});
+  exit_condition(lemlib::Pose(-28, 23), 0.5);
+  chassis.waitUntil(15.65);
+  mogo.toggle();
+  waitd;
+
+  chassis.turnToPoint(-10.368, 35.792, 600, {.forwards = false});
+  intake.intake();
+  waitd;
+  intake.intake();
+  chassis.moveToPoint(-10.368, 35.792, 1000, {.forwards = false});
+  exit_condition(lemlib::Pose(-10.368, 35.792), 2);
+  pros::delay(300);
+
+  chassis.turnToPoint(-9.068, 59.005, 300, {.forwards = false});
+  waitd;
+  chassis.moveToPoint(-9.068, 59.005, 1000, {.forwards = false});
+  exit_condition(lemlib::Pose(-9.068, 59.005), std::numbers::pi);
+  pros::delay(300);
+
+  chassis.moveToPose(-23.633, 23.449, 215, 1200, {.forwards = true, .lead = .5 });
+  waitd;
+
+  //red bottom stack
+  chassis.turnToPoint(-23.449, 47.214, 500, {.forwards = false});
+  waitd;
+  chassis.moveToPoint(-23.449, 47.214, 1000, {.forwards = false});
+  exit_condition(lemlib::Pose(-23.449, 47.214), std::numbers::e);
+  pros::delay(300);
+
+  //red for corner
+  chassis.turnToPoint(-35.055, 37.634, 350, {.forwards = true});
+  waitd;
+  chassis.moveToPoint(-35.055, 37.634,800, {.forwards = true, .minSpeed = 100});
+  exit_condition(lemlib::Pose(-35.055, 37.634), std::numbers::e);
+
+  chassis.turnToPoint(-67.295, 64.716, 800,{.forwards = false});
+  waitd;
+  chassis.moveToPoint(-67.295, 64.716, 1400, {.forwards = false});
+  exit_condition(lemlib::Pose(-67.295, 64.716), 2);
+  pros::delay(300);
+  chassis.moveToPoint(-55.873, 55.136, 1000, {.forwards = true, .minSpeed = 80});
+
+  chassis.turnToPoint(-43.161, -0.685, 550);
+  waitd;
+  chassis.moveToPoint(-43.161, -0.685, 2000, {.forwards = false, .minSpeed = 100});
+  pros::delay(500);
+  intake.lift(true);
+  exit_condition(lemlib::Pose(-43.161, -0.685), std::numbers::e);
+  intake.lift(false);
+  pros::delay(400);
+  doinker.left_toggle();
+  chassis.turnToHeading(270, 400);
+  
 }
 
 // Blue Positive Autons

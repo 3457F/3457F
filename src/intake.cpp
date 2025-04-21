@@ -10,7 +10,7 @@ Intake::Intake(
     , std::uint8_t distance_sensor_port
     , bool type
 ) : intake_motors(intake_motor_ports)
-    , intake_piston(intake_piston_port)
+    , intake_piston(intake_piston_port, pros::E_ADI_DIGITAL_OUT)
     , color_sensor(color_port)
     , distance_sensor(distance_sensor_port)
 {
