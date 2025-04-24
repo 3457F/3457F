@@ -239,26 +239,26 @@ void competition_initialize() {};
 void autonomous() {
 	chassis.setBrakeMode(pros::motor_brake_mode_e::E_MOTOR_BRAKE_HOLD);
 	
-	//red neg
-	
-	// red_neg_wp();
-	red_negative_elims();
+//red neg
+	red_neg_wp();
+	// red_negative_elims();
 
-	//red pos
-
+//red pos
 	// red_rush();
 	// red_pos_wp();
+	// red_pos_elims();
 
-	//blue neg
-
+//blue neg
 	// blue_negative_wp();
 	// blue_negative_elims();
 
-	//blue pos
-	
+//blue pos
 	// blue_rush();
 	// blue_pos_wp();
+	// blue_pos_elims();
 
+	
+	
 	// red_sawp();
 };
 

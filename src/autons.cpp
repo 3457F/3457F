@@ -202,6 +202,73 @@ void red_pos_wp() {
 
   
 }
+void red_pos_elims(){
+
+  chassis.setPose(-55.500, -23.500, 90);
+
+  chassis.moveToPoint(-24.000, -23.500, 1100, {.maxSpeed =70});
+  chassis.waitUntil(24);
+  mogo.toggle();
+  exit_condition(lemlib::Pose (-24.000, -23.500), std::numbers::e);
+
+  //gettin first ring
+  chassis.turnToPoint(-13.316, -12.292, 650, {.forwards = false});
+  pros::delay(400);
+  chassis.moveToPoint(-13.316, -12.292, 1000, {.forwards = false, .maxSpeed = 80});
+  exit_condition(lemlib::Pose (-13.316, -12.292), std::numbers::e);
+  doinker.left_toggle();
+  pros::delay(250);
+
+  chassis.moveToPose(-39.477, -25.372, 59, 1300, {.forwards = true, .minSpeed = 100});
+  exit_condition(lemlib::Pose(-39.477, -25.372), std::numbers::e);
+
+  chassis.turnToHeading(270, 400);
+  waitd;
+  doinker.left_toggle();
+
+  chassis.turnToPoint(-25.844, -34.215, 300, {.forwards = false});
+  waitd;
+  chassis.moveToPoint(-25.844, -34.215, 800, {.forwards = false});
+  intake.intake();
+  exit_condition(lemlib::Pose (-25.844, -34.215), 2);
+  pros::delay(200);
+
+  //red bottom stack
+  chassis.turnToPoint(-24.370, -48.493,500, {.forwards = false});
+  waitd;
+  chassis.moveToPoint(-24.370, -48.493, 1000, {.forwards = false});
+  exit_condition(lemlib::Pose (-24.370, -48.493), std::numbers::e);
+
+  chassis.turnToPoint(-43.530, -53.743, 500, {.forwards = false});
+  waitd;
+
+  chassis.moveToPoint(-46.846, -55.954, 1000, {.forwards = false});
+  exit_condition(lemlib::Pose (-46.846, -55.954), std::numbers::e);
+
+  chassis.moveToPoint(-69.322, -64.429, 950, {.forwards = false, .maxSpeed = 80});
+  exit_condition(lemlib::Pose (-69.322, -64.429), std::numbers::e);
+  pros::delay(800); 
+  chassis.moveToPoint(-52.741, -57.704, 800);
+  exit_condition(lemlib::Pose(-52.741, -57.704), 2);
+  doinker.right_toggle();
+  pros::delay(250);
+  chassis.moveToPoint(-60.479, -60.468, 700, {.forwards = false});
+  pros::delay(200);
+  chassis.turnToPoint(-55.500, -23.500, 700, {.forwards = false});
+  waitd;
+
+  chassis.moveToPose(-21.975, -51.533, 257, 1300, {.forwards = false, .minSpeed = 100});
+  intake.brake();
+  chassis.waitUntil(12);
+  mogo.toggle();
+  doinker.right_toggle();
+  arm.set_pos(arm.ALLIANCE_SCORE);
+  waitd;
+  chassis.turnToHeading(0, 700);
+
+
+  
+}
 
 //Blue Negative Autons
 void blue_negative_elims() {
@@ -426,13 +493,13 @@ void red_neg_wp() {
   intake.intake();
   waitd;
   intake.intake();
-  chassis.moveToPoint(-10.368, 35.792, 1000, {.forwards = false});
-  exit_condition(lemlib::Pose(-10.368, 35.792), 6+1.314);
+  chassis.moveToPoint(-8.368, 35.792, 1000, {.forwards = false});
+  exit_condition(lemlib::Pose(-8.368, 35.792), 6+1.314);
   pros::delay(300);
 
-  chassis.turnToPoint(-9.368, 59.005, 300, {.forwards = false});
+  chassis.turnToPoint(-8.368, 59.005, 300, {.forwards = false});
   waitd;
-  chassis.moveToPoint(-9.368, 59.005, 1000, {.forwards = false});
+  chassis.moveToPoint(-8.368, 59.005, 1000, {.forwards = false});
   exit_condition(lemlib::Pose(-9.368, 59.005), std::numbers::pi);
   pros::delay(300);
 
@@ -446,16 +513,6 @@ void red_neg_wp() {
   exit_condition(lemlib::Pose(-23.449, 47.214), std::numbers::e);
   pros::delay(300);
 
- 
-
-//  chassis.moveToPoint(-8.895, 33.765, 1000);
-//   exit_condition(lemlib::Pose(-11.658, 35.792), std::numbers::e);
-//   chassis.turnToPoint(-27.317, 50.715, 500, {.forwards = false});
-//   waitd;
-//   chassis.moveToPoint(-27.317, 50.715, 1000, {.forwards = false});
-//   exit_condition(lemlib::Pose(-24.001, 51.451), std::numbers::e);
-//   pros::delay(300);
-
   //stack
   chassis.turnToPoint(-43.161, -0.685, 550);
   waitd;
@@ -467,8 +524,7 @@ void red_neg_wp() {
   pros::delay(400);
 
   //ladder
-  chassis.turnToPoint(-30.818, 0.604, 700, {.forwards = false});
-  waitd;
+ chassis.turnToHeading(270, 650);
 
   chassis.moveToPoint(-31.765, -0.685, 1000, {.forwards = false, .minSpeed = 110});
   waitd;
@@ -479,7 +535,7 @@ void red_neg_wp() {
   
 
 }
-//TODO: rewrite this mirror with blue negative_elims
+
 void red_negative_elims() {
   chassis.setPose(-60.263, 13.198, 0);
 
@@ -632,6 +688,70 @@ void blue_pos_wp() {
   waitd;
 
 
+
+}
+
+void blue_pos_elims(){
+  chassis.setPose(55.500, -23.500, -90);
+
+  chassis.moveToPoint(24.000, -23.500, 1100, {.maxSpeed =70});
+  chassis.waitUntil(24);
+  mogo.toggle();
+  exit_condition(lemlib::Pose (24.000, -23.500), std::numbers::e);
+
+  //gettin first ring
+  chassis.turnToPoint(14.134, -9.713, 650, {.forwards = false});
+  pros::delay(400);
+  chassis.moveToPoint(14.134, -9.713, 1000, {.forwards = false, .maxSpeed = 80});
+  exit_condition(lemlib::Pose (14.134, -9.713), std::numbers::e);
+  doinker.right_toggle();
+  pros::delay(250);
+
+  chassis.moveToPose(39.477, -25.372, -59, 1300, {.forwards = true, .minSpeed = 100});
+  exit_condition(lemlib::Pose(-39.477, -25.372), std::numbers::e);
+
+  chassis.turnToHeading(90, 650);
+  waitd;
+  doinker.right_toggle();
+
+  chassis.turnToPoint(25.844, -34.215, 300, {.forwards = false});
+  waitd;
+  chassis.moveToPoint(25.844, -34.215, 800, {.forwards = false});
+  intake.intake();
+  exit_condition(lemlib::Pose (25.844, -34.215), 2);
+  pros::delay(200);
+
+  //red bottom stack
+  chassis.turnToPoint(24.370, -48.493,500, {.forwards = false});
+  waitd;
+  chassis.moveToPoint(24.370, -48.493, 1000, {.forwards = false});
+  exit_condition(lemlib::Pose (-24.370, -48.493), std::numbers::e);
+
+  chassis.turnToPoint(43.530, -53.743, 500, {.forwards = false});
+  waitd;
+
+  chassis.moveToPoint(46.846, -55.954, 1000, {.forwards = false});
+  exit_condition(lemlib::Pose (-46.846, -55.954), std::numbers::e);
+
+  chassis.moveToPoint(69.322, -64.429, 950, {.forwards = false, .maxSpeed = 80});
+  exit_condition(lemlib::Pose (-69.322, -64.429), std::numbers::e);
+  pros::delay(800); 
+  chassis.moveToPoint(46.190, -55.770, 950, {.minSpeed = 50});  
+  exit_condition(lemlib::Pose(46.190, -55.770), 2);
+  doinker.left_toggle();
+  pros::delay(350);
+  chassis.moveToPoint(54.849, -59.823, 700, {.forwards = false});
+  pros::delay(200);
+  chassis.turnToPoint(55.500, -23.500, 700, {.forwards = false});
+  waitd;
+
+  chassis.moveToPose(21.975, -51.533, -257, 1300, {.forwards = false, .minSpeed = 127});
+  intake.brake();
+  chassis.waitUntil(12);
+  mogo.toggle();
+  doinker.left_toggle();
+  waitd;
+  chassis.turnToHeading(0, 700);
 
 }
 

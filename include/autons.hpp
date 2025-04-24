@@ -16,6 +16,7 @@ void red_negative_elims();
 //red pos
 void red_rush();
 void red_pos_wp();
+void red_pos_elims();
 
 //blue neg
 void blue_negative_wp();
@@ -24,6 +25,7 @@ void blue_negative_elims();
 //blue pos
 void blue_rush();
 void blue_pos_wp();
+void blue_pos_elims();
 
 void red_sawp();
 void turnforRedrush();
