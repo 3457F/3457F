@@ -175,10 +175,10 @@ void Arm::score_cycle() {
     // when at LOADIN_POS, go to SCORE_POS
     else if (state == 1) {
         state = 2;
-        // intake->outtake();
-        // // intake->
-        // pros::delay(50);
-        // intake->brake();
+        intake->outtake();
+        // intake->
+        pros::delay(50);
+        intake->brake();
         intake->intake_motors.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
         std::cout << "SCORE_POS" << std::endl;
         this->set_pos(SCORE_POS);
@@ -228,7 +228,7 @@ void arm_update(void* armVoid) {
             // TODO: is this necessary?
             // move hooks slightly so ring doesn't get stuck on it
             intake.outtake();
-            pros::delay(100);
+            pros::delay(400);
             intake.brake();
 
             // if driver has not moved arm out yet, do it for them!

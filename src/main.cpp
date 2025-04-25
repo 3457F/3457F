@@ -240,7 +240,7 @@ void autonomous() {
 	chassis.setBrakeMode(pros::motor_brake_mode_e::E_MOTOR_BRAKE_HOLD);
 	
 //red neg
-	red_neg_wp();
+	// red_neg_wp();
 	// red_negative_elims();
 
 //red pos
@@ -255,7 +255,7 @@ void autonomous() {
 //blue pos
 	// blue_rush();
 	// blue_pos_wp();
-	// blue_pos_elims();
+	blue_pos_elims();
 
 	
 	
