@@ -109,6 +109,12 @@ void update_sort(void* intakeVoid) {
             if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
                 // printf("intaking!\n");
                 intake->intake();
+
+                if (intake->intake_motors.get_actual_velocity() > 10 && intake->intake_motors.get_power() > 5.5) {
+                    intake->outtake();
+                    pros::delay(150);
+                    intake->intake();
+                }
             } else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
                 // printf("outtaking!\n");
                 intake->outtake();
