@@ -56,6 +56,10 @@ void Intake::outtake() {
     intake_motors.move(127);
 }
 
+void Intake::antijam() {
+    intake_motors.move_velocity(30);
+}
+
 void Intake::outtake_auton() {
     auton_running = 2;
 }
@@ -138,9 +142,9 @@ void update_sort(void* intakeVoid) {
             }
 
             std::cout << "b, r:"
-                      << intake->color_sensor.get_rgb().blue
-                      << ", " << intake->color_sensor.get_rgb().red
-                      << std::endl;
+                    << intake->color_sensor.get_rgb().blue
+                    << ", " << intake->color_sensor.get_rgb().red
+                    << std::endl;
 
             if ((intake->alliance_color != intake->held_ring_color)) {
                 printf("sorting ring!\n");
