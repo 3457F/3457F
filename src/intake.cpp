@@ -110,7 +110,7 @@ void update_sort(void* intakeVoid) {
                 // printf("intaking!\n");
                 intake->intake();
 
-                if (intake->intake_motors.get_actual_velocity() > 10 && intake->intake_motors.get_power() > 5.5) {
+                if ((intake->intake_motors.get_actual_velocity() > 10 && intake->intake_motors.get_power() > 5.5) && arm.target != arm.LOADIN_POS) {
                     intake->outtake();
                     pros::delay(850);
                     intake->intake();
