@@ -56,10 +56,6 @@ void Intake::outtake() {
     intake_motors.move(127);
 }
 
-void Intake::antijam() {
-    intake_motors.move_velocity(30);
-}
-
 void Intake::outtake_auton() {
     auton_running = 2;
 }

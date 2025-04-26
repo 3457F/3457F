@@ -73,7 +73,6 @@ class Intake {
         void intake();
         void intake_auton();
         void floating_intake();
-        void antijam();
 
         void outtake();
         void outtake_auton();
