@@ -159,17 +159,18 @@ void red_pos_wp() {
 
   // moves out of alliance stake
   chassis.moveToPoint(chassis.getPose().x + 10, chassis.getPose().y - 10, TO,
-                      {.earlyExitRange = 5});
+                      {.minSpeed=35, .earlyExitRange = 5});
   waitd;
 
   // going to mogo
   chassis.moveToPose(-24.554, -24.248, 90, 1500, {.minSpeed = 60});
-  chassis.waitUntil(20);
+  chassis.waitUntil(24);
   arm.set_pos(arm.INIT_POS);
   mogo.clamp();
   waitd;
 
-  turnAndMoveToPoint(-15.536, -14.281, {.forwards = false});
+  turnAndMoveToPoint(-16.264, -13.213, {.forwards = false});
+  chassis.turnToHeading(180+58.25, 800);
   waitd;
   doinker.toggle();
   pros::delay(350);
@@ -183,24 +184,23 @@ void red_pos_wp() {
 
   pros::delay(240);
 
-  chassis.moveToPoint(-55.39, -26.754, 700);
+  // chassis.moveToPoint(-50.899, -22.424, 700);
+  // waitd;
+  chassis.turnToPoint(-21.937, -49.556, 800, {.forwards=false});
   waitd;
 
   intake.intake();
-  turnAndMoveToPoint(-39.994, -39.421, {.forwards = false});
+  // turnAndMoveToPoint(-39.994, -39.421, {.forwards = false});
+  // waitd;
+  // pros::delay(1000);
+  chassis.moveToPoint(-21.937, -49.556, 2500, {.forwards = false, .maxSpeed=40});
   waitd;
-  pros::delay(1000);
-  chassis.moveToPoint(-26.937, -49.556, 900, {.forwards = false});
-  waitd;
-  intake.intake();
+  pros::delay(750);
+  // intake.intake();
 
-  chassis.moveToPose(-11.541, -20.466, 216, 1300, {.forwards = false});
+  chassis.moveToPoint(-9.631, -10.582, 1300, {.forwards = false});
   arm.set_pos(arm.SCORE_POS);
   waitd;
-  
-
-
-  
 }
 void red_pos_elims(){
 
@@ -260,7 +260,7 @@ void red_pos_elims(){
   chassis.moveToPose(-21.975, -51.533, 257, 1300, {.forwards = false, .minSpeed = 100});
   intake.brake();
   chassis.waitUntil(12);
-  mogo.toggle();
+  // mogo.toggle();
   doinker.right_toggle();
   arm.set_pos(arm.ALLIANCE_SCORE);
   waitd;
@@ -385,85 +385,66 @@ void blue_negative_elims() {
   //   chassis.moveToPoint(64.223, -63.587, 10000);
 }
 void blue_negative_wp() {
-  chassis.setPose(53.746, 16.9, 0);
+  chassis.setPose(60.263, 13.198, 0);
 
-  // the commented out code is probs deprecated from when we ran no preload...?
-  // arm.set_pos(arm.LOADIN_POS);
-  // pros::delay(150);
-  // intake.intake();
-  // pros::delay(250);
-  // intake.intake_brake_mode = pros::E_MOTOR_BRAKE_COAST;
-  // intake.brake();
-  arm.set_pos(arm.SCORE_POS);
-
-  // chassis.moveToPoint(56.864, 9.5, 1000, {.forwards = false});
-  // waitd;
-  chassis.turnToPoint(67.85, 0, 375, {.forwards = false});
+  chassis.turnToHeading(-35, 700);
+  pros::delay(200);
   arm.set_pos(arm.ALLIANCE_SCORE);
   waitd;
+  
+  chassis.moveToPoint(46.913, 23.332, 900, {.minSpeed=80});
+  exit_condition(lemlib::Pose(-46, 23), 4);
+  arm.set_pos(arm.INIT_POS);
 
-  pros::delay(550);
-
-  arm.set_pos(arm.START_POS);
-
-  chassis.moveToPoint(44.683, 26.06, 1100);
+  chassis.turnToHeading(-90, 650, {.minSpeed=50, .earlyExitRange=5});
+  waitd;
+  chassis.moveToPoint(28.009, 23.332, 1200,{.maxSpeed=70, .minSpeed=40});
+  exit_condition(lemlib::Pose(-28, 23), 0.5);
+  chassis.waitUntil(15.65);
+  mogo.toggle();
   waitd;
 
-  chassis.turnToPoint(20, 25, 700);
-  waitd;
-
-  chassis.moveToPoint(20, 25, 1000, {.maxSpeed = 90});
-  waitd;
-
-  mogo.clamp(); // mogo end
-  pros::delay(225);
-
-  // fds
-  //  chassis.moveToPose(chassis.getPose().x-20, chassis.getPose().y+18.25, 127,
-  //  1900, {.forwards = false, .minSpeed = 89.69});
-  turnAndMoveToPoint(7.1, 38, {.turnTO = 650, .forwards = false,.async = true});
+  chassis.turnToPoint(12, 37.503, 600, {.forwards = false});
   intake.intake();
   waitd;
+  chassis.moveToPoint(12, 37.5032, 1000, {.forwards = false, .minSpeed=60, .earlyExitRange=5});
+  pros::delay(300);
 
-  pros::delay(450);
-
-  chassis.turnToHeading(180, 600);
+  chassis.turnToPoint(11.5, 57.005, 300, {.forwards = false});
   waitd;
-
-  chassis.moveToPoint(chassis.getPose().x-1.45, 54.221, 1200, {.forwards = false, .maxSpeed=100});
+  chassis.moveToPoint(11.5, 57.005, 1000, {.forwards = false, .maxSpeed=70});
   waitd;
   pros::delay(500);
 
-  chassis.moveToPoint(19.153, 25.475, 900);
+  chassis.moveToPose(23.633, 23.449, -215, 1200, {.forwards = true, .lead = .5, .minSpeed=90});
   waitd;
-
-  chassis.moveToPoint(24.22, 48.277, 1000, {.forwards=false, .maxSpeed=110});
+  
+  // chassis.turnToPoint(23.449, 47.214, 500, {.forwards = false});
+  // waitd;
+  chassis.moveToPoint(28.449, 47.214, 1000, {.forwards = false});
   waitd;
+  pros::delay(450);
 
-  // corner start
-
-  chassis.moveToPoint(56.571, 44.574, 1000, {.minSpeed=110});
+  //stack
+  // chassis.turnToPoint(49.161, -0.885, 550);
+  // waitd;
+  chassis.moveToPoint(52.161, 1.5, 2000, {.forwards = false, .maxSpeed=70, .earlyExitRange=5});
+  pros::delay(500);
+  intake.lift(true);
   waitd;
+  intake.lift(false);
+  pros::delay(600);
 
-  chassis.moveToPoint(64.757, 71.079, 1100, {.forwards=false, .minSpeed=110});
+  chassis.moveToPoint(48.401, 15.895, 900);
   waitd;
+  pros::delay(500);
 
-  pros::delay(250);
-
-  chassis.turnToPoint(72.357, 54.513, 800, {.forwards=false});
+  //ladder
+  chassis.moveToPoint(31.765, -0.685, 1000, {.forwards = false, .maxSpeed = 110});
   waitd;
-  chassis.moveToPoint(72.357, 54.513, 800, {.forwards=false});
-  waitd;
-
-  chassis.turnToPoint(17.692, 17.68, TO, {.forwards = false});
-  waitd;
-
-  chassis.moveToPoint(17.692, 17.68, TO, {.forwards = false, .maxSpeed = 120});
+  arm.set_pos(arm.LADDER_POS);
+  pros::delay(200);
   intake.brake();
-  waitd;
-
-  arm.set_pos(arm.SCORE_POS);
-
 
 }
 
@@ -477,51 +458,49 @@ void red_neg_wp() {
   arm.set_pos(arm.ALLIANCE_SCORE);
   waitd;
   
-  chassis.moveToPoint(-46.913, 23.332, 900);
+  chassis.moveToPoint(-46.913, 23.332, 900, {.minSpeed=80});
   exit_condition(lemlib::Pose(-46, 23), 4);
   arm.set_pos(arm.INIT_POS);
 
-  chassis.turnToHeading(90, 650);
+  chassis.turnToHeading(90, 650, {.minSpeed=50, .earlyExitRange=5});
   waitd;
-  chassis.moveToPoint(-28.009, 23.332, 1200,{.maxSpeed=70});
+  chassis.moveToPoint(-28.009, 23.332, 1200,{.maxSpeed=70, .minSpeed=40});
   exit_condition(lemlib::Pose(-28, 23), 0.5);
   chassis.waitUntil(15.65);
   mogo.toggle();
   waitd;
 
-  chassis.turnToPoint(-10.368, 35.792, 600, {.forwards = false});
+  chassis.turnToPoint(-9, 37.503, 600, {.forwards = false});
   intake.intake();
   waitd;
-  intake.intake();
-  chassis.moveToPoint(-8.368, 35.792, 1000, {.forwards = false});
-  exit_condition(lemlib::Pose(-8.368, 35.792), 6+1.314);
+  chassis.moveToPoint(-9, 37.5032, 1000, {.forwards = false, .minSpeed=60});
+  exit_condition(lemlib::Pose(-7.973, 38.003), 5);
   pros::delay(300);
 
-  chassis.turnToPoint(-8.368, 59.005, 300, {.forwards = false});
+  chassis.turnToPoint(-8.875, 59.005, 300, {.forwards = false});
   waitd;
-  chassis.moveToPoint(-8.368, 59.005, 1000, {.forwards = false});
-  exit_condition(lemlib::Pose(-9.368, 59.005), std::numbers::pi);
-  pros::delay(300);
-
-  chassis.moveToPose(-23.633, 23.449, 215, 1200, {.forwards = true, .lead = .5 });
+  chassis.moveToPoint(-8.875, 59.005, 1000, {.forwards = false, .maxSpeed=70});
   waitd;
+  pros::delay(500);
 
+  chassis.moveToPose(-23.633, 23.449, 215, 1200, {.forwards = true, .lead = .5, .minSpeed=60});
+  waitd;
   
   chassis.turnToPoint(-23.449, 47.214, 500, {.forwards = false});
   waitd;
   chassis.moveToPoint(-23.449, 47.214, 1000, {.forwards = false});
   exit_condition(lemlib::Pose(-23.449, 47.214), std::numbers::e);
-  pros::delay(300);
+  pros::delay(450);
 
   //stack
   chassis.turnToPoint(-43.161, -0.685, 550);
   waitd;
-  chassis.moveToPoint(-43.161, -0.685, 2000, {.forwards = false, .minSpeed = 100});
+  chassis.moveToPoint(-43.161, -0.685, 2000, {.forwards = false, .maxSpeed=100});
   pros::delay(500);
   intake.lift(true);
-  exit_condition(lemlib::Pose(-43.161, -0.685), std::numbers::e);
+  waitd;
   intake.lift(false);
-  pros::delay(400);
+  pros::delay(600);
 
   //ladder
  chassis.turnToHeading(270, 650);
@@ -624,6 +603,8 @@ void blue_rush() {
 }
 
 void blue_pos_wp() {
+
+  pros::delay(2000);
   chassis.setPose(60.263, -13.198, 180);
 
   // chassis.turnToHeading(180-31.5, 730);

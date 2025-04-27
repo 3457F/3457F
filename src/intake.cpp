@@ -1,6 +1,7 @@
 #include <cstdint>
 #include "intake.hpp"
 #include "main.h"
+#include "pros/rtos.hpp"
 
 Intake::Intake(
     std::initializer_list<std::int8_t> intake_motor_ports
@@ -30,6 +31,9 @@ Intake::Intake(
     color_sort_task = nullptr;
 
     held_ring_color = 0;
+
+    jamCounter = 0;
+    enableJam = false;
 }
 
 // config
@@ -68,6 +72,7 @@ void Intake::brake_auton() {
     auton_running = 0;
 }
 
+
 // color sort functions
 
 /**
@@ -104,17 +109,22 @@ void update_sort(void* intakeVoid) {
 
         intake->color_sensor.set_led_pwm(100);
 
+        if (
+            (intake->intake_motors.get_actual_velocity(0) == 0 && intake->intake_motors.get_efficiency() == 0) && 
+            (arm.target != arm.LOADIN_POS) && (intake->intake_motors.get_voltage()) < -6000
+            ) {
+            intake->outtake();
+            pros::delay(500);
+        }
+
+        std::cout << intake->jamCounter << std::endl;
+
         // Handle normal driver control.
         if (in_driver_control) {
             if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
                 // printf("intaking!\n");
                 intake->intake();
-
-                if ((intake->intake_motors.get_actual_velocity() > 10 && intake->intake_motors.get_power() > 5.5) && arm.target != arm.LOADIN_POS) {
-                    intake->outtake();
-                    pros::delay(850);
-                    intake->intake();
-                }
+            
             } else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
                 // printf("outtaking!\n");
                 intake->outtake();
@@ -130,7 +140,7 @@ void update_sort(void* intakeVoid) {
         // TODO: temporarily not using `intake.check_color()`
 
         // Runs color sorting algorithm.
-        if (intake->is_ring_on_top() && color_sorting) {
+        if (intake->is_ring_on_top() && false) {
             if (intake->color_sensor.get_rgb().blue>15) {
                 intake->held_ring_color = intake->BLUE;
             } else if (intake->color_sensor.get_rgb().red>35) {

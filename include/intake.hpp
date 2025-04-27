@@ -54,6 +54,9 @@ class Intake {
 
         bool sort_next_ring;
 
+        int jamCounter;
+        bool enableJam;
+
         Intake(
             std::initializer_list<std::int8_t> intake_motor_ports
             , std::uint8_t intake_piston_port

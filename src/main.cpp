@@ -246,7 +246,7 @@ void autonomous() {
 //red pos
 	// red_rush();
 	// red_pos_wp();
-	// red_pos_elims();
+	red_pos_elims();
 
 //blue neg
 	// blue_negative_wp();
@@ -255,7 +255,7 @@ void autonomous() {
 //blue pos
 	// blue_rush();
 	// blue_pos_wp();
-	blue_pos_elims();
+	// 	
 
 	
 	
