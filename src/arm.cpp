@@ -221,22 +221,22 @@ void arm_update(void* armVoid) {
     Arm* arm = (Arm*) armVoid;
 
     while(true) {
-        // if arm has a ring, automatically get arm out of the way of the intake
-        if ((arm->target == arm->LOADIN_POS) && intake.is_ring_on_top()) {
-            pros::delay(400);
+        // // if arm has a ring, automatically get arm out of the way of the intake
+        // if ((arm->target == arm->LOADIN_POS) && intake.is_ring_on_top()) {
+        //     pros::delay(400);
             
-            // TODO: is this necessary?
-            // move hooks slightly so ring doesn't get stuck on it
-            intake.outtake();
-            pros::delay(400);
-            intake.brake();
+        //     // TODO: is this necessary?
+        //     // move hooks slightly so ring doesn't get stuck on it
+        //     intake.outtake();
+        //     pros::delay(400);
+        //     intake.brake();
 
-            // if driver has not moved arm out yet, do it for them!
-            if (arm->target == arm->LOADIN_POS) {
-                pros::delay(300);
-                arm->set_pos(arm->HOLD_POS);
-            }
-        }
+        //     // if driver has not moved arm out yet, do it for them!
+        //     if (arm->target == arm->LOADIN_POS) {
+        //         pros::delay(300);
+        //         arm->set_pos(arm->HOLD_POS);
+        //     }
+        // }
 
         pros::delay(35);
     }

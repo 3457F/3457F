@@ -246,7 +246,7 @@ void autonomous() {
 //red pos
 	// red_rush();
 	// red_pos_wp();
-	red_pos_elims();
+	// red_pos_elims();
 
 //blue neg
 	// blue_negative_wp();
@@ -259,7 +259,7 @@ void autonomous() {
 
 	
 	
-	// red_sawp();
+	red_sawp();
 };
 
 /**
@@ -317,6 +317,8 @@ void opcontrol() {
 		bool Y_new_press = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y);
 		// toggle color sort
         bool A_new_press = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A);
+		// arm -- dunk pos
+		bool LEFT_new_press = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_LEFT);
         // arm -- loadin
 		bool DOWN_new_press = controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN);
 		// arm -- start pos
@@ -358,6 +360,9 @@ void opcontrol() {
 			arm.set_pos(arm.LOADIN_POS);
 		} else if (RIGHT_new_press) {
 			arm.set_pos(arm.START_POS);
+		}
+		else if (LEFT_new_press) {
+			arm.set_pos(arm.DUNK_POS);
 		}
 
         // /**
