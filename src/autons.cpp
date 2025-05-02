@@ -525,41 +525,65 @@ void red_negative_elims() {
   waitd;
   
 //mogo
-  chassis.moveToPoint(-46.913, 23.332, 900, {.minSpeed=80});
-  exit_condition(lemlib::Pose(-46, 23), 4);
+  chassis.moveToPoint(-46.913, 23.332, 900, {.minSpeed=80, .earlyExitRange=4});
+  // exit_condition(lemlib::Pose(-46, 23), 4);
+  chassis.moveToPose(-20.009, 23.332, 90, 1800,{.maxSpeed=95, .minSpeed=70, .earlyExitRange=2});
   arm.set_pos(arm.INIT_POS);
-  chassis.turnToHeading(90, 650, {.minSpeed=50, .earlyExitRange=5});
-  waitd;
-  chassis.moveToPoint(-28.009, 23.332, 1200,{.maxSpeed=70, .minSpeed=40});
-  exit_condition(lemlib::Pose(-28, 23), 0.5);
-  chassis.waitUntil(15.65);
+  chassis.waitUntil(22.65);
   mogo.toggle();
-  waitd;
+  pros::delay(100);
+  chassis.turnToHeading(90,100);
+   exit_condition(lemlib::Pose(-46.913, 23.332), 0.5);
+  // chassis.turnToHeading(90, 650, {.minSpeed=50, .earlyExitRange=5});
+  // waitd;
+  // chassis.moveToPoint(-28.009, 23.332, 1200,{.maxSpeed=70, .minSpeed=40});
+  // exit_condition(lemlib::Pose(-28, 23), 0.5);
+ 
+
 
 //top rings
-  chassis.moveToPose(-11.000, 33.503, 220, 1300, {.forwards = false, .minSpeed=50,.earlyExitRange = 10});
+  chassis.moveToPose(-11.000, 33.503, 220, 1100, {.forwards = false, .minSpeed=100,.earlyExitRange = 10});
   intake.intake();
-  chassis.moveToPose(-10.875, 52.005, 180.5, 1300, {.forwards = false, .minSpeed=50,.earlyExitRange = 13});
+  chassis.moveToPose(-10.875, 52.005, 180.5, 1000, {.forwards = false, .minSpeed=100,.earlyExitRange = 13});
   waitd;
-  chassis.moveToPose(-23.633, 23.449, 215, 900, {.forwards = true, .lead = .5, .minSpeed=90});
+  chassis.moveToPose(-23.633, 23.449, 215, 900, {.forwards = true, .lead = .5, .minSpeed=100});
   waitd;
   
 //middle stack
   chassis.turnToPoint(-23.449, 47.214, 500, {.forwards = false});
   waitd;
-  chassis.moveToPoint(-23.449, 47.214, 1000, {.forwards = false});
+  chassis.moveToPoint(-23.449, 47.214, 900, {.forwards = false, .minSpeed  = 100});
   exit_condition(lemlib::Pose(-23.449, 47.214), std::numbers::e);
 
 //corner
-  chassis.moveToPose(-40.213, 35.424, 53, 1000, {.forwards = false, .minSpeed=50});
+  chassis.moveToPose(-40.213, 35.424, 53, 1000, {.forwards = true, .minSpeed=100});
   exit_condition(lemlib::Pose (-40.213, 35.424), std::numbers::e);
 
-  chassis.turnToPoint(-62.137, 61.400, 500, {.forwards = false});
+  chassis.turnToPoint(-60.847, 61.4005, 500, {.forwards = false});
   waitd;
-  chassis.moveToPoint(-62.137, 61.400, 1000, {.forwards = false,  .maxSpeed=100, .minSpeed=90});;
-  exit_condition(lemlib::Pose (-62.137, 61.400), std::numbers::e);
-  pros::delay(200);
+  chassis.moveToPoint(-60.847, 61.400, 1000, {.forwards = false,  .maxSpeed=110, .minSpeed=90, .earlyExitRange = 9});;
+  exit_condition(lemlib::Pose (-60.847, 61.400), std::numbers::pi+1);
+  chassis.moveToPoint(-60.847, 61.400, 700, {.forwards = false, .maxSpeed=70});
+  pros::delay(400);
+
+  chassis.moveToPoint(-46.846, 43.530,1200,{.forwards = true, .minSpeed = 100});
+  exit_condition(lemlib::Pose (-46.846, 43.530), 0.5);
+  pros::delay(400);
+
+  chassis.turnToPoint(-47.030, 0.236, 700, {.forwards = false});  
+  waitd;
+  chassis.moveToPoint(-47.030, 0.236, 1200, {.forwards = false, .minSpeed = 80});
+  chassis.waitUntil(10);
+  intake.lift(true);
+  chassis.waitUntil(18);
+ 
+  chassis.turnToHeading(0,200);
+
+  exit_condition(lemlib::Pose (-47.030, 0.236), std::numbers::e+8);
+  intake.lift(false);
+
   
+
   
 }
 
