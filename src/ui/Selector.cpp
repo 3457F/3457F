@@ -26,39 +26,33 @@ static lv_style_t style_btn;
 static lv_style_t style_ind;
 static lv_style_t style_switch;
 
-lv_obj_t* main_screen = lv_tileview_create(NULL);
-lv_obj_t* auton_selector = lv_tileview_add_tile(
-    main_screen
-    , 0
-    , 0
-    , LV_DIR_NONE                                       // no predefined layout
-);
-lv_obj_t* motor_temps = lv_tileview_add_tile(
-    main_screen
-    , 1
-    , 0
-    , LV_DIR_NONE
-);
+rd_view_t* auton_selector = rd_view_create("AUTON SELECTOR");
+// lv_obj_t* motor_temps = lv_tileview_add_tile(
+//     rd_view_obj(main_screen)
+//     , 1
+//     , 0
+//     , LV_DIR_NONE
+// );
 // skipping auto builder and man builder
-lv_obj_t* overlay = lv_img_create(auton_selector);
-lv_obj_t* auton_select_up = lv_btn_create(auton_selector);
-lv_obj_t* auton_select_down = lv_btn_create(auton_selector);
-lv_obj_t* red_blu = lv_switch_create(auton_selector);
-lv_obj_t* pos_neg = lv_switch_create(auton_selector);
-lv_obj_t* neg_ind = lv_obj_create(auton_selector);
-lv_obj_t* pos_ind = lv_obj_create(auton_selector);
-lv_obj_t* red_blu_ind = lv_obj_create(auton_selector);
-lv_obj_t* auton_table_lv = lv_table_create(auton_selector);
-lv_obj_t* selected_auton = lv_label_create(auton_selector);
-lv_obj_t* selected_auton_box = lv_obj_create(auton_selector);
-lv_obj_t* auton_desc = lv_label_create(auton_selector);
-lv_obj_t* mogo_ring_1 = lv_obj_create(auton_selector);
-lv_obj_t* mogo_ring_2 = lv_obj_create(auton_selector);
-lv_obj_t* mogo_ring_back_1 = lv_obj_create(auton_selector);
-lv_obj_t* mogo_ring_back_2 = lv_obj_create(auton_selector);
-lv_obj_t* alliance_ring = lv_obj_create(auton_selector);
-lv_obj_t* ring_ind = lv_obj_create(auton_selector);
-lv_obj_t* page_switch;
+lv_obj_t* overlay = lv_img_create(rd_view_obj(auton_selector));
+lv_obj_t* auton_select_up = lv_btn_create(rd_view_obj(auton_selector));
+lv_obj_t* auton_select_down = lv_btn_create(rd_view_obj(auton_selector));
+lv_obj_t* red_blu = lv_switch_create(rd_view_obj(auton_selector));
+lv_obj_t* pos_neg = lv_switch_create(rd_view_obj(auton_selector));
+lv_obj_t* neg_ind = lv_obj_create(rd_view_obj(auton_selector));
+lv_obj_t* pos_ind = lv_obj_create(rd_view_obj(auton_selector));
+lv_obj_t* red_blu_ind = lv_obj_create(rd_view_obj(auton_selector));
+lv_obj_t* auton_table_lv = lv_table_create(rd_view_obj(auton_selector));
+lv_obj_t* selected_auton = lv_label_create(rd_view_obj(auton_selector));
+lv_obj_t* selected_auton_box = lv_obj_create(rd_view_obj(auton_selector));
+lv_obj_t* auton_desc = lv_label_create(rd_view_obj(auton_selector));
+lv_obj_t* mogo_ring_1 = lv_obj_create(rd_view_obj(auton_selector));
+lv_obj_t* mogo_ring_2 = lv_obj_create(rd_view_obj(auton_selector));
+lv_obj_t* mogo_ring_back_1 = lv_obj_create(rd_view_obj(auton_selector));
+lv_obj_t* mogo_ring_back_2 = lv_obj_create(rd_view_obj(auton_selector));
+lv_obj_t* alliance_ring = lv_obj_create(rd_view_obj(auton_selector));
+lv_obj_t* ring_ind = lv_obj_create(rd_view_obj(auton_selector));
+// lv_obj_t* page_switch;
 
 LV_IMG_DECLARE(brainuioverlay);
 
@@ -209,19 +203,19 @@ static void up_down_btn(lv_event_t* e) {
     list_update();
 }
 
-lv_obj_t* screens[2] = {auton_selector, motor_temps};
+// lv_obj_t* screens[2] = {auton_selector, motor_temps};
 
-static void page_switch_btn(lv_event_t* e) {
-    const bool *getside = (bool*)lv_event_get_user_data(e);
-    scr_page = *getside ? (scr_page + 1) % 2 : scr_page == 0 ? 1 : (scr_page - 1) % 2;
-    lv_obj_set_tile(main_screen, screens[scr_page], LV_ANIM_ON);
-    lv_obj_set_parent(page_switch, screens[scr_page]);
-}
+// static void page_switch_btn(lv_event_t* e) {
+//     const bool *getside = (bool*)lv_event_get_user_data(e);
+//     scr_page = *getside ? (scr_page + 1) % 2 : scr_page == 0 ? 1 : (scr_page - 1) % 2;
+//     lv_obj_set_tile(main_screen, screens[scr_page], LV_ANIM_ON);
+//     lv_obj_set_parent(page_switch, screens[scr_page]);
+// }
 
 lv_event_cb_t autonCurate = auton_curate;
 lv_event_cb_t selectAuton = select_auton;
 lv_event_cb_t upDownBtn = up_down_btn;
-lv_event_cb_t pageSwitchBtn = page_switch_btn;
+// lv_event_cb_t pageSwitchBtn = page_switch_btn;
 
 // TODO: group inits by object
 void screen_init() {
@@ -270,9 +264,8 @@ void screen_init() {
     lv_img_set_src(overlay, &brainuioverlay); // "S:brainuioverlay.bin"
     lv_obj_move_foreground(overlay);
 
-    lv_scr_load(main_screen);
-    lv_obj_add_style(main_screen, &style_bg, LV_PART_MAIN);
-    lv_obj_set_scrollbar_mode(main_screen, LV_SCROLLBAR_MODE_OFF);
+    lv_obj_add_style(rd_view_obj(auton_selector), &style_bg, LV_PART_MAIN);
+    lv_obj_set_scrollbar_mode(rd_view_obj(auton_selector), LV_SCROLLBAR_MODE_OFF);
     
     lv_obj_set_size(auton_select_up, 11, 58);
     lv_obj_set_pos(auton_select_up, 242, 50);
@@ -341,15 +334,8 @@ void screen_init() {
     lv_obj_move_foreground(auton_select_up);
     lv_obj_move_foreground(auton_select_down);
 
-    #ifdef __cplusplus
-        #pragma GCC diagnostic push
-        #pragma GCC diagnostic ignored "-Wdeprecated-enum-enum-conversion"
-    #endif
     lv_obj_add_style(red_blu, &style_switch, LV_PART_INDICATOR | LV_STATE_DEFAULT);
     lv_obj_add_style(red_blu, &style_switch, LV_PART_INDICATOR | LV_STATE_CHECKED);
-    #ifdef __cplusplus
-        #pragma GCC diagnostic pop
-    #endif
     lv_obj_add_style(red_blu, &style_switch, LV_PART_KNOB);
     lv_obj_set_style_pad_all(red_blu, 0, LV_PART_KNOB);
     lv_obj_set_style_pad_hor(red_blu, 2, LV_PART_KNOB);
@@ -360,15 +346,8 @@ void screen_init() {
     lv_obj_set_pos(red_blu, 62, 10);
     lv_obj_move_foreground(red_blu);
 
-    #ifdef __cplusplus
-        #pragma GCC diagnostic push
-        #pragma GCC diagnostic ignored "-Wdeprecated-enum-enum-conversion"
-    #endif
     lv_obj_add_style(pos_neg, &style_switch, LV_PART_INDICATOR | LV_STATE_DEFAULT);
     lv_obj_add_style(pos_neg, &style_switch, LV_PART_INDICATOR | LV_STATE_CHECKED);
-    #ifdef __cplusplus
-        #pragma GCC diagnostic pop
-    #endif
     lv_obj_add_style(pos_neg, &style_switch, LV_PART_KNOB);
     lv_obj_set_style_pad_all(pos_neg, 0, LV_PART_KNOB);
     lv_obj_set_style_pad_hor(pos_neg, 2, LV_PART_KNOB);
@@ -405,4 +384,7 @@ void screen_init() {
     
     // TODO: was "lv_event_send"...?
     lv_event_send(red_blu, LV_EVENT_CLICKED, NULL);
+
+    // BY DEFAULT: shows motor dashboard
+    rd_view_focus(motor_temps);
 }
