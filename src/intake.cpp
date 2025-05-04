@@ -112,9 +112,11 @@ void update_sort(void* intakeVoid) {
         if (
             (intake->intake_motors.get_actual_velocity(0) == 0 && intake->intake_motors.get_efficiency() == 0) && 
             (arm.target != arm.LOADIN_POS) && (intake->intake_motors.get_voltage()) < -6000
-            ) {
-            
+            )
+        {   
+            intake->outtake();
             pros::delay(500);
+            intake->intake();
         }
 
         std::cout << intake->jamCounter << std::endl;
