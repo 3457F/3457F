@@ -115,7 +115,7 @@ void update_sort(void* intakeVoid) {
             )
         {   
             intake->outtake();
-            pros::delay(500);
+            pros::delay(100);
             intake->intake();
         }
 
