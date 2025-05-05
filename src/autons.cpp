@@ -272,118 +272,80 @@ void red_pos_elims(){
 
 //Blue Negative Autons
 void blue_negative_elims() {
-    intake.alliance_color = intake.BLUE;
+    chassis.setPose(60.263, 13.198, 0);
 
-    chassis.setPose(53.746, 16.9, 0);
-
-    arm.set_pos(arm.SCORE_POS);
-  
-    // chassis.moveToPoint(56.864, 9.5, 1000, {.forwards = false});
-    // waitd;
-    chassis.turnToPoint(67.85, 0, 375, {.forwards = false});
+    // alliance stake
+    chassis.turnToHeading(325, 700);
+    // waits for turn to mostly finish
+    pros::delay(200);
+    // runs in the extra 500ms
     arm.set_pos(arm.ALLIANCE_SCORE);
     waitd;
-  
-    pros::delay(200);
-  
-    // alliance stake end
-    // // alliance ring start
 
-    // chassis.moveToPoint(44.683, 26.06, 1400);
-    // waitd;
+    // backs up
+    // moves out without lifting arm to avoid getting stuck
+    // on alliance stake
+    chassis.moveToPoint(46.913, 23.332, 900, { .minSpeed = 80, .earlyExitRange = 4 });
+    
+    // goes for middle mogo
+    chassis.moveToPose(16.009, 23.332, 270, 1800, { .maxSpeed = 95, .minSpeed = 60, .earlyExitRange = 2 });
+    arm.set_pos(arm.INIT_POS);
+    chassis.waitUntil(22.65);
+    mogo.toggle();
+    pros::delay(100);
+    // ensures robot at exact heading for next movetopose
+    chassis.turnToHeading(270, 100);
 
-    // arm.set_pos(arm.INTAKE_LIFT);
-
-    // chassis.moveToPoint(42.735, 9.495, 1000, {.forwards=false, .maxSpeed=80});
-    // waitd;
-
-    // arm.set_pos(arm.START_POS);
-    // intake.intake();
-    // pros::delay(540);
-    // intake.brake();
-
-    // // alliance ring end
-    // mogo start
-  
-    chassis.moveToPoint(44.683, 26.06, 850);
-    waitd;
-
-    arm.set_pos(arm.START_POS);
-  
-    chassis.moveToPoint(14.281, 26.645, 1200, {.maxSpeed = 70});
-    waitd;
-  
-    mogo.clamp(); 
-
-    // mogo end
-
-    pros::delay(225);
-  
-    // mid doinker ring start
-
-    chassis.moveToPoint(9.3, 10.271, 800, {.forwards=false});
-    waitd;
-    chassis.turnToHeading(73.25, 800);
-    pros::delay(150);
-    doinker.left_toggle();
-    pros::delay(250);
-
-    chassis.moveToPoint(14.281, 26.645, 1200);
-    waitd;
-    chassis.turnToHeading(90+17.5, 800);
-    pros::delay(350);
-    doinker.left_toggle();
-    waitd;
-
-    // middle ring start
-  
-    chassis.turnToPoint(3.5, 43, 200, {.forwards = false});
-    waitd;
+    // goes for bottom auton line ring
+    chassis.moveToPose(9.447, 34.055, 139.8, 1000, { .forwards = false, .maxSpeed = 120, .earlyExitRange = 10 });
     intake.intake();
-    chassis.moveToPoint(3.5, 43, 1400, {.forwards = false});
-    waitd;
-  
-    pros::delay(200);
-  
-    chassis.turnToHeading(180, 600);
-    waitd;
-  
-    chassis.moveToPoint(chassis.getPose().x - 2.25, 60.221, 1100,
-                        {.forwards = false, .maxSpeed = 100});
-    waitd;
+    // goes for top auton line ring
+    chassis.moveToPose(9.263, 61.636, 179.5, 1100, { .forwards = false, .maxSpeed = 100, .earlyExitRange = 10 });
     pros::delay(400);
-  
-    // end of middle rings
-    // start of single stack
-  
-    chassis.moveToPoint(13.307, 33.076, 900);
+
+    // goes back to mogo point
+    chassis.moveToPose(23.633, 23.633, 144.4, 1400, {.forwards = true,.lead = 0.5, .minSpeed = 120}); 
+    exit_condition(lemlib::Pose(23.633, 23.633, 215.6), std::numbers::e);
+
+    // goes for lone stack in middle of corner
+    chassis.turnToPoint(26.396, 45.740, 500, {.forwards = false});
     waitd;
-  
-    chassis.moveToPoint(26.364, 57.826, 1200, {.forwards = false});
-    waitd;
-  
-    // end of single stack
-    // corner start
-    waitd;
-  
-    chassis.moveToPose(73.307, 91.323, 180+45, 1200, {.forwards = false, .minSpeed = 115});
-    waitd;
-  
-    pros::delay(400);
-  
-    chassis.turnToPoint(44.411, 14.503, 600, {.forwards=false});
+    chassis.moveToPoint(26.396, 45.740, 1000, {.forwards = false, .minSpeed=80});
+    exit_condition(lemlib::Pose(26.396, 45.740), std::numbers::e);
+
+    // aligns with corner
+    chassis.moveToPose(37.819, 34.318, 301, 1000, {.forwards = true, .minSpeed=80, .earlyExitRange = 2});
+    // TODO: could go for second red ring, but runs risk of
+    // getting a blue ring instead, so DOESN'T DO IT
+    chassis.turnToPoint(65.545, 65.1773, 500, {.forwards = false});
     waitd;
 
-    chassis.moveToPoint(99.544, 57.826, 800, {.forwards=false});
-    waitd;
+    // getting corner ring
+    chassis.moveToPoint(65.545, 65.177, 1200, {.forwards = false, .minSpeed = 90});  
+    exit_condition(lemlib::Pose (64.347, 63.426), std::numbers::e);
+    pros::delay(500);
+    
+    // backs out of corner
+    chassis.turnToHeading(77, 300);
+    chassis.moveToPoint(46.109, 43.345,1300, {.forwards = true, .minSpeed=80});
+    exit_condition(lemlib::Pose (46.109, 43.345), 0.5);
 
-    chassis.turnToPoint(22.61, 1.267, 800);
+    // goes for stack in middle of blue side
+    chassis.turnToPoint(45.214, -1.133, 600, {.forwards = false});  
     waitd;
-    chassis.moveToPoint(22.61, 1.267, TO, {.maxSpeed=80});
-    waitd;
-  
-  //   chassis.moveToPoint(64.223, -63.587, 10000);
+    chassis.moveToPoint(45.846, -1.131, 1900, {.forwards = false, .minSpeed = 100});
+    chassis.waitUntil(6);
+    intake.lift(true);
+    exit_condition(lemlib::Pose (45.214, -1.133), 1);
+    intake.lift(false);
+    pros::delay(400);
+
+    // attempts to drop entire mogo in positive corner
+
+    // TODO: auton times out when going for corner
+    chassis.moveToPose(53.017, -57.336, 348.5, 2000, {.forwards = true, .minSpeed = 127});
 }
+
 void blue_negative_wp() {
   chassis.setPose(60.263, 13.198, 0);
 
@@ -532,6 +494,7 @@ void red_negative_elims() {
   chassis.waitUntil(22.65);
   mogo.toggle();
   pros::delay(100);
+  // ensure robot at exact heading for next movetopose
   chassis.turnToHeading(90,100);
 
 
@@ -540,7 +503,7 @@ void red_negative_elims() {
   chassis.moveToPose(-9.447, 34.055, 220.2, 1000, {.forwards = false,.maxSpeed = 120, .earlyExitRange = 10});
   intake.intake();
   chassis.moveToPose(-9.263, 61.636, 180.5, 1100, {.forwards = false, .maxSpeed = 100, .earlyExitRange = 10});
-; pros::delay(400);
+  pros::delay(400);
   chassis.moveToPose(-23.633, 23.633, 215.6, 1400, {.forwards = true,.lead = 0.5, .minSpeed = 120}); 
   exit_condition(lemlib::Pose(-23.633, 23.633, 215.6), std::numbers::e);
 
@@ -549,7 +512,10 @@ void red_negative_elims() {
   chassis.moveToPoint(-26.396, 45.740, 1000, {.forwards = false, .minSpeed=80});
   exit_condition(lemlib::Pose(-26.396, 45.740), std::numbers::e);
  
+  // corner
   chassis.moveToPose(-37.819, 34.318, 59.0, 1000, {.forwards = true, .minSpeed=80, .earlyExitRange = 2});
+  // TODO: could go for second red ring, but runs risk of
+  // getting a blue ring instead, so DOESN'T DO IT
   chassis.turnToPoint(-65.545, 65.1773, 500, {.forwards = false});
   waitd;
   chassis.moveToPoint(-65.545, 65.177, 1200, {.forwards = false, .minSpeed = 90});  
@@ -558,10 +524,6 @@ void red_negative_elims() {
   chassis.turnToHeading(77, 300);
   chassis.moveToPoint(-46.109, 43.345,1300, {.forwards = true, .minSpeed=80});
   exit_condition(lemlib::Pose (-46.109, 43.345), 0.5);
-
-//   chassis.moveToPoint(-46.846, 43.530,1200,{.forwards = true, .minSpeed = 100});
-//   exit_condition(lemlib::Pose (-46.846, 43.530), 0.5);
-//   pros::delay(400);
 
   chassis.turnToPoint(-45.214, -1.133, 600, {.forwards = false});  
   waitd;
@@ -573,6 +535,7 @@ void red_negative_elims() {
   pros::delay(400);
   
 
+  // TODO: auton times out when going for corner
   chassis.moveToPose(-53.017, -57.336, 197.5, 2000, {.forwards = true, .minSpeed = 127});
 }
 
