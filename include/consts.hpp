@@ -75,5 +75,5 @@
 // arm PID
 // 1 15 before
 // 2 20 too high
-#define ARM_P 1.5 // 2
+#define ARM_P 1.9 // 2
 #define ARM_D 1 // 5; 15 works too slow though
