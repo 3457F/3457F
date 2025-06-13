@@ -18,17 +18,19 @@
  */
 
 // dt ports
-#define LEFT_BACK_PORT -19
-#define LEFT_MID_PORT -20
-#define LEFT_FRONT_PORT -1
+#define LEFT_BACK_PORT -11
+#define LEFT_MID_PORT -12
+#define LEFT_FRONT_PORT -13
 
-#define RIGHT_BACK_PORT 2
-#define RIGHT_MID_PORT 3
-#define RIGHT_FRONT_PORT 10
+#define RIGHT_BACK_PORT 20
+#define RIGHT_MID_PORT 19
+#define RIGHT_FRONT_PORT 18
 
 // tracking wheel port
-#define HORIZ_TRACK_WHEEL_PORT 9
-#define VERTICAL_TRACK_WHEEL_PORT -4 
+#define HORIZ_TRACK_WHEEL_PORT 15
+#define VERTICAL_TRACK_WHEEL_PORT 17
+#define IMU_PORT 21
+
 
 // arm ports
 #define ARM_PORT 12
@@ -66,11 +68,11 @@
 // #define DT_ANGULAR_D 10 // 62
 
 // dt PID -- 450rpm dt (iowa -- taken from budget bot)
-#define DT_LATERAL_P 8
-#define DT_LATERAL_D 21
+#define DT_LATERAL_P 8 
+#define DT_LATERAL_D 21 
 
 #define DT_ANGULAR_P 3.25
-#define DT_ANGULAR_D 26
+#define DT_ANGULAR_D 34
 
 // arm PID
 // 1 15 before

@@ -26,6 +26,7 @@ void blue_negative_elims();
 void blue_rush();
 void blue_pos_wp();
 void blue_pos_elims();
+void fun_auto();
 
 void red_sawp();
 void turnforRedrush();
